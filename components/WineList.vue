@@ -43,9 +43,14 @@ const emptyVariantClass = computed(() =>
 
 <style scoped>
 .wine-list__grid {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  width: 100%;
+}
+
+.wine-list__grid > :deep(*) {
+  width: 100%;
 }
 
 .wine-list__empty {
