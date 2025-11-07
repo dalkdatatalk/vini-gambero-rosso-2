@@ -23,6 +23,15 @@ type RelatedLocale = {
   [key: string]: unknown;
 };
 
+type RawGrape = {
+  vitigno?: string;
+  nome?: string;
+  name?: string;
+  percentuale?: string | number | null;
+  percentage?: string | number | null;
+  value?: string | number | null;
+};
+
 type RawWine = {
   id: number;
   slug?: string;
@@ -42,9 +51,19 @@ type RawWine = {
   alcol?: string | null;
   prezzo?: string | number | null;
   numero_bottiglie?: string | number | null;
+  vitigni?: RawGrape[] | null;
+  vino_vitigni?: RawGrape[] | null;
+  prodotti_vitigni?: RawGrape[] | null;
+  abbinamento?: string | null;
+  vino_abbinamento?: string | null;
   content?: string | null;
   related_locale?: RelatedLocale | null;
 };
+
+export interface GrapeComposition {
+  name: string;
+  percentage: number | null;
+}
 
 export interface Wine {
   id: number;
@@ -56,6 +75,11 @@ export interface Wine {
   score: number | null;
   denominazione: string | null;
   content: string | null;
+  price: number | null;
+  priceRange: string | null;
+  bottles: number | null;
+  grapes: GrapeComposition[];
+  pairing: string | null;
   relatedLocale: RelatedLocale | null;
 }
 
@@ -83,9 +107,32 @@ function firstName(items?: TaxonomyItem[]): string | null {
   return safeText(items[0]?.name) ?? null;
 }
 
+function parseGrapes(raw?: RawGrape[] | null): GrapeComposition[] {
+  if (!raw || raw.length === 0) {
+    return [];
+  }
+
+  return raw
+    .map((item) => {
+      const label = safeText(item.vitigno ?? item.nome ?? item.name ?? undefined);
+      if (!label) {
+        return null;
+      }
+
+      const percentageValue = item.percentuale ?? item.percentage ?? item.value;
+      const percentage = toNumber(percentageValue ?? null);
+
+      return { name: label, percentage } satisfies GrapeComposition;
+    })
+    .filter((item): item is GrapeComposition => item !== null);
+}
+
 export function normalizeWine(raw: RawWine): Wine {
   const name = safeText(raw.title) ?? 'Senza nome';
   const slug = safeText(raw.slug) ?? slugify(name);
+
+  const rawGrapes = raw.vitigni ?? raw.vino_vitigni ?? raw.prodotti_vitigni ?? null;
+  const pairingText = safeText(raw.abbinamento ?? raw.vino_abbinamento ?? null);
 
   return {
     id: raw.id,
@@ -97,6 +144,11 @@ export function normalizeWine(raw: RawWine): Wine {
     score: toNumber(raw.vino_centesimi),
     denominazione: firstName(raw.prodotti_denominazione_vino),
     content: safeText(raw.content) ?? null,
+    price: toNumber(raw.prezzo),
+    priceRange: firstName(raw.prodotti_fascia_di_prezzo),
+    bottles: toNumber(raw.numero_bottiglie),
+    grapes: parseGrapes(rawGrapes),
+    pairing: pairingText,
     relatedLocale: raw.related_locale ?? null,
   };
 }
