@@ -73,6 +73,7 @@ test('normalizeWine extracts type and region names', async () => {
   });
 
   assert.equal(wine.type, 'bianco');
+  assert.deepEqual(wine.categories, ['bianco']);
   assert.equal(wine.region, 'Lazio');
 });
 

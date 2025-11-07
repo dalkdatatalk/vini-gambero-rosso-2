@@ -1,18 +1,18 @@
 <template>
-  <main class="type-page">
-    <header class="type-page__header">
+  <main class="page page--type">
+    <header class="page__header">
       <h1>Vini {{ typeLabel }}</h1>
       <p>
         {{ winesCountLabel }}
       </p>
     </header>
 
-    <WineFiltersType class="type-page__filters" />
+    <WineFiltersType class="page__filters" />
 
-    <section v-if="sortedWines.length" class="type-page__grid">
+    <section v-if="sortedWines.length" class="page__grid">
       <WineCard v-for="wine in sortedWines" :key="wine.id" :wine="wine" />
     </section>
-    <p v-else class="type-page__empty">Nessun vino disponibile per questa tipologia.</p>
+    <p v-else class="page__empty">Nessun vino disponibile per questa tipologia.</p>
   </main>
 </template>
 
@@ -20,11 +20,13 @@
 import { computed } from 'vue';
 import { useHead, useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
+import { slugify } from '~/utils/slugify';
 
 const route = useRoute();
 const { byType } = useWines();
 
 const typeParam = computed(() => String(route.params.type ?? ''));
+const typeSlug = computed(() => slugify(typeParam.value));
 
 const winesByType = computed(() => byType(typeParam.value));
 const sortedWines = computed(() => {
@@ -54,9 +56,14 @@ const winesCountLabel = computed(() => {
 });
 
 const typeLabel = computed(() => {
-  const wine = sortedWines.value[0];
-  if (wine?.type) {
-    return wine.type;
+  const slug = typeSlug.value;
+  if (slug) {
+    for (const wine of sortedWines.value) {
+      const match = wine.categories.find((category) => slugify(category) === slug);
+      if (match) {
+        return match;
+      }
+    }
   }
   return typeParam.value.replace(/-/g, ' ');
 });
@@ -73,7 +80,7 @@ useHead({
 </script>
 
 <style scoped>
-.type-page {
+.page {
   margin: 0 auto;
   max-width: 1080px;
   padding: 48px 24px;
@@ -82,36 +89,44 @@ useHead({
   gap: 32px;
 }
 
-.type-page__header {
+.page__header {
   text-align: center;
 }
 
-.type-page__header h1 {
+.page__header h1 {
   font-size: 2.25rem;
   margin: 0;
   color: #1f2937;
 }
 
-.type-page__header p {
+.page__header p {
   margin: 12px 0 0;
   color: #4b5563;
 }
 
-.type-page__filters {
+.page__filters {
   margin: 0 auto;
   width: min(100%, 720px);
 }
 
-.type-page__grid {
+.page__grid {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
-.type-page__empty {
+.page__empty {
   text-align: center;
   color: #6b7280;
   font-size: 0.95rem;
   margin: 0;
+}
+
+.page__empty {
+  grid-column: 1 / -1;
+  padding: 24px;
+  border: 1px dashed #d1d5db;
+  border-radius: 12px;
+  background: #f9fafb;
 }
 </style>

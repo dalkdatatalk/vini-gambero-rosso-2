@@ -33,13 +33,15 @@ const filters = computed<FilterOption[]>(() => {
   const options = new Map<string, string>();
 
   for (const wine of wines.value) {
-    if (!wine.type) {
+    if (!wine.categories.length) {
       continue;
     }
 
-    const slug = slugify(wine.type);
-    if (!options.has(slug)) {
-      options.set(slug, wine.type);
+    for (const category of wine.categories) {
+      const slug = slugify(category);
+      if (!options.has(slug)) {
+        options.set(slug, category);
+      }
     }
   }
 

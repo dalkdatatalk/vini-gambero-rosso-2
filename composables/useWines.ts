@@ -42,6 +42,7 @@ export interface Wine {
   slug: string;
   name: string;
   type: string | null;
+  categories: string[];
   region: string | null;
   year: number | null;
   score: number | null;
@@ -74,15 +75,29 @@ function firstName(items?: TaxonomyItem[]): string | null {
   return safeText(items[0]?.name) ?? null;
 }
 
+function normalizeCategories(items?: TaxonomyItem[]): string[] {
+  if (!items || items.length === 0) {
+    return [];
+  }
+
+  const names = items
+    .map((item) => safeText(item?.name))
+    .filter((name): name is string => Boolean(name));
+
+  return Array.from(new Set(names));
+}
+
 export function normalizeWine(raw: RawWine): Wine {
   const name = safeText(raw.title) ?? 'Senza nome';
   const slug = safeText(raw.slug) ?? slugify(name);
+  const categories = normalizeCategories(raw.vino_categoria);
 
   return {
     id: raw.id,
     slug,
     name,
-    type: firstName(raw.vino_categoria),
+    type: categories[0] ?? null,
+    categories,
     region: firstName(raw.regioni),
     year: toNumber(raw.anno),
     score: toNumber(raw.vino_centesimi),
@@ -105,7 +120,7 @@ export function useWines() {
     }
 
     return wines.value.filter((wine) => {
-      const haystack = [wine.name, wine.region, wine.type]
+      const haystack = [wine.name, wine.region, wine.type, ...wine.categories]
         .filter((value): value is string => Boolean(value))
         .map((value) => value.toLowerCase());
 
@@ -116,11 +131,16 @@ export function useWines() {
   function byType(typeParam: string): Wine[] {
     const typeSlug = slugify(typeParam);
 
+    if (!typeSlug) {
+      return [];
+    }
+
     return wines.value.filter((wine) => {
-      if (!wine.type) {
+      if (!wine.categories.length) {
         return false;
       }
-      return slugify(wine.type) === typeSlug;
+
+      return wine.categories.some((category) => slugify(category) === typeSlug);
     });
   }
 
