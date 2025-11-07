@@ -46,7 +46,7 @@ const filters = computed<FilterOption[]>(() => {
   return Array.from(options, ([slug, label]) => ({
     slug,
     label,
-    href: `/classifica-vini-2026/vini/${slug}`,
+    href: `/classifica-vini-2026/vini/tipo/${slug}`,
   })).sort((a, b) => a.label.localeCompare(b.label));
 });
 
