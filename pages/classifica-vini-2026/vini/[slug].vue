@@ -48,14 +48,19 @@ import { useWines } from '~/composables/useWines';
 const route = useRoute();
 const { bySlug } = useWines();
 
-const wine = computed(() => bySlug(String(route.params.slug ?? '')));
+// primo step: potrebbe essere undefined
+const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
 
-if (!wine.value) {
+// se non esiste, 404
+if (!rawWine.value) {
   throw createError({ statusCode: 404, statusMessage: 'Vino non trovato' });
 }
 
+// secondo step: da qui in poi è DEFINITO
+const wine = computed(() => rawWine.value!);
+
 const relatedRegion = computed(() => {
-  const regions = wine.value?.relatedLocale?.regioni;
+  const regions = wine.value.relatedLocale?.regioni;
   return regions?.[0]?.name ?? null;
 });
 
