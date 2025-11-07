@@ -5,31 +5,99 @@
       <p>Esplora i migliori vini della guida e scopri dettagli e cantine.</p>
     </header>
 
-    <WineFiltersType class="page__filters" />
+    <WineTypeFilters v-model="typeSelection" class="page__filters" />
 
-    <WineSearchBar v-model="query" class="page__search" />
+    <WineDetailFilters
+      :wines="wines"
+      v-model="filterStateBinding"
+      :min-score="0"
+      :max-score="100"
+      @update:results="onFilterResults"
+      class="page__filters"
+    />
 
-    <section class="page__grid">
-      <template v-if="filteredWines.length">
-        <WineCard v-for="wine in filteredWines" :key="wine.id" :wine="wine" />
-      </template>
-      <p v-else class="page__empty">Nessun vino corrisponde alla ricerca.</p>
-    </section>
+    <WineList :wines="filteredWines" empty-message="Nessun vino corrisponde alla ricerca." />
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useHead } from '#imports';
 import { useWines } from '~/composables/useWines';
+import type { Wine } from '~/composables/useWines';
+import { slugify } from '~/utils/slugify';
 
-const { search } = useWines();
-const query = ref('');
+const wineTools = useWines();
+const { wines } = wineTools;
+const macroTypes = wineTools.getMacroWineTypes();
+
+const typeSelection = ref<string | string[]>('tutti');
+
+const filterState = reactive({
+  query: '',
+  region: null as string | null,
+  grape: null as string | null,
+  score: 0,
+  price: 0,
+});
+
+const filterStateBinding = computed({
+  get: () => filterState,
+  set: (value) => {
+    filterState.query = value?.query ?? '';
+    filterState.region = value?.region ?? null;
+    filterState.grape = value?.grape ?? null;
+    filterState.score = Number.isFinite(value?.score) ? Number(value?.score) : 0;
+    filterState.price = Number.isFinite(value?.price) ? Number(value?.price) : 0;
+  },
+});
+
+const detailFiltersApplied = ref(false);
+const detailResults = ref<Wine[]>([]);
+
+const normalizedTypeSelection = computed(() => {
+  const value = typeSelection.value;
+  const list = Array.isArray(value) ? value : value ? [value] : [];
+  return list
+    .map((item) => (item ?? '').toString().trim().toLowerCase())
+    .filter((item) => item.length > 0);
+});
+
+const macroMap = computed(() => {
+  const map = new Map<string, (typeof macroTypes)[number]>();
+  for (const macro of macroTypes) {
+    map.set(macro.id, macro);
+  }
+  return map;
+});
+
+function matchesType(wine: Wine, selections: string[]) {
+  if (selections.length === 0 || selections.includes('tutti')) {
+    return true;
+  }
+
+  const wineType = (wine.type ?? '').toLowerCase().trim();
+  const wineTypeSlug = slugify(wine.type ?? '');
+
+  return selections.some((selection) => {
+    const macro = macroMap.value.get(selection);
+    if (macro) {
+      if (!macro.types) {
+        return true;
+      }
+      return macro.types.some((type) => type.toLowerCase().trim() === wineType);
+    }
+
+    return wineType === selection || slugify(selection) === wineTypeSlug;
+  });
+}
+
+const baseList = computed(() => (detailFiltersApplied.value ? detailResults.value : wines.value));
 
 const filteredWines = computed(() => {
-  const results = search(query.value);
+  const filteredByType = baseList.value.filter((wine) => matchesType(wine, normalizedTypeSelection.value));
 
-  return [...results].sort((a, b) => {
+  return [...filteredByType].sort((a, b) => {
     const scoreA = a.score ?? 0;
     const scoreB = b.score ?? 0;
 
@@ -40,6 +108,11 @@ const filteredWines = computed(() => {
     return a.name.localeCompare(b.name);
   });
 });
+
+function onFilterResults(list: Wine[]) {
+  detailFiltersApplied.value = true;
+  detailResults.value = [...list];
+}
 
 useHead({
   title: 'Classifica Vini 2026 | Dashboard',
@@ -80,30 +153,4 @@ useHead({
   color: #4b5563;
 }
 
-.page__search {
-  margin: 0 auto;
-  width: min(100%, 480px);
-}
-
-.page__filters {
-  margin: 0 auto;
-  width: min(100%, 720px);
-}
-
-.page__grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-.page__empty {
-  text-align: center;
-  color: #6b7280;
-  font-size: 0.95rem;
-  grid-column: 1 / -1;
-  padding: 24px;
-  border: 1px dashed #d1d5db;
-  border-radius: 12px;
-  background: #f9fafb;
-}
 </style>
