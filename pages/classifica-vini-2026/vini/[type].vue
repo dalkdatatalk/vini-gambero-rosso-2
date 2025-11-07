@@ -18,10 +18,13 @@
       class="page__filters"
     />
 
-    <section v-if="filteredWines.length" class="type-page__grid page__grid">
-      <WineCard v-for="wine in filteredWines" :key="wine.id ?? wine.slug" :wine="wine" />
-    </section>
-    <p v-else class="type-page__empty">Nessun vino disponibile per questa tipologia.</p>
+    <WineList
+      :wines="filteredWines"
+      empty-message="Nessun vino disponibile per questa tipologia."
+      grid-class="type-page__grid"
+      empty-class="type-page__empty"
+      empty-variant="simple"
+    />
   </main>
 </template>
 
@@ -224,16 +227,4 @@ useHead({
   color: #4b5563;
 }
 
-.page__grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-.type-page__empty {
-  text-align: center;
-  color: #6b7280;
-  font-size: 0.95rem;
-  margin: 0;
-}
 </style>
