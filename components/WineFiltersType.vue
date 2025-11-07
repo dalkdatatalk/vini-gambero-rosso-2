@@ -1,13 +1,13 @@
 <template>
   <nav class="filters" aria-label="Filtra per tipologia di vino">
     <ul class="filters__list">
-      <li v-for="filter in filters" :key="filter.slug" class="filters__item">
+      <li v-for="macro in macroTypes" :key="macro.id" class="filters__item">
         <NuxtLink
           class="filters__link"
-          :class="{ 'filters__link--active': filter.slug === activeSlug }"
-          :to="filter.href"
+          :class="{ 'filters__link--active': macro.id === activeType }"
+          :to="`/classifica-vini-2026/vini/${macro.id}`"
         >
-          {{ filter.label }}
+          {{ macro.label }}
         </NuxtLink>
       </li>
     </ul>
@@ -18,47 +18,21 @@
 import { computed } from 'vue';
 import { useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
-import { slugify } from '~/utils/slugify';
 
 const route = useRoute();
-const { wines } = useWines();
+const { getMacroWineTypes } = useWines();
 
-interface FilterOption {
-  slug: string;
-  label: string;
-  href: string;
-}
+const macroTypes = getMacroWineTypes();
 
-const filters = computed<FilterOption[]>(() => {
-  const options = new Map<string, string>();
-
-  for (const wine of wines.value) {
-    if (!wine.type) {
-      continue;
-    }
-
-    const slug = slugify(wine.type);
-    if (!options.has(slug)) {
-      options.set(slug, wine.type);
-    }
-  }
-
-  return Array.from(options, ([slug, label]) => ({
-    slug,
-    label,
-    href: `/classifica-vini-2026/vini/tipo/${slug}`,
-  })).sort((a, b) => a.label.localeCompare(b.label));
-});
-
-const activeSlug = computed(() => {
+const activeType = computed(() => {
   const param = route.params?.type;
 
   if (typeof param === 'string') {
-    return param.toLowerCase();
+    return param.trim().toLowerCase();
   }
 
   if (Array.isArray(param)) {
-    return (param[0] ?? '').toLowerCase();
+    return (param[0] ?? '').trim().toLowerCase();
   }
 
   return '';
