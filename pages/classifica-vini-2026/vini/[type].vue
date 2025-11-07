@@ -7,21 +7,32 @@
       </p>
     </header>
 
-    <WineFiltersType class="type-page__filters" />
+    <WineTypeFilters v-model="typeSelection" class="type-page__filters page__filters" />
 
-    <section v-if="sortedWines.length" class="type-page__grid">
-      <WineCard v-for="wine in sortedWines" :key="wine.id" :wine="wine" />
+    <WineDetailFilters
+      :wines="winesBySelection"
+      v-model="filterStateBinding"
+      :min-score="0"
+      :max-score="100"
+      @update:results="onFilterResults"
+      class="page__filters"
+    />
+
+    <section v-if="filteredWines.length" class="type-page__grid page__grid">
+      <WineCard v-for="wine in filteredWines" :key="wine.id ?? wine.slug" :wine="wine" />
     </section>
     <p v-else class="type-page__empty">Nessun vino disponibile per questa tipologia.</p>
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { navigateTo, useHead, useRoute } from '#imports';
+import { computed, reactive, ref, watch } from 'vue';
+import { navigateTo, useHead, useRoute, useRouter } from '#imports';
 import { useWines } from '~/composables/useWines';
+import type { Wine } from '~/composables/useWines';
 
 const route = useRoute();
+const router = useRouter();
 const { byType, bySlug, filterByMacroType, getMacroWineTypes } = useWines();
 
 const macroTypes = getMacroWineTypes();
@@ -63,7 +74,7 @@ const winesBySelection = computed(() => {
   return byType(typeParamRaw.value);
 });
 
-const sortedWines = computed(() => {
+const baseSortedWines = computed(() => {
   return [...winesBySelection.value].sort((a, b) => {
     const scoreA = a.score ?? 0;
     const scoreB = b.score ?? 0;
@@ -76,8 +87,77 @@ const sortedWines = computed(() => {
   });
 });
 
+const filterState = reactive({
+  query: '',
+  region: null as string | null,
+  grape: null as string | null,
+  score: 0,
+});
+
+const filterStateBinding = computed({
+  get: () => filterState,
+  set: (value) => {
+    filterState.query = value?.query ?? '';
+    filterState.region = value?.region ?? null;
+    filterState.grape = value?.grape ?? null;
+    filterState.score = Number.isFinite(value?.score) ? Number(value?.score) : 0;
+  },
+});
+
+const detailFiltersApplied = ref(false);
+const detailResults = ref<Wine[]>([]);
+
+const filteredWines = computed(() => {
+  const base = detailFiltersApplied.value ? detailResults.value : baseSortedWines.value;
+
+  return [...base].sort((a, b) => {
+    const scoreA = a.score ?? 0;
+    const scoreB = b.score ?? 0;
+
+    if (scoreA !== scoreB) {
+      return scoreB - scoreA;
+    }
+
+    return a.name.localeCompare(b.name);
+  });
+});
+
+function onFilterResults(list: Wine[]) {
+  detailFiltersApplied.value = true;
+  detailResults.value = [...list];
+}
+
+const typeSelection = ref('');
+
+watch(
+  () => currentType.value,
+  (value) => {
+    const normalized = value || 'tutti';
+    if (typeSelection.value !== normalized) {
+      typeSelection.value = normalized;
+    }
+    detailFiltersApplied.value = false;
+    detailResults.value = [];
+  },
+  { immediate: true }
+);
+
+watch(
+  () => typeSelection.value,
+  (value) => {
+    const normalized = (value ?? '').trim().toLowerCase();
+    if (!normalized) {
+      return;
+    }
+    if (normalized === currentType.value) {
+      return;
+    }
+    router.push(`/classifica-vini-2026/vini/${normalized}`);
+  }
+);
+
 const winesCountLabel = computed(() => {
-  const count = sortedWines.value.length;
+  const count = filteredWines.value.length;
   if (count === 0) {
     return 'Nessun vino disponibile per la tipologia selezionata.';
   }
@@ -90,7 +170,7 @@ const winesCountLabel = computed(() => {
 });
 
 const fallbackLabel = computed(() => {
-  const wine = sortedWines.value[0];
+  const wine = baseSortedWines.value[0];
   if (wine?.type) {
     return wine.type;
   }
@@ -142,12 +222,7 @@ useHead({
   color: #4b5563;
 }
 
-.type-page__filters {
-  margin: 0 auto;
-  width: min(100%, 720px);
-}
-
-.type-page__grid {
+.page__grid {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
