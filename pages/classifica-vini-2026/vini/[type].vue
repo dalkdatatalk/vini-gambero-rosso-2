@@ -18,17 +18,53 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useHead, useRoute } from '#imports';
+import { navigateTo, useHead, useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
 
 const route = useRoute();
-const { byType } = useWines();
+const { byType, bySlug, filterByMacroType, getMacroWineTypes } = useWines();
 
-const typeParam = computed(() => String(route.params.type ?? ''));
+const macroTypes = getMacroWineTypes();
 
-const winesByType = computed(() => byType(typeParam.value));
+const typeParamRaw = computed(() => String(route.params.type ?? ''));
+const currentType = computed(() => typeParamRaw.value.trim().toLowerCase());
+
+const currentMacro = computed(() => {
+  if (!currentType.value) {
+    return null;
+  }
+  return macroTypes.find((macro) => macro.id === currentType.value) ?? null;
+});
+
+const redirectTarget = computed(() => {
+  if (!typeParamRaw.value || currentMacro.value) {
+    return null;
+  }
+  const wine = bySlug(typeParamRaw.value);
+  if (wine) {
+    return `/classifica-vini-2026/vini/schede/${wine.slug}`;
+  }
+  return null;
+});
+
+if (redirectTarget.value) {
+  await navigateTo(redirectTarget.value, { replace: true });
+}
+
+const winesBySelection = computed(() => {
+  if (!currentType.value) {
+    return [];
+  }
+
+  if (currentMacro.value) {
+    return filterByMacroType(currentType.value);
+  }
+
+  return byType(typeParamRaw.value);
+});
+
 const sortedWines = computed(() => {
-  return [...winesByType.value].sort((a, b) => {
+  return [...winesBySelection.value].sort((a, b) => {
     const scoreA = a.score ?? 0;
     const scoreB = b.score ?? 0;
 
@@ -53,13 +89,22 @@ const winesCountLabel = computed(() => {
   return `${count} vini disponibili per la tipologia selezionata.`;
 });
 
-const typeLabel = computed(() => {
+const fallbackLabel = computed(() => {
   const wine = sortedWines.value[0];
   if (wine?.type) {
     return wine.type;
   }
-  return typeParam.value.replace(/-/g, ' ');
+  const rawParam = route.params.type;
+  if (typeof rawParam === 'string') {
+    return rawParam.replace(/-/g, ' ');
+  }
+  if (Array.isArray(rawParam)) {
+    return (rawParam[0] ?? '').replace(/-/g, ' ');
+  }
+  return '';
 });
+
+const typeLabel = computed(() => currentMacro.value?.label ?? fallbackLabel.value);
 
 useHead({
   title: `Vini ${typeLabel.value} | Classifica 2026`,

@@ -35,7 +35,7 @@ const props = defineProps<{
   wine: Wine;
 }>();
 
-const detailLink = computed(() => `/classifica-vini-2026/vini/${props.wine.slug}`);
+const detailLink = computed(() => `/classifica-vini-2026/vini/schede/${props.wine.slug}`);
 
 const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile');
 </script>
