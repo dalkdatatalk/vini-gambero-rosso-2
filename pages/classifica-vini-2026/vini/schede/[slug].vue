@@ -6,36 +6,93 @@
 
     <header class="detail-page__header">
       <h1>{{ wine.name }}</h1>
-      <p>{{ wine.type ?? 'Tipologia non disponibile' }} · {{ wine.region ?? 'Regione non disponibile' }}</p>
+      <p>
+        {{ wine.type ?? 'Tipologia non disponibile' }} ·
+        {{ primaryRegion ?? 'Regione non disponibile' }}
+      </p>
     </header>
 
-    <section class="detail-page__metrics">
-      <div class="detail-page__metric">
-        <h2>Annata</h2>
-        <p>{{ wine.year ?? 'N/D' }}</p>
+    <section class="detail-page__info">
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-label">Nome del vino</span>
+        <span class="detail-page__info-value">{{ wine.name }}</span>
       </div>
-      <div class="detail-page__metric">
-        <h2>Punteggio</h2>
-        <p>{{ wine.score ?? 'N/D' }}</p>
-      </div>
-      <div v-if="wine.denominazione" class="detail-page__metric detail-page__metric--wide">
-        <h2>Denominazione</h2>
-        <p>{{ wine.denominazione }}</p>
-      </div>
-    </section>
 
-    <section>
-      <h2 class="detail-page__section-title">Descrizione</h2>
-      <RichContent :html="wine.content" />
-    </section>
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-label">Annata</span>
+        <span class="detail-page__info-value">{{ wine.year ?? 'Informazione non disponibile' }}</span>
+      </div>
 
-    <section v-if="wine.relatedLocale" class="detail-page__related">
-      <h2 class="detail-page__section-title">Cantina</h2>
-      <p class="detail-page__related-title">{{ wine.relatedLocale.title ?? 'Nome non disponibile' }}</p>
-      <p v-if="relatedRegion" class="detail-page__related-region">{{ relatedRegion }}</p>
-      <p v-if="wine.relatedLocale.website" class="detail-page__related-link">
-        <a :href="wine.relatedLocale.website" target="_blank" rel="noopener noreferrer">Visita il sito</a>
-      </p>
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-label">Cantina</span>
+        <span class="detail-page__info-value">
+          <template v-if="wineryName">
+            <template v-if="wineryLink">
+              <a :href="wineryLink" target="_blank" rel="noopener noreferrer">{{ wineryName }}</a>
+            </template>
+            <template v-else>{{ wineryName }}</template>
+          </template>
+          <template v-else>Informazione non disponibile</template>
+        </span>
+      </div>
+
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-label">Regione di provenienza</span>
+        <span class="detail-page__info-value">{{ primaryRegion ?? 'Informazione non disponibile' }}</span>
+      </div>
+
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-label">Punteggio</span>
+        <span class="detail-page__info-value">{{ formattedScore ?? 'Informazione non disponibile' }}</span>
+      </div>
+
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-label">Tipologia</span>
+        <span class="detail-page__info-value">{{ wine.type ?? 'Informazione non disponibile' }}</span>
+      </div>
+
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-label">Vitigni</span>
+        <span class="detail-page__info-value">
+          <template v-if="grapesList?.length">
+            <span v-for="(grape, index) in grapesList" :key="`${grape}-${index}`">
+              {{ grape }}<span v-if="index < grapesList.length - 1">, </span>
+            </span>
+          </template>
+          <template v-else>Informazioni non disponibili</template>
+        </span>
+      </div>
+
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-label">Denominazione</span>
+        <span class="detail-page__info-value">{{ wine.denominazione ?? 'Informazione non disponibile' }}</span>
+      </div>
+
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-label">Bottiglie prodotte</span>
+        <span class="detail-page__info-value">{{ formattedBottles ?? 'Informazione non disponibile' }}</span>
+      </div>
+
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-label">Prezzo</span>
+        <span class="detail-page__info-value">{{ formattedPrice ?? 'Informazione non disponibile' }}</span>
+      </div>
+
+      <div class="detail-page__info-item detail-page__info-item--stacked">
+        <span class="detail-page__info-label">Descrizione</span>
+        <div class="detail-page__info-value detail-page__info-value--rich">
+          <RichContent v-if="wine.content" :html="wine.content" />
+          <span v-else>Informazione non disponibile</span>
+        </div>
+      </div>
+
+      <div class="detail-page__info-item detail-page__info-item--stacked">
+        <span class="detail-page__info-label">Abbinamento</span>
+        <div class="detail-page__info-value">
+          <span v-if="wine.pairing">{{ wine.pairing }}</span>
+          <span v-else>Informazione non disponibile</span>
+        </div>
+      </div>
     </section>
   </main>
 </template>
@@ -59,9 +116,53 @@ if (!rawWine.value) {
 // secondo step: da qui in poi è DEFINITO
 const wine = computed(() => rawWine.value!);
 
-const relatedRegion = computed(() => {
-  const regions = wine.value.relatedLocale?.regioni;
-  return regions?.[0]?.name ?? null;
+const wineryName = computed(() => wine.value.relatedLocale?.title ?? null);
+const wineryLink = computed(() => wine.value.relatedLocale?.website ?? null);
+const relatedRegion = computed(() => wine.value.relatedLocale?.regioni?.[0]?.name ?? null);
+const primaryRegion = computed(() => wine.value.region ?? relatedRegion.value ?? null);
+
+const formattedScore = computed(() => {
+  if (typeof wine.value.score === 'number') {
+    return wine.value.score.toString();
+  }
+  return null;
+});
+
+const formattedBottles = computed(() => {
+  if (typeof wine.value.bottles !== 'number') {
+    return null;
+  }
+
+  return new Intl.NumberFormat('it-IT').format(wine.value.bottles);
+});
+
+const formattedPrice = computed(() => {
+  if (typeof wine.value.price === 'number') {
+    return new Intl.NumberFormat('it-IT', {
+      style: 'currency',
+      currency: 'EUR',
+      maximumFractionDigits: 0,
+    }).format(wine.value.price);
+  }
+
+  if (wine.value.priceRange) {
+    return wine.value.priceRange;
+  }
+
+  return null;
+});
+
+const grapesList = computed(() => {
+  if (!wine.value.grapes || wine.value.grapes.length === 0) {
+    return null;
+  }
+
+  return wine.value.grapes.map((grape) => {
+    if (typeof grape.percentage === 'number') {
+      return `${grape.name} (${grape.percentage}%)`;
+    }
+    return grape.name;
+  });
 });
 
 useHead({
@@ -69,7 +170,7 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: `Scopri dettagli su ${wine.value.name}, tipologia ${wine.value.type ?? 'n/d'}, regione ${wine.value.region ?? 'n/d'}.`,
+      content: `Scopri dettagli su ${wine.value.name}, tipologia ${wine.value.type ?? 'n/d'}, regione ${primaryRegion.value ?? 'n/d'}.`,
     },
   ],
 });
@@ -108,72 +209,54 @@ useHead({
   font-size: 1rem;
 }
 
-.detail-page__metrics {
-  display: grid;
-  gap: 16px;
+.detail-page__info {
+  display: flex;
+  flex-direction: column;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   background-color: #ffffff;
-  padding: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
-.detail-page__metric {
+.detail-page__info-item {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  align-items: flex-start;
 }
 
-.detail-page__metric h2 {
-  margin: 0;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #9ca3af;
+.detail-page__info-item:last-child {
+  border-bottom: none;
 }
 
-.detail-page__metric p {
-  margin: 0;
-  font-size: 1.1rem;
-  color: #1f2937;
-}
-
-.detail-page__metric--wide {
-  grid-column: 1 / -1;
-}
-
-.detail-page__section-title {
-  font-size: 1.4rem;
-  margin: 0 0 12px;
-  color: #1f2937;
-}
-
-.detail-page__related {
-  border: 1px solid #fcd34d;
-  background: #fef3c7;
-  border-radius: 12px;
-  padding: 24px;
-  display: flex;
+.detail-page__info-item--stacked {
   flex-direction: column;
   gap: 8px;
 }
 
-.detail-page__related-title {
+.detail-page__info-label {
   font-weight: 600;
-  color: #92400e;
-  margin: 0;
+  color: #6b7280;
+  min-width: 200px;
 }
 
-.detail-page__related-region {
-  margin: 0;
+.detail-page__info-value {
+  color: #1f2937;
+  flex: 1;
+}
+
+.detail-page__info-value--rich :deep(p) {
+  margin: 0 0 8px;
+}
+
+.detail-page__info-value a {
   color: #b45309;
-  font-size: 0.9rem;
+  text-decoration: none;
 }
 
-.detail-page__related-link a {
-  color: #92400e;
+.detail-page__info-value a:hover {
   text-decoration: underline;
-  font-weight: 600;
 }
 </style>
