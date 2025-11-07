@@ -43,6 +43,7 @@ const filterState = reactive({
   region: null as string | null,
   grape: null as string | null,
   score: 0,
+  price: 0,
 });
 
 const filterStateBinding = computed({
@@ -52,6 +53,7 @@ const filterStateBinding = computed({
     filterState.region = value?.region ?? null;
     filterState.grape = value?.grape ?? null;
     filterState.score = Number.isFinite(value?.score) ? Number(value?.score) : 0;
+    filterState.price = Number.isFinite(value?.price) ? Number(value?.price) : 0;
   },
 });
 
