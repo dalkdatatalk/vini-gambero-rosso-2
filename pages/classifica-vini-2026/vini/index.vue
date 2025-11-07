@@ -5,6 +5,8 @@
       <p>Esplora i migliori vini della guida e scopri dettagli e cantine.</p>
     </header>
 
+    <WineFiltersType class="page__filters" />
+
     <WineSearchBar v-model="query" class="page__search" />
 
     <section class="page__grid">
@@ -81,6 +83,11 @@ useHead({
 .page__search {
   margin: 0 auto;
   width: min(100%, 480px);
+}
+
+.page__filters {
+  margin: 0 auto;
+  width: min(100%, 720px);
 }
 
 .page__grid {
