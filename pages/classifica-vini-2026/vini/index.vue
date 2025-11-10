@@ -1,9 +1,5 @@
 <template>
   <main class="page">
-    <header class="page__header">
-      <h1>Classifica Vini 2026</h1>
-      <p>Esplora i migliori vini della guida e scopri dettagli e cantine.</p>
-    </header>
 
     <WineTypeFilters v-model="typeSelection" class="page__filters" />
 
@@ -123,6 +119,7 @@ useHead({
     },
   ],
 });
+
 </script>
 
 <style scoped>

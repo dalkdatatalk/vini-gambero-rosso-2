@@ -14,7 +14,8 @@
     </div>
 
     <div class="region-price">
-      <div class="detail-page__info-item">
+      <div class="detail-page__info-item regione">
+        <span class="detail-page__info-label">Provenienza</span>
         <span class="detail-page__info-value">{{ primaryRegion ?? 'Informazione non disponibile' }}</span>
       </div>
 
@@ -91,6 +92,10 @@ h3{
   color: var(--rosso-scuro);
 }
 
+.cantina .detail-page__info-value a{
+  color: var(--rosso-scuro);
+}
+
 .detail-page__info{
   display: flex;
   flex-direction: column;
@@ -103,6 +108,25 @@ h3{
   justify-content: space-between;
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--rosso);
+}
+
+.detail-page__info-item.regione{
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-page__info-item.regione .detail-page__info-label{
+  color: var(--rosso-scuro);
+  font-family: var(--funnel-sans);
+  font-weight: 300;
+  font-size: 1.5rem;
+}
+
+.detail-page__info-item.regione .detail-page__info-value{
+  color: var(--rosso);
+  font-family: var(--cormorant-garamond);
+  font-weight: 300;
+  font-size: 3rem;
 }
 
 .detail-page__info-item.punteggio{
@@ -138,5 +162,6 @@ h3{
   color: var(--rosso-scuro);
   font-family: var(--funnel-sans);
   font-size: 1.1rem;
+  text-transform: capitalize;
 }
 </style>
