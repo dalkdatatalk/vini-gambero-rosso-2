@@ -60,11 +60,18 @@
       <span class="detail-page__info-label">Prezzo</span>
       <span class="detail-page__info-value">{{ formattedPrice ?? 'Informazione non disponibile' }}</span>
     </div>
+
+    <WineRelatedWines
+      :current-wine="wine"
+      :primary-region="primaryRegion"
+      class="related-wines-section"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
 import type { Wine } from '~/composables/useWines';
+import WineRelatedWines from '~/components/WineRelatedWines.vue';
 
 defineProps<{
   wine: Wine;
