@@ -189,11 +189,17 @@ const fallbackLabel = computed(() => {
 const typeLabel = computed(() => currentMacro.value?.label ?? fallbackLabel.value);
 
 useHead({
-  title: `Vini ${typeLabel.value} | Classifica 2026`,
+  title: `Berebene 2026 | Classifica migliori vini ${typeLabel.value} economici`,
   meta: [
     {
       name: 'description',
-      content: `Scopri tutti i vini per la tipologia ${typeLabel.value} nella classifica 2026.`,
+      content: `Scopri quali vini ${typeLabel.value} sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026.`,
+    },
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${route.params.type}/`,
     },
   ],
 });
