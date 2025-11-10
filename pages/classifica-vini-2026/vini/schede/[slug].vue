@@ -1,10 +1,6 @@
 <template>
   <HeaderBereBene />
   <main class="detail-page">
-    <NuxtLink :to="macroCategoriaLink" class="detail-page__back">
-      ← Torna alla classifica<span v-if="macroCategoria"> {{ macroCategoria.label }}</span>
-    </NuxtLink>
-
     <div class="wine-info-page">
       <section class="detail-page__content">
         <div class="wine-details-container">
