@@ -1,8 +1,8 @@
 <template>
   <HeaderBereBene />
   <main class="detail-page">
-    <NuxtLink to="/classifica-vini-2026/vini/bianchi" class="detail-page__back">
-      ← Torna alla classifica
+    <NuxtLink :to="macroCategoriaLink" class="detail-page__back">
+      ← Torna alla classifica<span v-if="macroCategoria"> {{ macroCategoria.label }}</span>
     </NuxtLink>
 
     <div class="wine-info-page">
@@ -36,9 +36,10 @@
 import { computed } from 'vue';
 import { createError, useHead, useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
+import { slugify } from '~/utils/slugify';
 
 const route = useRoute();
-const { bySlug } = useWines();
+const { bySlug, getMacroWineTypes } = useWines();
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
@@ -50,6 +51,31 @@ if (!rawWine.value) {
 
 // secondo step: da qui in poi è DEFINITO
 const wine = computed(() => rawWine.value!);
+
+const macroCategories = getMacroWineTypes();
+
+const macroCategoria = computed(() => {
+  const wineType = wine.value.type;
+  if (!wineType) {
+    return null;
+  }
+
+  const normalizedWineType = slugify(wineType);
+
+  return (
+    macroCategories.find((category) =>
+      category.types.some((type) => slugify(type) === normalizedWineType)
+    ) ?? null
+  );
+});
+
+const macroCategoriaLink = computed(() => {
+  if (!macroCategoria.value) {
+    return '/classifica-vini-2026/vini/tutti';
+  }
+
+  return `/classifica-vini-2026/vini/${macroCategoria.value.id}`;
+});
 
 const wineryName = computed(() => wine.value.relatedLocale?.title ?? null);
 const wineryLink = computed(() => wine.value.relatedLocale?.website ?? null);
