@@ -14,6 +14,8 @@
 
     <WineList :wines="filteredWines" empty-message="Nessun vino corrisponde alla ricerca." />
   </main>
+
+  <ScrollToTopButton />
 </template>
 
 <script setup lang="ts">

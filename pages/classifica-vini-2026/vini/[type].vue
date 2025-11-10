@@ -21,6 +21,8 @@
       empty-variant="simple"
     />
   </main>
+
+  <ScrollToTopButton />
 </template>
 
 <script setup lang="ts">
