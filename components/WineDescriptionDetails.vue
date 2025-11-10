@@ -28,12 +28,20 @@ defineProps<{
 
 <style scoped>
 .detail-page__info{
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
 
+.detail-page__info-item{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .detail-page__info-label{
   font-family: var(--cormorant-garamond);
-  font-size: 1.2rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: var(--rosso-scuro);
 }
