@@ -45,7 +45,6 @@ const route = useRoute();
  * - Rossi/Bianchi/Bollicine/Dolci/Rosati -> /classifica-vini-2026/vini/<slug>
  */
 const items = [
-  { label: 'Home', to: '/classifica-vini-2026/vini/', type: null },
   { label: 'Rossi', to: '/classifica-vini-2026/vini/rossi', type: 'rossi' },
   { label: 'Bianchi', to: '/classifica-vini-2026/vini/bianchi', type: 'bianchi' },
   { label: 'Bollicine', to: '/classifica-vini-2026/vini/bollicine', type: 'bollicine' },
