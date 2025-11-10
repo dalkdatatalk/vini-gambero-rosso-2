@@ -123,7 +123,7 @@ function isActive(rawId: string) {
 .category-buttons {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 14px;
   align-items: center;
   line-height: 0;
 }
@@ -137,17 +137,24 @@ function isActive(rawId: string) {
   flex-shrink: 0;
   cursor: pointer;
   transition: all 0.3s ease;
-  background-color: #ffffff;
   padding: 0;
 }
 
 .btn-category:hover,
 .btn-category:focus-visible {
-  background-color: rgba(202, 31, 30, 0.1);
+  background-color: var(--rosso);
+}
+
+.btn-category:hover .btn-category__label{
+  color: var(--bianco);
+}
+
+..btn-category:focus-visible .btn-category__label{
+  color: var(--bianco);
 }
 
 .btn-category.active {
-  background-color: #ca1f1e;
+  background-color: var(--rosso);
   border: none;
 }
 
