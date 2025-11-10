@@ -111,18 +111,18 @@ function isActive(rawId: string) {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 70px;
+  font-size: 3rem;
   color: #ca1f1e;
   letter-spacing: 0;
   line-height: normal;
   white-space: nowrap;
-  margin-bottom: 60px;
-  text-align: center;
+  margin-bottom: 1rem;
+  text-align: left;
 }
 
 .category-buttons {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 14px;
   align-items: center;
   line-height: 0;
@@ -149,7 +149,7 @@ function isActive(rawId: string) {
   color: var(--bianco);
 }
 
-..btn-category:focus-visible .btn-category__label{
+.btn-category:focus-visible .btn-category__label{
   color: var(--bianco);
 }
 
