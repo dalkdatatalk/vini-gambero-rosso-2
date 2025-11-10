@@ -3,7 +3,7 @@
     <NuxtLink :to="detailLink" class="wine-card__link">
       <div class="wine-card__content">
         <div class="wine-card__info">
-          <p v-if="wine.priceRange" class="wine-card__badge">Premio</p>
+          <!-- <p v-if="wine.priceRange" class="wine-card__badge">Premio</p> -->
           <h3 class="wine-card__name">{{ wine.name }}</h3>
           <p class="wine-card__region">{{ regionLabel }}</p>
           <p v-if="wine.type" class="wine-card__type">{{ wine.type }}</p>
@@ -13,15 +13,17 @@
 
         <div class="wine-card__score">
           <p class="wine-card__score-label">Punteggio</p>
-          <p class="wine-card__score-value">{{ wine.score ?? 'N/D' }}</p>
-          <span class="wine-card__arrow" aria-hidden="true">
-            <svg viewBox="0 0 47 18" fill="none" role="presentation">
-              <path
-                d="M36.0352 0C38.1999 2.36003 40.0716 4.15853 41.6504 5.39551C43.2292 6.61621 44.7184 7.52767 46.1182 8.12988V9.22852C44.5068 10.0098 42.9443 11.0107 41.4307 12.2314C39.917 13.4359 38.1104 15.21 36.0107 17.5537H34.1309C35.6608 14.2822 37.264 11.7676 38.9404 10.0098H0V7.54395H38.9404C37.7035 5.98145 36.8408 4.81771 36.3525 4.05273C35.8643 3.27148 35.14 1.92057 34.1797 0H36.0352Z"
-                fill="#290005"
-              />
-            </svg>
-          </span>
+          <div class="score-inline">
+            <p class="wine-card__score-value">{{ wine.score ?? 'N/D' }}</p>
+            <span class="wine-card__arrow" aria-hidden="true">
+              <svg viewBox="0 0 47 18" fill="none" role="presentation">
+                <path
+                  d="M36.0352 0C38.1999 2.36003 40.0716 4.15853 41.6504 5.39551C43.2292 6.61621 44.7184 7.52767 46.1182 8.12988V9.22852C44.5068 10.0098 42.9443 11.0107 41.4307 12.2314C39.917 13.4359 38.1104 15.21 36.0107 17.5537H34.1309C35.6608 14.2822 37.264 11.7676 38.9404 10.0098H0V7.54395H38.9404C37.7035 5.98145 36.8408 4.81771 36.3525 4.05273C35.8643 3.27148 35.14 1.92057 34.1797 0H36.0352Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+          </div>
         </div>
       </div>
     </NuxtLink>
@@ -52,8 +54,26 @@ const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile
   border-bottom: 1px solid var(--rosso);
 }
 
+.wine-card:first-child{
+  border-top: 1px solid var(--rosso);
+}
+
 .wine-card:hover {
-  background-color: rgba(202, 31, 30, 0.02);
+  background-color: var(--rosso);
+}
+
+.wine-card:hover .wine-card__name,
+.wine-card:hover .wine-card__region,
+.wine-card:hover .wine-card__type,
+.wine-card:hover .wine-card__denominazione,
+.wine-card:hover .wine-card__score-label,
+.wine-card:hover .wine-card__score-value,
+.wine-card:hover .wine-card__arrow {
+  color: var(--bianco);
+}
+
+.wine-card:hover .wine-card__arrow svg {
+  fill: var(--bianco);
 }
 
 .wine-card--featured {
@@ -68,7 +88,7 @@ const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile
   display: block;
   color: inherit;
   text-decoration: none;
-  padding: 32px 48px;
+  padding: 50px 24px;
 }
 
 .wine-card__content {
@@ -76,12 +96,13 @@ const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile
   display: flex;
   align-items: stretch;
   gap: 32px;
+  justify-content: space-between;
 }
 
 .wine-card__info {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   flex: 1;
   max-width: 65%;
 }
@@ -131,8 +152,8 @@ const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
   gap: 8px;
   min-width: 180px;
 }
@@ -144,10 +165,17 @@ const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile
   margin: 0;
 }
 
+.score-inline{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
 .wine-card__score-value {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
-  font-size: clamp(3.5rem, 4vw, 6rem);
+  font-size: clamp(5rem, 4vw, 6rem);
   color: #290005;
   letter-spacing: -0.05em;
   line-height: 0.9;

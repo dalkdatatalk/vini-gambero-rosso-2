@@ -46,6 +46,7 @@ const emptyVariantClass = computed(() =>
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding-top: 5rem;
 }
 
 .wine-list__grid > :deep(*) {
