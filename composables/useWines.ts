@@ -166,7 +166,7 @@ export function useWines() {
     }
 
     return wines.value.filter((wine) => {
-      const haystack = [wine.name, wine.region, wine.type]
+      const haystack = [wine.name, wine.region, wine.type, wine.price]
         .filter((value): value is string => Boolean(value))
         .map((value) => value.toLowerCase());
 
