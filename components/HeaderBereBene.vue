@@ -1,7 +1,11 @@
 <template>
   <header class="bbb-header">
-    <NuxtLink to="/classifica-vini-2026/vini/" class="bbb-header__logo">
-      <img src="/img/logo-bere-bene-sm.png" alt="Bere Bene" />
+    <NuxtLink
+      to="/classifica-vini-2026/vini/"
+      class="bbb-header__logo"
+      aria-label="Bere Bene"
+    >
+      <div class="bbb-header__logo-placeholder" aria-hidden="true"></div>
     </NuxtLink>
 
     <nav class="bbb-header__nav" aria-label="Sezioni vini">
@@ -19,8 +23,12 @@
       </ul>
     </nav>
 
-    <NuxtLink to="/classifica-vini-2026/vini/" class="bbb-header__logo">
-      <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+    <NuxtLink
+      to="/classifica-vini-2026/vini/"
+      class="bbb-header__logo"
+      aria-label="Gambero Rosso"
+    >
+      <div class="bbb-header__logo-placeholder" aria-hidden="true"></div>
     </NuxtLink>
   </header>
 </template>
@@ -79,10 +87,20 @@ function isActive(item: { type: string | null; to: string }) {
   justify-content: space-between;
 }
 
-.bbb-header__logo img {
-  display: block;
+.bbb-header__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: 40px;
-  width: auto;
+  width: 120px;
+  text-decoration: none;
+}
+
+.bbb-header__logo-placeholder {
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .bbb-header__nav {
