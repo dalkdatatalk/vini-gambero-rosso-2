@@ -11,7 +11,17 @@
     <nav class="bbb-header__nav" aria-label="Sezioni vini">
       <ul class="bbb-header__menu">
         <li v-for="item in items" :key="item.id">
+          <a
+            v-if="item.href"
+            :href="item.href"
+            class="bbb-header__link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ item.label }}
+          </a>
           <NuxtLink
+            v-else
             :to="item.to"
             class="bbb-header__link"
             :class="{ active: isActive(item.id) }"
@@ -43,7 +53,11 @@ const { bySlug, getMacroWineTypes } = useWines()
 const MACROS = getMacroWineTypes()
 
 const items = [
-  { id: 'home', label: 'Home', to: '/classifica-vini-2026/vini/bianchi' },
+  {
+    id: 'home',
+    label: 'Home',
+    href: 'https://gambero-rosso---bere-bene.webflow.io/',
+  },
   { id: 'bianchi', label: 'Bianchi', to: '/classifica-vini-2026/vini/bianchi' },
   { id: 'rossi', label: 'Rossi', to: '/classifica-vini-2026/vini/rossi' },
   { id: 'bollicine', label: 'Bollicine', to: '/classifica-vini-2026/vini/bollicine' },
