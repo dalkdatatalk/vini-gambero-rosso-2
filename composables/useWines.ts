@@ -8,7 +8,7 @@ const MACRO_WINE_TYPES = [
   { id: 'bollicine', label: 'Bollicine', types: ['spumante bianco', 'spumante rosato', 'spumante rosso', 'spumante dolce bianco'] },
   { id: 'rosati', label: 'Rosati', types: ['rose'] },
   { id: 'vini-dolci', label: 'Vini dolci', types: ['dolce bianco', 'dolce rosso'] },
-  { id: 'tutti', label: 'Tutti', types: null },
+  { id: 'tutti', label: 'Tutti', types: ['bianco', 'bianco macerato/orange wine', 'bianco liquoroso','rosso','spumante bianco', 'spumante rosato', 'spumante rosso', 'spumante dolce bianco','rose','dolce bianco', 'dolce rosso'] },
 ];
 
 type TaxonomyItem = {
