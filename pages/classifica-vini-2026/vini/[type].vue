@@ -188,18 +188,53 @@ const fallbackLabel = computed(() => {
 
 const typeLabel = computed(() => currentMacro.value?.label ?? fallbackLabel.value);
 
+const isTuttiPage = computed(() => currentType.value === 'tutti');
+
+const metaTitle = computed(() => {
+  if (isTuttiPage.value) {
+    return 'Berebene 2026 | Classifica migliori vini economici';
+  }
+  return `Berebene 2026 | Classifica migliori vini ${typeLabel.value} economici`;
+});
+
+const metaDescription = computed(() => {
+  if (isTuttiPage.value) {
+    return 'Scopri quali vini sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, tipologia e altro.';
+  }
+  return `Scopri quali vini ${typeLabel.value} sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026.`;
+});
+
+const canonicalSegment = computed(() => {
+  const param = route.params.type;
+  if (Array.isArray(param)) {
+    return param[0] ?? '';
+  }
+  return String(param ?? '');
+});
+
+const canonicalHref = computed(() => {
+  if (isTuttiPage.value) {
+    return 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/tutti';
+  }
+  const segment = canonicalSegment.value.trim().replace(/\/+$/, '');
+  if (!segment) {
+    return 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/';
+  }
+  return `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${segment}/`;
+});
+
 useHead({
-  title: `Berebene 2026 | Classifica migliori vini ${typeLabel.value} economici`,
+  title: metaTitle.value,
   meta: [
     {
       name: 'description',
-      content: `Scopri quali vini ${typeLabel.value} sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026.`,
+      content: metaDescription.value,
     },
   ],
   link: [
     {
       rel: 'canonical',
-      href: `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${route.params.type}/`,
+      href: canonicalHref.value,
     },
   ],
 });
