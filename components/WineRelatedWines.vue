@@ -13,9 +13,14 @@
         <p class="wine-card__type">
           <span>Tipologia</span> {{ wine.type ?? 'n/d' }}
         </p>
-        <h4 class="wine-card__name">
-          {{ wine.name ?? 'n/d' }}
-        </h4>
+        <NuxtLink
+          class="wine-card__cta"
+          :to="`/classifica-vini-2026/vini/schede/${wine.slug}`"
+        >
+          <h4 class="wine-card__name">
+            {{ wine.name ?? 'n/d' }}
+          </h4>
+        </NuxtLink>
         <p class="wine-card__winery">
           {{ wine.wineryName ?? wine.winery ?? 'n/d' }}
         </p>
@@ -120,6 +125,7 @@ onMounted(async () => {
   font-family: var(--cormorant-garamond);
   font-size: 1.4rem;
   color: var(--rosso-scuro);
+  text-align: left;
 }
 
 .wine-card__winery {
