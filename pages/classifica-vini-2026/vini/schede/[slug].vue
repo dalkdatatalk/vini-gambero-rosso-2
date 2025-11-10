@@ -169,56 +169,7 @@ useHead({
   flex: 1 1 50%;
 }
 
-.detail-page :deep(.detail-page__info) {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background-color: #ffffff;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-}
 
-.detail-page :deep(.detail-page__info-item) {
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  padding: 20px 24px;
-  border-bottom: 1px solid #f3f4f6;
-  align-items: flex-start;
-}
-
-.detail-page :deep(.detail-page__info-item:last-child) {
-  border-bottom: none;
-}
-
-.detail-page :deep(.detail-page__info-item--stacked) {
-  flex-direction: column;
-  gap: 8px;
-}
-
-.detail-page :deep(.detail-page__info-label) {
-  font-weight: 600;
-  color: #6b7280;
-  min-width: 200px;
-}
-
-.detail-page :deep(.detail-page__info-value) {
-  color: #1f2937;
-  flex: 1;
-}
-
-.detail-page :deep(.detail-page__info-value--rich p) {
-  margin: 0 0 8px;
-}
-
-.detail-page :deep(.detail-page__info-value a) {
-  color: #b45309;
-  text-decoration: none;
-}
-
-.detail-page :deep(.detail-page__info-value a:hover) {
-  text-decoration: underline;
-}
 
 @media (max-width: 768px) {
   .wine-details-container {
