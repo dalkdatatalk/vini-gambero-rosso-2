@@ -14,18 +14,16 @@
       </span>
     </div>
 
-    <div class="detail-page__info-item">
-      <span class="detail-page__info-label">Regione di provenienza</span>
-      <span class="detail-page__info-value">{{ primaryRegion ?? 'Informazione non disponibile' }}</span>
+    <div class="region-price">
+      <div class="detail-page__info-item">
+        <span class="detail-page__info-value">{{ primaryRegion ?? 'Informazione non disponibile' }}</span>
+      </div>
+
+      <div class="detail-page__info-item punteggio">
+        <span class="detail-page__info-label">Punteggio</span>
+        <span class="detail-page__info-value">{{ formattedScore ?? 'Informazione non disponibile' }}</span>
+      </div>
     </div>
-
-    <div class="detail-page__info-item">
-      <span class="detail-page__info-label">Punteggio</span>
-      <span class="detail-page__info-value">{{ formattedScore ?? 'Informazione non disponibile' }}</span>
-    </div>
-
-    <h3>Dettagli del vino</h3>
-
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Tipologia</span>
       <span class="detail-page__info-value">{{ wine.type ?? 'Informazione non disponibile' }}</span>
@@ -81,13 +79,58 @@ defineProps<{
 </script>
 
 <style scoped>
+
+h3{
+  font-family: var(--cormorant-garamond);
+  font-size: 1.4rem;
+}
+
 .detail-page__info{
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
+}
+
+.region-price{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--rosso);
+}
+
+.detail-page__info-item.punteggio{
+  display: flex;
+  flex-direction: column;
+}
+
+.punteggio .detail-page__info-label{
+  color: var(--rosso-scuro);
+  font-family: var(--funnel-sans);
+}
+
+.punteggio .detail-page__info-value{
+  color: var(--rosso-scuro);
+  font-family: var(--cormorant-garamond);
+  font-size: 5rem;
+  font-weight: 600;
+}
+
+.detail-page__info-item{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .detail-page__info-label{
-  
+  color: var(--rosso);
+  font-family: var(--funnel-sans);
+  font-size: 1.1rem;
+}
+
+.detail-page__info-value{
+  color: var(--rosso-scuro);
+  font-family: var(--funnel-sans);
+  font-size: 1.1rem;
 }
 </style>

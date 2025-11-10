@@ -25,3 +25,22 @@ defineProps<{
   wine: Wine;
 }>();
 </script>
+
+<style scoped>
+.detail-page__info{
+
+}
+
+.detail-page__info-label{
+  font-family: var(--cormorant-garamond);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--rosso-scuro);
+}
+
+.detail-page__info-value, .rich-content{
+  font-family: var(--cormorant-garamond);
+  font-size: 1.7rem;
+  color: var(--rosso-scuro);
+}
+</style>

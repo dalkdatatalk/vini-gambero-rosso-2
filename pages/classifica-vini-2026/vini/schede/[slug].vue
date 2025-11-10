@@ -116,7 +116,7 @@ useHead({
 
 <style scoped>
 .detail-page {
-  padding: 48px 24px;
+  padding: 48px 6rem;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -163,6 +163,8 @@ useHead({
 
 .wine-column.technical {
   flex: 0 0 50%;
+  padding-right: 2rem;
+  border-right: 2px solid var(--rosso);
 }
 
 .wine-column.description {
