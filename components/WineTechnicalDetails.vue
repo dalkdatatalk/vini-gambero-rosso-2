@@ -1,14 +1,5 @@
 <template>
   <section class="detail-page__info">
-    <div class="detail-page__info-item">
-      <span class="detail-page__info-label">Nome del vino</span>
-      <span class="detail-page__info-value">{{ wine.name }}</span>
-    </div>
-
-    <div class="detail-page__info-item">
-      <span class="detail-page__info-label">Annata</span>
-      <span class="detail-page__info-value">{{ wine.year ?? 'Informazione non disponibile' }}</span>
-    </div>
 
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Cantina</span>
@@ -33,6 +24,8 @@
       <span class="detail-page__info-value">{{ formattedScore ?? 'Informazione non disponibile' }}</span>
     </div>
 
+    <h3>Dettagli del vino</h3>
+
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Tipologia</span>
       <span class="detail-page__info-value">{{ wine.type ?? 'Informazione non disponibile' }}</span>
@@ -48,6 +41,11 @@
         </template>
         <template v-else>Informazioni non disponibili</template>
       </span>
+    </div>
+
+    <div class="detail-page__info-item">
+      <span class="detail-page__info-label">Annata</span>
+      <span class="detail-page__info-value">{{ wine.year ?? 'Informazione non disponibile' }}</span>
     </div>
 
     <div class="detail-page__info-item">
@@ -81,3 +79,15 @@ defineProps<{
   formattedPrice: string | null;
 }>();
 </script>
+
+<style scoped>
+.detail-page__info{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.detail-page__info-label{
+  
+}
+</style>
