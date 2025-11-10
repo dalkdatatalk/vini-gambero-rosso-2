@@ -1,8 +1,7 @@
 <template>
   <section class="detail-page__info">
 
-    <div class="detail-page__info-item">
-      <span class="detail-page__info-label">Cantina</span>
+    <div class="detail-page__info-item cantina">
       <span class="detail-page__info-value">
         <template v-if="wineryName">
           <template v-if="wineryLink">
@@ -83,6 +82,13 @@ defineProps<{
 h3{
   font-family: var(--cormorant-garamond);
   font-size: 1.4rem;
+}
+
+.cantina .detail-page__info-value{
+  font-family: var(--cormorant-garamond);
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--rosso-scuro);
 }
 
 .detail-page__info{

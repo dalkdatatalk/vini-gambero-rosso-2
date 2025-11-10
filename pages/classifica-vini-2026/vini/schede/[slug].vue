@@ -9,11 +9,7 @@
         <div class="wine-details-container">
           <div class="wine-column technical">
             <header class="detail-page__header">
-              <h1>{{ wine.name }}</h1>
-              <p>
-                {{ wine.type ?? 'Tipologia non disponibile' }} ·
-                {{ primaryRegion ?? 'Regione non disponibile' }}
-              </p>
+              <h1 class="name-wine">{{ wine.name }}</h1>
             </header>
             <WineTechnicalDetails
               :wine="wine"
@@ -135,8 +131,11 @@ useHead({
 
 .detail-page__header h1 {
   margin: 0;
-  font-size: 2.4rem;
-  color: #1f2937;
+  font-size: 3.5rem;
+  line-height: 3rem;
+  color: var(--rosso-scuro);
+  font-family: var(--cormorant-garamond);
+  padding-bottom: 2rem;
 }
 
 .detail-page__header p {
