@@ -123,6 +123,7 @@ useHead({
     },
   ],
 });
+
 </script>
 
 <style scoped>
