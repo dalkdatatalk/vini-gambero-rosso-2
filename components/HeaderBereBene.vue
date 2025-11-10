@@ -49,7 +49,7 @@ const items = [
   { label: 'Rossi', to: '/classifica-vini-2026/vini/rossi', type: 'rossi' },
   { label: 'Bianchi', to: '/classifica-vini-2026/vini/bianchi', type: 'bianchi' },
   { label: 'Bollicine', to: '/classifica-vini-2026/vini/bollicine', type: 'bollicine' },
-  { label: 'Dolci', to: '/classifica-vini-2026/vini/dolci', type: 'dolci' },
+  { label: 'Dolci', to: '/classifica-vini-2026/vini/vini-dolci', type: 'dolci' },
   { label: 'Rosati', to: '/classifica-vini-2026/vini/rosati', type: 'rosati' },
 ];
 
