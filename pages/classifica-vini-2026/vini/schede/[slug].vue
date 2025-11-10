@@ -132,7 +132,7 @@ useHead({
 .detail-page__header h1 {
   margin: 0;
   font-size: 3.5rem;
-  line-height: 3rem;
+  line-height: 3.4rem;
   color: var(--rosso-scuro);
   font-family: var(--cormorant-garamond);
   padding-bottom: 2rem;

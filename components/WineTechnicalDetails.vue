@@ -91,6 +91,10 @@ h3{
   color: var(--rosso-scuro);
 }
 
+.cantina .detail-page__info-value a{
+  color: var(--rosso-scuro);
+}
+
 .detail-page__info{
   display: flex;
   flex-direction: column;
