@@ -11,7 +11,11 @@
           class="bbb-header__logo"
           aria-label="Bere Bene"
         >
-          <div class="bbb-header__logo-placeholder logo-bere-bene" aria-hidden="true"></div>
+          <img
+            src="/img/logo-bere-bene-sm.png"
+            alt="Bere Bene"
+            class="bbb-header__logo-image"
+          />
         </NuxtLink>
       </div>
 
@@ -50,7 +54,11 @@
           class="bbb-header__logo"
           aria-label="Gambero Rosso"
         >
-          <div class="bbb-header__logo-placeholder logo-gambero-rosso" aria-hidden="true"></div>
+          <img
+            src="/img/logo-gambero-rosso-sm.png"
+            alt="Gambero Rosso"
+            class="bbb-header__logo-image"
+          />
         </NuxtLink>
       </div>
     </div>
@@ -79,6 +87,7 @@ const route = useRoute()
 const { bySlug, getMacroWineTypes } = useWines()
 const MACROS = getMacroWineTypes()
 
+// Reactive scroll state toggles background when passing the threshold
 const isScrolled = ref(false)
 
 const cssVars = computed(() => ({
@@ -176,7 +185,7 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   right: 0;
-  width: 100%;
+  width: min(100vw, 100%);
   z-index: 50;
   display: flex;
   justify-content: center;
@@ -185,6 +194,7 @@ onBeforeUnmount(() => {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   backdrop-filter: blur(6px);
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .bbb-header.is-scrolled {
@@ -207,7 +217,6 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   min-width: 0;
-  width: 100%;
   max-width: var(--logo-max-width);
 }
 
@@ -215,28 +224,15 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  max-width: var(--logo-max-width);
   text-decoration: none;
 }
 
-.bbb-header__logo-placeholder {
+.bbb-header__logo-image {
   width: 100%;
-  height: var(--logo-max-height);
-}
-
-.logo-bere-bene {
-  background-image: url('https://raw.githubusercontent.com/dalkdatatalk/vini-gambero-rosso-2/refs/heads/main/public/img/logo-bere-bene-sm.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.logo-gambero-rosso {
-  background-image: url('https://raw.githubusercontent.com/dalkdatatalk/vini-gambero-rosso-2/refs/heads/main/public/img/logo-gambero-rosso-sm.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  height: auto;
+  max-width: var(--logo-max-width);
+  max-height: var(--logo-max-height);
+  object-fit: contain;
 }
 
 .bbb-header__center {
