@@ -1,7 +1,7 @@
 <template>
   <HeaderBereBene />
   <main class="detail-page">
-    <NuxtLink to="/classifica-vini-2026/vini/" class="detail-page__back">
+    <NuxtLink to="/classifica-vini-2026/vini/bianchi" class="detail-page__back">
       ← Torna alla classifica
     </NuxtLink>
 
