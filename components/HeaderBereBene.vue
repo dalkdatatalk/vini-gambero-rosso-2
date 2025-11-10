@@ -5,7 +5,7 @@
       class="bbb-header__logo"
       aria-label="Bere Bene"
     >
-      <div class="bbb-header__logo-placeholder" aria-hidden="true"></div>
+      <div class="bbb-header__logo-placeholder logo-bere-bene" aria-hidden="true"></div>
     </NuxtLink>
 
     <nav class="bbb-header__nav" aria-label="Sezioni vini">
@@ -28,7 +28,7 @@
       class="bbb-header__logo"
       aria-label="Gambero Rosso"
     >
-      <div class="bbb-header__logo-placeholder" aria-hidden="true"></div>
+      <div class="bbb-header__logo-placeholder logo-gambero-rosso" aria-hidden="true"></div>
     </NuxtLink>
   </header>
 </template>
@@ -98,8 +98,20 @@ function isActive(item: { type: string | null; to: string }) {
 .bbb-header__logo-placeholder {
   height: 100%;
   width: 100%;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.08);
+}
+
+.logo-bere-bene{
+  background-image: url('https://raw.githubusercontent.com/dalkdatatalk/vini-gambero-rosso-2/refs/heads/main/public/img/logo-bere-bene-sm.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.logo-gambero-rosso{
+  background-image: url('https://raw.githubusercontent.com/dalkdatatalk/vini-gambero-rosso-2/refs/heads/main/public/img/logo-gambero-rosso-sm.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .bbb-header__nav {
