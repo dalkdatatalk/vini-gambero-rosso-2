@@ -1,12 +1,6 @@
 <template>
   <HeaderBereBene />
   <main class="type-page">
-    <header class="type-page__header">
-      <h1>Vini {{ typeLabel }}</h1>
-      <p>
-        {{ winesCountLabel }}
-      </p>
-    </header>
 
     <WineTypeFilters v-model="typeSelection" class="type-page__filters page__filters" />
 
