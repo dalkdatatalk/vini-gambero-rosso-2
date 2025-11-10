@@ -122,7 +122,6 @@ function isActive(rawId: string) {
 
 .category-buttons {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
   align-items: center;
@@ -131,13 +130,9 @@ function isActive(rawId: string) {
 
 .btn-category {
   position: relative;
-  width: 202px;
-  height: 64px;
   border: 1px solid #ca1f1e;
   border-radius: 10px;
   display: inline-grid;
-  grid-template-columns: max-content;
-  grid-template-rows: max-content;
   place-items: start;
   flex-shrink: 0;
   cursor: pointer;
@@ -162,23 +157,17 @@ function isActive(rawId: string) {
 }
 
 .btn-category__label {
-  grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 202px;
-  height: 39.906px;
-  margin-left: 101px;
-  margin-top: 32px;
-  transform: translate(-50%, -50%);
   font-family: 'Cormorant Garamond', serif;
-  font-weight: 700;
+  font-weight: 600;
   font-style: italic;
-  font-size: 32px;
+  font-size: 1.5rem;
   color: #ca1f1e;
   text-align: center;
-  line-height: 34px;
   position: relative;
+  padding: 10px 14px;
 }
 
 .btn-category.active .btn-category__label {
