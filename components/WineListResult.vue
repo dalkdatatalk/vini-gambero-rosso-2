@@ -24,7 +24,6 @@
           </span>
         </div>
       </div>
-      <div class="wine-card__divider" aria-hidden="true"></div>
     </NuxtLink>
   </article>
 </template>
@@ -49,8 +48,8 @@ const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile
   position: relative;
   width: 100%;
   overflow: hidden;
-  background: #ffffff;
   transition: background-color 0.3s ease;
+  border-bottom: 1px solid var(--rosso);
 }
 
 .wine-card:hover {
@@ -198,10 +197,6 @@ const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile
 
   .wine-card__score-value {
     text-align: left;
-  }
-
-  .wine-card__divider {
-    margin-top: 24px;
   }
 }
 </style>
