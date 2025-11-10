@@ -8,6 +8,10 @@
       </div>
     </div>
 
+    <div class="wine-image-placeholder" style="display: flex; flex-direction: column; align-items: center;">
+      <img src="/img/placeholder-img-vino.png" alt="Immagine del vino" style="max-width: 200px;" />
+    </div>
+
     <div class="detail-page__info-item detail-page__info-item--stacked">
       <span class="detail-page__info-label">Abbinamento</span>
       <div class="detail-page__info-value">
