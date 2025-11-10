@@ -5,18 +5,27 @@
     <div v-else-if="error" class="related-wines__state">{{ error }}</div>
     <div v-else-if="items.length === 0" class="related-wines__state">Nessun vino correlato disponibile.</div>
     <div v-else class="related-wines__grid">
-      <NuxtLink
-        v-for="item in items"
-        :key="item.slug"
-        :to="`/classifica-vini-2026/vini/schede/${item.slug}`"
+      <article
+        v-for="wine in items"
+        :key="wine.slug"
         class="related-wines__card"
       >
-        <h4 class="related-wines__name">{{ item.name }}</h4>
-        <p class="related-wines__meta">
-          <span>{{ item.type ?? 'Tipologia n/d' }}</span>
-          <span v-if="item.region"> · {{ item.region }}</span>
+        <p class="wine-card__type">
+          Tipologia {{ wine.type ?? 'n/d' }}
         </p>
-      </NuxtLink>
+        <h4 class="wine-card__name">
+          {{ wine.name ?? 'n/d' }}
+        </h4>
+        <p class="wine-card__winery">
+          {{ wine.wineryName ?? wine.winery ?? 'n/d' }}
+        </p>
+        <NuxtLink
+          class="wine-card__cta"
+          :to="`/classifica-vini-2026/vini/schede/${wine.slug}`"
+        >
+          Scopri di più
+        </NuxtLink>
+      </article>
     </div>
   </section>
 </template>
@@ -82,11 +91,10 @@ onMounted(async () => {
 .related-wines__card {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
   padding: 1.25rem;
   border: 1px solid var(--rosso);
   border-radius: 8px;
-  text-decoration: none;
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
@@ -95,19 +103,38 @@ onMounted(async () => {
   transform: translateY(-2px);
 }
 
-.related-wines__name {
+.wine-card__type {
+  margin: 0;
+  font-family: var(--funnel-sans);
+  font-size: 0.95rem;
+  color: var(--rosso-scuro);
+  text-transform: capitalize;
+}
+
+.wine-card__name {
   margin: 0;
   font-family: var(--cormorant-garamond);
   font-size: 1.4rem;
   color: var(--rosso-scuro);
 }
 
-.related-wines__meta {
+.wine-card__winery {
   margin: 0;
+  font-family: var(--cormorant-garamond);
+  font-size: 1.05rem;
+  color: var(--rosso-scuro);
+}
+
+.wine-card__cta {
+  margin-top: auto;
   font-family: var(--funnel-sans);
   font-size: 0.95rem;
+  color: var(--rosso);
+  text-decoration: none;
+}
+
+.wine-card__cta:hover {
   color: var(--rosso-scuro);
-  text-transform: capitalize;
 }
 
 @media (max-width: 1024px) {
