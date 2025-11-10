@@ -4,33 +4,34 @@
       ← Torna alla classifica
     </NuxtLink>
 
-    <header class="detail-page__header">
-      <h1>{{ wine.name }}</h1>
-      <p>
-        {{ wine.type ?? 'Tipologia non disponibile' }} ·
-        {{ primaryRegion ?? 'Regione non disponibile' }}
-      </p>
-    </header>
-
-    <section class="detail-page__content">
-      <div class="wine-details-container">
-        <div class="wine-column technical">
-          <WineTechnicalDetails
-            :wine="wine"
-            :winery-name="wineryName"
-            :winery-link="wineryLink"
-            :primary-region="primaryRegion"
-            :formatted-score="formattedScore"
-            :grapes-list="grapesList"
-            :formatted-bottles="formattedBottles"
-            :formatted-price="formattedPrice"
-          />
+    <div class="wine-info-page">
+      <section class="detail-page__content">
+        <div class="wine-details-container">
+          <div class="wine-column technical">
+            <header class="detail-page__header">
+              <h1>{{ wine.name }}</h1>
+              <p>
+                {{ wine.type ?? 'Tipologia non disponibile' }} ·
+                {{ primaryRegion ?? 'Regione non disponibile' }}
+              </p>
+            </header>
+            <WineTechnicalDetails
+              :wine="wine"
+              :winery-name="wineryName"
+              :winery-link="wineryLink"
+              :primary-region="primaryRegion"
+              :formatted-score="formattedScore"
+              :grapes-list="grapesList"
+              :formatted-bottles="formattedBottles"
+              :formatted-price="formattedPrice"
+            />
+          </div>
+          <div class="wine-column description">
+            <WineDescriptionDetails :wine="wine" />
+          </div>
         </div>
-        <div class="wine-column description">
-          <WineDescriptionDetails :wine="wine" />
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
 </template>
 
@@ -115,8 +116,6 @@ useHead({
 
 <style scoped>
 .detail-page {
-  margin: 0 auto;
-  max-width: 720px;
   padding: 48px 24px;
   display: flex;
   flex-direction: column;
@@ -163,11 +162,11 @@ useHead({
 }
 
 .wine-column.technical {
-  flex: 0 0 40%;
+  flex: 0 0 50%;
 }
 
 .wine-column.description {
-  flex: 1 1 60%;
+  flex: 1 1 50%;
 }
 
 .detail-page :deep(.detail-page__info) {
