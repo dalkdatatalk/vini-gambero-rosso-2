@@ -22,18 +22,11 @@
     />
   </main>
 
-  <button
-    v-if="showScrollTop"
-    type="button"
-    class="scroll-top-button"
-    @click="scrollToTop"
-  >
-    Torna all'inizio
-  </button>
+  <ScrollToTopButton />
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { navigateTo, useHead, useRoute, useRouter } from '#imports';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
@@ -115,25 +108,6 @@ const filterStateBinding = computed({
 
 const detailFiltersApplied = ref(false);
 const detailResults = ref<Wine[]>([]);
-
-const showScrollTop = ref(false);
-
-function updateScrollButtonVisibility() {
-  showScrollTop.value = window.scrollY > 200;
-}
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-onMounted(() => {
-  updateScrollButtonVisibility();
-  window.addEventListener('scroll', updateScrollButtonVisibility, { passive: true });
-});
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', updateScrollButtonVisibility);
-});
 
 const filteredWines = computed(() => {
   const base = detailFiltersApplied.value ? detailResults.value : baseSortedWines.value;
@@ -248,26 +222,6 @@ useHead({
 .type-page__header p {
   margin: 12px 0 0;
   color: #4b5563;
-}
-
-.scroll-top-button {
-  position: fixed;
-  bottom: 32px;
-  right: 24px;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 999px;
-  background-color: #b21f24;
-  color: #ffffff;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.scroll-top-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.2);
 }
 
 </style>
