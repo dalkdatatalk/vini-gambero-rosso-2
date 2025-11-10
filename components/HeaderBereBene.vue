@@ -48,7 +48,7 @@ const items = [
   { label: 'Rossi', to: '/classifica-vini-2026/vini/rossi', type: 'rossi' },
   { label: 'Bianchi', to: '/classifica-vini-2026/vini/bianchi', type: 'bianchi' },
   { label: 'Bollicine', to: '/classifica-vini-2026/vini/bollicine', type: 'bollicine' },
-  { label: 'Dolci', to: '/classifica-vini-2026/vini/vini-dolci', type: 'dolci' },
+  { label: 'Dolci', to: '/classifica-vini-2026/vini/vini-dolci', type: 'vini-dolci' },
   { label: 'Rosati', to: '/classifica-vini-2026/vini/rosati', type: 'rosati' },
 ];
 
@@ -123,7 +123,7 @@ function isActive(item: { type: string | null; to: string }) {
 .bbb-header__menu {
   list-style: none;
   display: flex;
-  gap: 20px;
+  gap: 5rem;
   margin: 0;
   padding: 0;
   flex-wrap: wrap;
