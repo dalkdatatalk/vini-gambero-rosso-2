@@ -43,7 +43,7 @@ const { bySlug, getMacroWineTypes } = useWines()
 const MACROS = getMacroWineTypes()
 
 const items = [
-  { id: 'home', label: 'Home', to: '/classifica-vini-2026/vini/' },
+  { id: 'home', label: 'Home', to: '/classifica-vini-2026/vini/tutti' },
   { id: 'rossi', label: 'Rossi', to: '/classifica-vini-2026/vini/rossi' },
   { id: 'bianchi', label: 'Bianchi', to: '/classifica-vini-2026/vini/bianchi' },
   { id: 'bollicine', label: 'Bollicine', to: '/classifica-vini-2026/vini/bollicine' },
