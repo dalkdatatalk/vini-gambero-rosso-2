@@ -1,8 +1,8 @@
 <template>
   <HeaderBereBene />
   <main class="detail-page">
-    <NuxtLink to="/classifica-vini-2026/vini/" class="detail-page__back">
-      ← Torna alla classifica
+    <NuxtLink :to="backLink" class="detail-page__back">
+      ← Torna alla classifica<span v-if="backLabel">&nbsp;{{ backLabel }}</span>
     </NuxtLink>
 
     <div class="wine-info-page">
@@ -38,7 +38,7 @@ import { createError, useHead, useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
 
 const route = useRoute();
-const { bySlug } = useWines();
+const { bySlug, getMacroWineTypes } = useWines();
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
@@ -50,6 +50,34 @@ if (!rawWine.value) {
 
 // secondo step: da qui in poi è DEFINITO
 const wine = computed(() => rawWine.value!);
+
+const fallbackLink = '/classifica-vini-2026/vini/';
+const macroCategories = getMacroWineTypes().filter((category) => category.id !== 'tutti');
+
+type MacroCategory = (typeof macroCategories)[number];
+
+const macroCategory = computed<MacroCategory | null>(() => {
+  const typeValue = wine.value.type?.toLowerCase().trim();
+  if (!typeValue) {
+    return null;
+  }
+
+  return (
+    macroCategories.find((category) =>
+      category.types.some((categoryType) => categoryType.toLowerCase().trim() === typeValue),
+    ) ?? null
+  );
+});
+
+const backLink = computed(() => {
+  if (!macroCategory.value) {
+    return fallbackLink;
+  }
+
+  return `/classifica-vini-2026/${macroCategory.value.id}/`;
+});
+
+const backLabel = computed(() => macroCategory.value?.label ?? null);
 
 const wineryName = computed(() => wine.value.relatedLocale?.title ?? null);
 const wineryLink = computed(() => wine.value.relatedLocale?.website ?? null);
