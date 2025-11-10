@@ -131,22 +131,20 @@ function isActive(item: { type: string | null; to: string }) {
 
 .bbb-header__link {
   text-decoration: none;
+  font-family: var(--cormorant-garamond);
+  font-size: 1.2rem;
   font-weight: 600;
-  line-height: 1;
-  padding: 8px 10px;
-  border-radius: 6px;
-  opacity: 0.85;
-  transition: opacity 0.15s ease, background-color 0.15s ease;
+  color: var(--rosso-scuro);
+  opacity: .5;
 }
 
 .bbb-header__link:hover {
   opacity: 1;
-  text-decoration: underline;
 }
 
 .bbb-header__link.active {
-  text-decoration: none;
-  background: rgba(0, 0, 0, 0.06);
+  text-decoration: underline;
+  text-decoration-color: var(--rosso);
   opacity: 1;
 }
 </style>
