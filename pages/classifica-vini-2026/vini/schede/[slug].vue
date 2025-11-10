@@ -4,96 +4,30 @@
       ← Torna alla classifica
     </NuxtLink>
 
-    <header class="detail-page__header">
-      <h1>{{ wine.name }}</h1>
-      <p>
-        {{ wine.type ?? 'Tipologia non disponibile' }} ·
-        {{ primaryRegion ?? 'Regione non disponibile' }}
-      </p>
-    </header>
-
-    <section class="detail-page__info">
-      <div class="detail-page__info-item">
-        <span class="detail-page__info-label">Nome del vino</span>
-        <span class="detail-page__info-value">{{ wine.name }}</span>
-      </div>
-
-      <div class="detail-page__info-item">
-        <span class="detail-page__info-label">Annata</span>
-        <span class="detail-page__info-value">{{ wine.year ?? 'Informazione non disponibile' }}</span>
-      </div>
-
-      <div class="detail-page__info-item">
-        <span class="detail-page__info-label">Cantina</span>
-        <span class="detail-page__info-value">
-          <template v-if="wineryName">
-            <template v-if="wineryLink">
-              <a :href="wineryLink" target="_blank" rel="noopener noreferrer">{{ wineryName }}</a>
-            </template>
-            <template v-else>{{ wineryName }}</template>
-          </template>
-          <template v-else>Informazione non disponibile</template>
-        </span>
-      </div>
-
-      <div class="detail-page__info-item">
-        <span class="detail-page__info-label">Regione di provenienza</span>
-        <span class="detail-page__info-value">{{ primaryRegion ?? 'Informazione non disponibile' }}</span>
-      </div>
-
-      <div class="detail-page__info-item">
-        <span class="detail-page__info-label">Punteggio</span>
-        <span class="detail-page__info-value">{{ formattedScore ?? 'Informazione non disponibile' }}</span>
-      </div>
-
-      <div class="detail-page__info-item">
-        <span class="detail-page__info-label">Tipologia</span>
-        <span class="detail-page__info-value">{{ wine.type ?? 'Informazione non disponibile' }}</span>
-      </div>
-
-      <div class="detail-page__info-item">
-        <span class="detail-page__info-label">Vitigni</span>
-        <span class="detail-page__info-value">
-          <template v-if="grapesList?.length">
-            <span v-for="(grape, index) in grapesList" :key="`${grape}-${index}`">
-              {{ grape }}<span v-if="index < grapesList.length - 1">, </span>
-            </span>
-          </template>
-          <template v-else>Informazioni non disponibili</template>
-        </span>
-      </div>
-
-      <div class="detail-page__info-item">
-        <span class="detail-page__info-label">Denominazione</span>
-        <span class="detail-page__info-value">{{ wine.denominazione ?? 'Informazione non disponibile' }}</span>
-      </div>
-
-      <div class="detail-page__info-item">
-        <span class="detail-page__info-label">Bottiglie prodotte</span>
-        <span class="detail-page__info-value">{{ formattedBottles ?? 'Informazione non disponibile' }}</span>
-      </div>
-
-      <div class="detail-page__info-item">
-        <span class="detail-page__info-label">Prezzo</span>
-        <span class="detail-page__info-value">{{ formattedPrice ?? 'Informazione non disponibile' }}</span>
-      </div>
-
-      <div class="detail-page__info-item detail-page__info-item--stacked">
-        <span class="detail-page__info-label">Descrizione</span>
-        <div class="detail-page__info-value detail-page__info-value--rich">
-          <RichContent v-if="wine.content" :html="wine.content" />
-          <span v-else>Informazione non disponibile</span>
+    <div class="wine-info-page">
+      <section class="detail-page__content">
+        <div class="wine-details-container">
+          <div class="wine-column technical">
+            <header class="detail-page__header">
+              <h1 class="name-wine">{{ wine.name }}</h1>
+            </header>
+            <WineTechnicalDetails
+              :wine="wine"
+              :winery-name="wineryName"
+              :winery-link="wineryLink"
+              :primary-region="primaryRegion"
+              :formatted-score="formattedScore"
+              :grapes-list="grapesList"
+              :formatted-bottles="formattedBottles"
+              :formatted-price="formattedPrice"
+            />
+          </div>
+          <div class="wine-column description">
+            <WineDescriptionDetails :wine="wine" />
+          </div>
         </div>
-      </div>
-
-      <div class="detail-page__info-item detail-page__info-item--stacked">
-        <span class="detail-page__info-label">Abbinamento</span>
-        <div class="detail-page__info-value">
-          <span v-if="wine.pairing">{{ wine.pairing }}</span>
-          <span v-else>Informazione non disponibile</span>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
 </template>
 
@@ -178,9 +112,7 @@ useHead({
 
 <style scoped>
 .detail-page {
-  margin: 0 auto;
-  max-width: 720px;
-  padding: 48px 24px;
+  padding: 48px 6rem;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -199,8 +131,11 @@ useHead({
 
 .detail-page__header h1 {
   margin: 0;
-  font-size: 2.4rem;
-  color: #1f2937;
+  font-size: 3.5rem;
+  line-height: 3rem;
+  color: var(--rosso-scuro);
+  font-family: var(--cormorant-garamond);
+  padding-bottom: 2rem;
 }
 
 .detail-page__header p {
@@ -209,54 +144,42 @@ useHead({
   font-size: 1rem;
 }
 
-.detail-page__info {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background-color: #ffffff;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+.detail-page__content {
+  width: 100%;
 }
 
-.detail-page__info-item {
+.wine-details-container {
   display: flex;
   flex-direction: row;
-  gap: 16px;
-  padding: 20px 24px;
-  border-bottom: 1px solid #f3f4f6;
-  align-items: flex-start;
+  gap: 2rem;
 }
 
-.detail-page__info-item:last-child {
-  border-bottom: none;
-}
-
-.detail-page__info-item--stacked {
+.wine-column {
+  display: flex;
   flex-direction: column;
-  gap: 8px;
+  min-width: 0;
 }
 
-.detail-page__info-label {
-  font-weight: 600;
-  color: #6b7280;
-  min-width: 200px;
+.wine-column.technical {
+  flex: 0 0 50%;
+  padding-right: 2rem;
+  border-right: 2px solid var(--rosso);
 }
 
-.detail-page__info-value {
-  color: #1f2937;
-  flex: 1;
+.wine-column.description {
+  flex: 1 1 50%;
 }
 
-.detail-page__info-value--rich :deep(p) {
-  margin: 0 0 8px;
-}
 
-.detail-page__info-value a {
-  color: #b45309;
-  text-decoration: none;
-}
 
-.detail-page__info-value a:hover {
-  text-decoration: underline;
+@media (max-width: 768px) {
+  .wine-details-container {
+    flex-direction: column;
+  }
+
+  .wine-column.technical,
+  .wine-column.description {
+    flex: 1 1 auto;
+  }
 }
 </style>
