@@ -7,6 +7,20 @@
     <div class="bbb-header__inner">
       <div class="bbb-header__logo-wrapper bbb-logo--left">
         <NuxtLink
+          v-if="isWineDetailPage"
+          :to="macroCategoriaLink"
+          class="detail-page__back"
+        >
+          ← Torna alla classifica<span v-if="macroCategoria"> {{ macroCategoria.label }}</span>
+        </NuxtLink>
+        <NuxtLink
+          v-else
+          :to="homeLink"
+          class="detail-page__back"
+        >
+          ← Torna alla Home
+        </NuxtLink>
+        <NuxtLink
           to="/classifica-vini-2026/vini/"
           class="bbb-header__logo"
           aria-label="Bere Bene"
@@ -108,6 +122,35 @@ const items = [
   { id: 'vini-dolci', label: 'Vini Dolci', to: '/classifica-vini-2026/vini/vini-dolci' },
   { id: 'tutti', label: 'Tutti', to: '/classifica-vini-2026/vini/tutti' },
 ]
+
+const isWineDetailPage = computed(() => {
+  const path = route.path || ''
+  return path.startsWith('/classifica-vini-2026/vini/schede/')
+})
+
+const currentWine = computed(() => {
+  if (!isWineDetailPage.value) return null
+  const slug = String(route.params.slug ?? '').trim()
+  if (!slug) return null
+  return bySlug(slug) ?? null
+})
+
+const macroCategoria = computed(() => {
+  const wine = currentWine.value
+  if (!wine?.type) return null
+  const macroId = macroIdFromWineType(wine.type)
+  if (!macroId) return null
+  return MACROS.find((macro) => macro.id === macroId) ?? null
+})
+
+const macroCategoriaLink = computed(() => {
+  if (!macroCategoria.value) {
+    return '/classifica-vini-2026/vini/tutti'
+  }
+  return `/classifica-vini-2026/vini/${macroCategoria.value.id}`
+})
+
+const homeLink = computed(() => items.find((item) => item.id === 'home')?.href ?? '/')
 
 function macroIdFromWineType(wineType?: string | null): string | null {
   const t = (wineType ?? '').toLowerCase().trim()
@@ -218,6 +261,11 @@ onBeforeUnmount(() => {
   justify-content: center;
   min-width: 0;
   max-width: var(--logo-max-width);
+  gap: 12px;
+}
+
+.bbb-logo--left {
+  justify-content: flex-start;
 }
 
 .bbb-header__logo {
