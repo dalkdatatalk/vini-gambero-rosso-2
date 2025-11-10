@@ -1,56 +1,99 @@
 <template>
-  <header class="bbb-header">
-    <NuxtLink
-      to="/classifica-vini-2026/vini/"
-      class="bbb-header__logo"
-      aria-label="Bere Bene"
-    >
-      <div class="bbb-header__logo-placeholder logo-bere-bene" aria-hidden="true"></div>
-    </NuxtLink>
+  <header
+    class="bbb-header"
+    :class="{ 'is-scrolled': isScrolled }"
+    :style="cssVars"
+  >
+    <div class="bbb-header__inner">
+      <div class="bbb-header__logo-wrapper bbb-logo--left">
+        <NuxtLink
+          to="/classifica-vini-2026/vini/"
+          class="bbb-header__logo"
+          aria-label="Bere Bene"
+        >
+          <img
+            src="/img/logo-bere-bene-sm.png"
+            alt="Bere Bene"
+            class="bbb-header__logo-image"
+          />
+        </NuxtLink>
+      </div>
 
-    <nav class="bbb-header__nav" aria-label="Sezioni vini">
-      <ul class="bbb-header__menu">
-        <li v-for="item in items" :key="item.id">
-          <a
-            v-if="item.href"
-            :href="item.href"
-            class="bbb-header__link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {{ item.label }}
-          </a>
-          <NuxtLink
-            v-else
-            :to="item.to"
-            class="bbb-header__link"
-            :class="{ active: isActive(item.id) }"
-            :aria-current="isActive(item.id) ? 'page' : undefined"
-          >
-            {{ item.label }}
-          </NuxtLink>
-        </li>
-      </ul>
-    </nav>
+      <div class="bbb-header__center">
+        <slot>
+          <nav class="bbb-header__nav" aria-label="Sezioni vini">
+            <ul class="bbb-header__menu">
+              <li v-for="item in items" :key="item.id">
+                <a
+                  v-if="item.href"
+                  :href="item.href"
+                  class="bbb-header__link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ item.label }}
+                </a>
+                <NuxtLink
+                  v-else
+                  :to="item.to"
+                  class="bbb-header__link"
+                  :class="{ active: isActive(item.id) }"
+                  :aria-current="isActive(item.id) ? 'page' : undefined"
+                >
+                  {{ item.label }}
+                </NuxtLink>
+              </li>
+            </ul>
+          </nav>
+        </slot>
+      </div>
 
-    <NuxtLink
-      to="/classifica-vini-2026/vini/"
-      class="bbb-header__logo"
-      aria-label="Gambero Rosso"
-    >
-      <div class="bbb-header__logo-placeholder logo-gambero-rosso" aria-hidden="true"></div>
-    </NuxtLink>
+      <div class="bbb-header__logo-wrapper bbb-logo--right">
+        <NuxtLink
+          to="/classifica-vini-2026/vini/"
+          class="bbb-header__logo"
+          aria-label="Gambero Rosso"
+        >
+          <img
+            src="/img/logo-gambero-rosso-sm.png"
+            alt="Gambero Rosso"
+            class="bbb-header__logo-image"
+          />
+        </NuxtLink>
+      </div>
+    </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from '#imports'
 import { useWines } from '~/composables/useWines'
+
+const props = withDefaults(
+  defineProps<{
+    scrollThreshold?: number
+    logoMaxWidth?: string
+    logoMaxHeight?: string
+  }>(),
+  {
+    scrollThreshold: 48,
+    logoMaxWidth: 'clamp(80px, 16vw, 180px)',
+    logoMaxHeight: '48px',
+  },
+)
 
 const route = useRoute()
 const { bySlug, getMacroWineTypes } = useWines()
 const MACROS = getMacroWineTypes()
+
+// Reactive scroll state toggles background when passing the threshold
+const isScrolled = ref(false)
+
+const cssVars = computed(() => ({
+  '--logo-max-width': props.logoMaxWidth,
+  '--logo-max-height': props.logoMaxHeight,
+}))
 
 const items = [
   {
@@ -101,61 +144,118 @@ const activeId = computed(() => {
 function isActive(id: string) {
   return activeId.value === id
 }
+
+let ticking = false
+
+const updateScrollState = () => {
+  if (typeof window === 'undefined') return
+  const offset = window.scrollY || window.pageYOffset || 0
+  const shouldBeScrolled = offset > props.scrollThreshold
+  if (isScrolled.value !== shouldBeScrolled) {
+    isScrolled.value = shouldBeScrolled
+  }
+}
+
+const handleScroll = () => {
+  if (typeof window === 'undefined') return
+  if (!ticking) {
+    ticking = true
+    window.requestAnimationFrame(() => {
+      updateScrollState()
+      ticking = false
+    })
+  }
+}
+
+onMounted(() => {
+  if (typeof window === 'undefined') return
+  updateScrollState()
+  window.addEventListener('scroll', handleScroll, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  if (typeof window === 'undefined') return
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <style scoped>
 .bbb-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: min(100vw, 100%);
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  padding: 12px 24px;
+  background-color: transparent;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(6px);
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.bbb-header.is-scrolled {
+  background-color: var(--bianco);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+.bbb-header__inner {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
+  align-items: center;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.bbb-header__logo-wrapper {
   display: flex;
   align-items: center;
-  /* Desktop: in riga */
-  flex-direction: row;
-  gap: 16px;
-  padding: 16px 24px;
-  /* Giustifica in base allo spazio disponibile */
-  justify-content: space-between;
+  justify-content: center;
+  min-width: 0;
+  max-width: var(--logo-max-width);
 }
 
 .bbb-header__logo {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  height: 40px;
-  width: 120px;
   text-decoration: none;
 }
 
-.bbb-header__logo-placeholder {
-  height: 100%;
+.bbb-header__logo-image {
   width: 100%;
+  height: auto;
+  max-width: var(--logo-max-width);
+  max-height: var(--logo-max-height);
+  object-fit: contain;
 }
 
-.logo-bere-bene{
-  background-image: url('https://raw.githubusercontent.com/dalkdatatalk/vini-gambero-rosso-2/refs/heads/main/public/img/logo-bere-bene-sm.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.logo-gambero-rosso{
-  background-image: url('https://raw.githubusercontent.com/dalkdatatalk/vini-gambero-rosso-2/refs/heads/main/public/img/logo-gambero-rosso-sm.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+.bbb-header__center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
 }
 
 .bbb-header__nav {
-  flex: 1 1 auto;
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 .bbb-header__menu {
   list-style: none;
   display: flex;
-  gap: 5rem;
+  gap: clamp(1rem, 4vw, 3.5rem);
   margin: 0;
   padding: 0;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .bbb-header__link {
@@ -164,7 +264,8 @@ function isActive(id: string) {
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--rosso-scuro);
-  opacity: .5;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
 }
 
 .bbb-header__link:hover {
@@ -175,5 +276,15 @@ function isActive(id: string) {
   text-decoration: underline;
   text-decoration-color: var(--rosso);
   opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .bbb-header {
+    padding: 12px 16px;
+  }
+
+  .bbb-header__inner {
+    gap: 12px;
+  }
 }
 </style>
