@@ -123,11 +123,17 @@ const grapesList = computed(() => {
 });
 
 useHead({
-  title: `${wine.value.name} | Classifica Vini 2026`,
+  title: `${wine.value.name} | Berebene 2026`,
   meta: [
     {
       name: 'description',
-      content: `Scopri dettagli su ${wine.value.name}, tipologia ${wine.value.type ?? 'n/d'}, regione ${primaryRegion.value ?? 'n/d'}.`,
+      content: `Scopri tutto quello che c’è da sapere sul ${wine.value.name}, un vino selezionato da Gambero Rosso per Berebene 2026.`,
+    },
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${wine.value.slug}`,
     },
   ],
 });
