@@ -19,11 +19,13 @@
         <span v-else>Informazione non disponibile</span>
       </div>
     </div>
+    <SocialMediaShareButtons :title="wine.name" />
   </section>
 </template>
 
 <script setup lang="ts">
 import type { Wine } from '~/composables/useWines';
+import SocialMediaShareButtons from '~/components/SocialMediaShareButtons.vue';
 
 defineProps<{
   wine: Wine;
