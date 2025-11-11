@@ -10,15 +10,47 @@
           v-if="isWineDetailPage"
           :to="macroCategoriaLink"
           class="detail-page__back"
+          aria-label="Ritorna indietro"
         >
-          ← Torna alla classifica<span v-if="macroCategoria"> {{ macroCategoria.label }}</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            class="detail-page__back-icon"
+          >
+            <path d="M4.5 12h15" />
+            <path d="M10.5 6l-6 6 6 6" />
+          </svg>
         </NuxtLink>
         <NuxtLink
           v-else
           :to="homeLink"
           class="detail-page__back"
+          aria-label="Ritorna indietro"
         >
-          ← Torna alla Home
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            class="detail-page__back-icon"
+          >
+            <path d="M4.5 12h15" />
+            <path d="M10.5 6l-6 6 6 6" />
+          </svg>
         </NuxtLink>
         <NuxtLink
           to="/classifica-vini-2026/vini/"
