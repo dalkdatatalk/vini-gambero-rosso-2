@@ -141,7 +141,7 @@ useHead({
 
 <style scoped>
 .detail-page {
-  padding: 48px 6rem;
+  padding: 6rem 6rem;
   display: flex;
   flex-direction: column;
   gap: 32px;
