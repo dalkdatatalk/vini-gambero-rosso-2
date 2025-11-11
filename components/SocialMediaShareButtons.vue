@@ -29,6 +29,7 @@
       >
         WhatsApp
       </a>
+      <!--
       <a
         :href="links.linkedin"
         target="_blank"
@@ -38,6 +39,7 @@
       >
         LinkedIn
       </a>
+      -->
     </div>
   </section>
 </template>
