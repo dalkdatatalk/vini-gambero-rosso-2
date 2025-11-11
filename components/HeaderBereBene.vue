@@ -151,8 +151,7 @@ const items = [
   { id: 'rossi', label: 'Rossi', to: '/classifica-vini-2026/vini/rossi' },
   { id: 'bollicine', label: 'Bollicine', to: '/classifica-vini-2026/vini/bollicine' },
   { id: 'rosati', label: 'Rosati', to: '/classifica-vini-2026/vini/rosati' },
-  { id: 'vini-dolci', label: 'Vini Dolci', to: '/classifica-vini-2026/vini/vini-dolci' },
-  { id: 'tutti', label: 'Tutti', to: '/classifica-vini-2026/vini/tutti' },
+  { id: 'vini-dolci', label: 'Vini Dolci', to: '/classifica-vini-2026/vini/vini-dolci' }
 ]
 
 const isWineDetailPage = computed(() => {
