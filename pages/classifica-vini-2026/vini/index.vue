@@ -113,11 +113,18 @@ function onFilterResults(list: Wine[]) {
 }
 
 useHead({
-  title: 'Classifica Vini 2026 | Dashboard',
+  title: 'Berebene 2026 | Classifica migliori vini economici',
   meta: [
     {
       name: 'description',
-      content: 'Ricerca e consulta i migliori vini della guida 2026 con filtri per nome, regione e tipologia.',
+      content:
+        'Scopri quali vini sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, tipologia e altro.',
+    },
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/',
     },
   ],
 });
