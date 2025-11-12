@@ -1,8 +1,12 @@
+import { useHtmlEntities } from '~/composables/useHtmlEntities';
+
 type PremioParsed = { nome?: string; anno?: string; label: string };
 
 export function usePremioCleaner() {
-  function parsePremio(raw?: string): PremioParsed {
-    const safe = (raw ?? '').trim();
+  const { decodeHtml } = useHtmlEntities();
+
+  function parsePremio(raw?: string | null): PremioParsed {
+    const safe = decodeHtml(raw ?? '').trim();
 
     if (!safe) {
       return { label: '' };
@@ -26,5 +30,7 @@ export function usePremioCleaner() {
     return { nome, anno, label };
   }
 
-  return { parsePremio };
+  const parsePremioName = (raw?: string | null) => parsePremio(raw).label;
+
+  return { parsePremio, parsePremioName };
 }
