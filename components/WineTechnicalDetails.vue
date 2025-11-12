@@ -94,7 +94,7 @@ h3{
 
 .cantina .detail-page__info-value{
   font-family: var(--cormorant-garamond);
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 500;
   color: var(--rosso-scuro);
 }
