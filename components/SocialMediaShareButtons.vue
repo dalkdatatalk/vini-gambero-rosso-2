@@ -1,6 +1,6 @@
 <template>
   <section class="social-share">
-    <span class="social-share__label">Condividi sui Social</span>
+    <!-- <span class="social-share__label">Condividi sui Social</span> -->
     <div class="social-share__buttons" role="group" aria-label="Condivisione sui social">
       <a
         :href="links.facebook"
@@ -72,8 +72,9 @@ const { links } = useShareLinks({ title });
 
 .social-share__buttons {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-around;
   gap: 0.5rem;
 }
 
