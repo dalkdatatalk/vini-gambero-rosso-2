@@ -3,12 +3,12 @@
 
     <div class="detail-page__info-item cantina">
       <span class="detail-page__info-value">
-        <template v-if="wineryName">
+        <template v-if="decodedWineryName">
           <template v-if="wineryLink">
-            <!-- <a :href="wineryLink" target="_blank" rel="noopener noreferrer">{{ wineryName }}</a> -->
-            {{ wineryName }}
+            <!-- <a :href="wineryLink" target="_blank" rel="noopener noreferrer">{{ decodedWineryName }}</a> -->
+            {{ decodedWineryName }}
           </template>
-          <template v-else>{{ wineryName }}</template>
+          <template v-else>{{ decodedWineryName }}</template>
         </template>
         <template v-else>Informazione non disponibile</template>
       </span>
@@ -17,25 +17,25 @@
     <div class="region-price">
       <div class="detail-page__info-item regione">
         <span class="detail-page__info-label">Provenienza</span>
-        <span class="detail-page__info-value">{{ primaryRegion ?? 'Informazione non disponibile' }}</span>
+        <span class="detail-page__info-value">{{ decodedPrimaryRegion ?? 'Informazione non disponibile' }}</span>
       </div>
 
       <div class="detail-page__info-item punteggio">
         <span class="detail-page__info-label">Punteggio</span>
-        <span class="detail-page__info-value">{{ formattedScore ?? 'Informazione non disponibile' }}</span>
+        <span class="detail-page__info-value">{{ decodedScore ?? 'Informazione non disponibile' }}</span>
       </div>
     </div>
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Tipologia</span>
-      <span class="detail-page__info-value">{{ wine.type ?? 'Informazione non disponibile' }}</span>
+      <span class="detail-page__info-value">{{ decodedWineType ?? 'Informazione non disponibile' }}</span>
     </div>
 
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Vitigni</span>
       <span class="detail-page__info-value">
-        <template v-if="grapesList?.length">
-          <span v-for="(grape, index) in grapesList" :key="`${grape}-${index}`">
-            {{ grape }}<span v-if="index < grapesList.length - 1">, </span>
+        <template v-if="decodedGrapesList?.length">
+          <span v-for="(grape, index) in decodedGrapesList" :key="`${grape}-${index}`">
+            {{ grape }}<span v-if="index < decodedGrapesList.length - 1">, </span>
           </span>
         </template>
         <template v-else>Informazioni non disponibili</template>
@@ -49,32 +49,34 @@
 
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Denominazione</span>
-      <span class="detail-page__info-value">{{ wine.denominazione ?? 'Informazione non disponibile' }}</span>
+      <span class="detail-page__info-value">{{ decodedDenominazione ?? 'Informazione non disponibile' }}</span>
     </div>
 
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Bottiglie prodotte</span>
-      <span class="detail-page__info-value">{{ formattedBottles ?? 'Informazione non disponibile' }}</span>
+      <span class="detail-page__info-value">{{ decodedFormattedBottles ?? 'Informazione non disponibile' }}</span>
     </div>
 
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Prezzo</span>
-      <span class="detail-page__info-value">{{ formattedPrice ?? 'Informazione non disponibile' }}</span>
+      <span class="detail-page__info-value">{{ decodedFormattedPrice ?? 'Informazione non disponibile' }}</span>
     </div>
 
     <WineRelatedWines
       :current-wine="wine"
-      :primary-region="primaryRegion"
+      :primary-region="decodedPrimaryRegion"
       class="related-wines-section"
     />
   </section>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { Wine } from '~/composables/useWines';
 import WineRelatedWines from '~/components/WineRelatedWines.vue';
+import { useHtmlEntities } from '~/composables/useHtmlEntities';
 
-defineProps<{
+const props = defineProps<{
   wine: Wine;
   wineryName: string | null;
   wineryLink: string | null;
@@ -84,6 +86,33 @@ defineProps<{
   formattedBottles: string | null;
   formattedPrice: string | null;
 }>();
+
+const { decodeHtml } = useHtmlEntities();
+
+const decodeOptional = (value?: string | null) => {
+  const decoded = decodeHtml(value ?? null);
+  const normalized = decoded.trim();
+  return normalized.length > 0 ? normalized : null;
+};
+
+const decodedWineryName = computed(() => decodeOptional(props.wineryName));
+const decodedPrimaryRegion = computed(() => decodeOptional(props.primaryRegion));
+const decodedScore = computed(() => decodeOptional(props.formattedScore));
+const decodedWineType = computed(() => decodeOptional(props.wine.type));
+const decodedGrapesList = computed(() => {
+  if (!props.grapesList || props.grapesList.length === 0) {
+    return null;
+  }
+
+  const decoded = props.grapesList
+    .map((grape) => decodeOptional(grape))
+    .filter((value): value is string => Boolean(value));
+
+  return decoded.length > 0 ? decoded : null;
+});
+const decodedDenominazione = computed(() => decodeOptional(props.wine.denominazione));
+const decodedFormattedBottles = computed(() => decodeOptional(props.formattedBottles));
+const decodedFormattedPrice = computed(() => decodeOptional(props.formattedPrice));
 </script>
 
 <style scoped>
