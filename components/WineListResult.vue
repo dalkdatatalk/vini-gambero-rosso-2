@@ -92,7 +92,8 @@ const premioLabel = computed(() => {
 .wine-card:hover .wine-card__denominazione,
 .wine-card:hover .wine-card__score-label,
 .wine-card:hover .wine-card__score-value,
-.wine-card:hover .wine-card__arrow {
+.wine-card:hover .wine-card__arrow,
+.wine-card:hover .wine-card__award{
   color: var(--bianco);
 }
 
@@ -112,7 +113,7 @@ const premioLabel = computed(() => {
   display: block;
   color: inherit;
   text-decoration: none;
-  padding: 50px 24px;
+  padding: 2rem 24px;
 }
 
 .wine-card__content {
@@ -151,10 +152,10 @@ const premioLabel = computed(() => {
 }
 
 .wine-card__award {
-  font-size: 0.875rem;
-  line-height: 1.2;
-  margin-bottom: 0.25rem;
-  opacity: 0.85;
+  color: var(--rosso);
+  font-family: var(--cormorant-garamond);
+  font-weight: 600;
+  font-size: 1.4rem;
 }
 
 .wine-card__region {
