@@ -45,7 +45,7 @@ const sanitizedHtml = computed(() => {
 
 <style scoped>
 .rich-content {
-  font-size: 0.95rem;
+  font-size: 1.4rem;
   line-height: 1.65;
   color: #374151;
 }

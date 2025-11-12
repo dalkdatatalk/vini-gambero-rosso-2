@@ -67,7 +67,6 @@ defineProps<{
 
 .detail-page__info-value, .rich-content{
   font-family: var(--cormorant-garamond);
-  font-size: 1.7rem;
   color: var(--rosso-scuro);
 }
 
