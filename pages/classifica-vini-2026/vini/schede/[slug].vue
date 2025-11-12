@@ -196,6 +196,12 @@ useHead({
   width: 100%;
 }
 
+.wine-info-page{
+  border: 1px solid var(--rosso);
+  padding: 2rem;
+  border-radius: 5px;
+}
+
 .wine-details-container {
   display: flex;
   flex-direction: row;
