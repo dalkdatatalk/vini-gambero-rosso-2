@@ -32,7 +32,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { createError, useHead, useRoute } from '#imports';
+import { useHtmlEntities } from '~/composables/useHtmlEntities';
+import { usePremioCleaner } from '~/composables/usePremioCleaner';
 import { useWines } from '~/composables/useWines';
+import type { Wine } from '~/composables/useWines';
 import { slugify } from '~/utils/slugify';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
 import rawWines from '~/data/wines.json';
@@ -41,6 +44,8 @@ type RawPremio = { name?: string | null };
 type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
 
 const route = useRoute();
+const { decodeHtml } = useHtmlEntities();
+const { parsePremio } = usePremioCleaner();
 const { bySlug, getMacroWineTypes } = useWines();
 
 // primo step: potrebbe essere undefined
@@ -52,7 +57,39 @@ if (!rawWine.value) {
 }
 
 // secondo step: da qui in poi è DEFINITO
-const wine = computed(() => rawWine.value!);
+const decodeNullable = (value?: string | null) => (value ? decodeHtml(value) : null);
+
+const wine = computed(() => {
+  const current = rawWine.value!;
+
+  const grapes = current.grapes.map((grape) => ({
+    ...grape,
+    name: decodeHtml(grape.name),
+  }));
+
+  const relatedLocale = current.relatedLocale
+    ? {
+        ...current.relatedLocale,
+        title: current.relatedLocale.title ? decodeHtml(current.relatedLocale.title) : undefined,
+        regioni: current.relatedLocale.regioni?.map((region) => ({
+          ...region,
+          name: decodeHtml(region.name),
+        })),
+      }
+    : null;
+
+  return {
+    ...current,
+    name: decodeHtml(current.name),
+    type: decodeNullable(current.type),
+    region: decodeNullable(current.region),
+    denominazione: decodeNullable(current.denominazione),
+    pairing: decodeNullable(current.pairing),
+    priceRange: decodeNullable(current.priceRange),
+    grapes,
+    relatedLocale,
+  } satisfies Wine;
+});
 
 const macroCategories = getMacroWineTypes();
 
@@ -89,12 +126,23 @@ const premioName = computed(() => {
     (premio) => typeof premio?.name === 'string' && premio.name.trim().length > 0
   );
 
-  return firstValid?.name ?? undefined;
+  if (!firstValid?.name) {
+    return undefined;
+  }
+
+  const label = parsePremio(firstValid.name).label;
+  return label || undefined;
 });
 
-const wineryName = computed(() => wine.value.relatedLocale?.title ?? null);
+const wineryName = computed(() => {
+  const title = wine.value.relatedLocale?.title;
+  return title && title.trim().length > 0 ? title : null;
+});
 const wineryLink = computed(() => wine.value.relatedLocale?.website ?? null);
-const relatedRegion = computed(() => wine.value.relatedLocale?.regioni?.[0]?.name ?? null);
+const relatedRegion = computed(() => {
+  const region = wine.value.relatedLocale?.regioni?.[0]?.name;
+  return region && region.trim().length > 0 ? region : null;
+});
 const primaryRegion = computed(() => wine.value.region ?? relatedRegion.value ?? null);
 
 const formattedScore = computed(() => {

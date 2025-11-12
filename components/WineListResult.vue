@@ -7,10 +7,10 @@
           <div v-if="premioLabel" class="wine-card__award">
             {{ premioLabel }}
           </div>
-          <h3 class="wine-card__name">{{ wine.name }}</h3>
+          <h3 class="wine-card__name">{{ safeWineName }}</h3>
           <p class="wine-card__region">{{ regionLabel }}</p>
-          <p v-if="wine.type" class="wine-card__type">{{ wine.type }}</p>
-          <p v-if="wine.denominazione" class="wine-card__denominazione">{{ wine.denominazione }}</p>
+          <p v-if="wineType" class="wine-card__type">{{ wineType }}</p>
+          <p v-if="wineDenominazione" class="wine-card__denominazione">{{ wineDenominazione }}</p>
           <p v-if="wine.price" class="wine-card__price">€{{ wine.price }}</p>
         </div>
 
@@ -35,6 +35,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useHtmlEntities } from '~/composables/useHtmlEntities';
 import { usePremioCleaner } from '~/composables/usePremioCleaner';
 import rawWines from '~/data/wines.json';
 import type { Wine } from '~/composables/useWines';
@@ -46,11 +47,27 @@ const props = defineProps<{
   wine: Wine;
 }>();
 
+const { decodeHtml } = useHtmlEntities();
+const { parsePremioName } = usePremioCleaner();
+
 const detailLink = computed(() => `/classifica-vini-2026/vini/schede/${props.wine.slug}`);
 
-const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile');
+const safeWineName = computed(() => decodeHtml(props.wine.name ?? ''));
 
-const { parsePremio } = usePremioCleaner();
+const regionLabel = computed(() => {
+  const region = props.wine.region;
+  return region ? decodeHtml(region) : 'Regione non disponibile';
+});
+
+const wineType = computed(() => {
+  const type = props.wine.type;
+  return type ? decodeHtml(type) : '';
+});
+
+const wineDenominazione = computed(() => {
+  const denominazione = props.wine.denominazione;
+  return denominazione ? decodeHtml(denominazione) : '';
+});
 
 const matchedRaw = computed(() => {
   const slugValue = (props.wine?.slug ?? '').toLowerCase();
@@ -61,10 +78,7 @@ const matchedRaw = computed(() => {
 
 const premioNameRaw = computed(() => matchedRaw.value?.premi?.[0]?.name ?? '');
 
-const premioLabel = computed(() => {
-  const { label } = parsePremio(premioNameRaw.value);
-  return label;
-});
+const premioLabel = computed(() => parsePremioName(premioNameRaw.value));
 </script>
 
 <style scoped>
