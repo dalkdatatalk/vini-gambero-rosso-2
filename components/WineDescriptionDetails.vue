@@ -19,6 +19,19 @@
         <span v-else>Informazione non disponibile</span>
       </div>
     </div>
+    <div class="box-newsletter">
+      <p>
+        Degusta con noi! Iscriviti per ricevere<br />
+        aggiornamenti e suggerimenti selezionati.
+      </p>
+      <a
+        href="https://www.gamberorosso.it/"
+        target="_blank"
+        rel="noopener"
+      >
+        Iscriviti alla newsletter
+      </a>
+    </div>
     <SocialMediaShareButtons :title="wine.name" />
   </section>
 </template>
@@ -56,5 +69,25 @@ defineProps<{
   font-family: var(--cormorant-garamond);
   font-size: 1.7rem;
   color: var(--rosso-scuro);
+}
+
+.box-newsletter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 1px solid var(--rosso);
+  border-bottom: 1px solid var(--rosso);
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.box-newsletter p {
+  margin: 0 0 0.5rem;
+}
+
+.box-newsletter a {
+  color: var(--rosso);
+  font-weight: 600;
+  text-decoration: underline;
 }
 </style>
