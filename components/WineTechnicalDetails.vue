@@ -5,7 +5,8 @@
       <span class="detail-page__info-value">
         <template v-if="wineryName">
           <template v-if="wineryLink">
-            <a :href="wineryLink" target="_blank" rel="noopener noreferrer">{{ wineryName }}</a>
+            <!-- <a :href="wineryLink" target="_blank" rel="noopener noreferrer">{{ wineryName }}</a> -->
+            {{ wineryName }}
           </template>
           <template v-else>{{ wineryName }}</template>
         </template>
