@@ -34,7 +34,7 @@ const label = computed(() => parsed.value.label);
   font-family: var(--cormorant-garamond), serif;
   font-weight: 600;
   color: var(--rosso);
-  max-width: 50%;
+  max-width: 60%;
   padding-bottom: 1.2rem;
 }
 
