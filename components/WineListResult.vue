@@ -3,7 +3,10 @@
     <NuxtLink :to="detailLink" class="wine-card__link">
       <div class="wine-card__content">
         <div class="wine-card__info">
-          <!-- <p v-if="wine.priceRange" class="wine-card__badge">Premio</p> -->
+
+          <div v-if="premioLabel" class="wine-card__award">
+            {{ premioLabel }}
+          </div>
           <h3 class="wine-card__name">{{ wine.name }}</h3>
           <p class="wine-card__region">{{ regionLabel }}</p>
           <p v-if="wine.type" class="wine-card__type">{{ wine.type }}</p>
@@ -32,7 +35,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { usePremioCleaner } from '~/composables/usePremioCleaner';
+import rawWines from '~/data/wines.json';
 import type { Wine } from '~/composables/useWines';
+
+type Premio = { name?: string };
+type RawWineWithPremi = { slug?: string; premi?: Premio[] };
 
 const props = defineProps<{
   wine: Wine;
@@ -41,6 +49,22 @@ const props = defineProps<{
 const detailLink = computed(() => `/classifica-vini-2026/vini/schede/${props.wine.slug}`);
 
 const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile');
+
+const { parsePremio } = usePremioCleaner();
+
+const matchedRaw = computed(() => {
+  const slugValue = (props.wine?.slug ?? '').toLowerCase();
+  return (rawWines as RawWineWithPremi[]).find(
+    (item) => (item.slug ?? '').toLowerCase() === slugValue
+  );
+});
+
+const premioNameRaw = computed(() => matchedRaw.value?.premi?.[0]?.name ?? '');
+
+const premioLabel = computed(() => {
+  const { label } = parsePremio(premioNameRaw.value);
+  return label;
+});
 </script>
 
 <style scoped>
@@ -68,7 +92,8 @@ const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile
 .wine-card:hover .wine-card__denominazione,
 .wine-card:hover .wine-card__score-label,
 .wine-card:hover .wine-card__score-value,
-.wine-card:hover .wine-card__arrow {
+.wine-card:hover .wine-card__arrow,
+.wine-card:hover .wine-card__award{
   color: var(--bianco);
 }
 
@@ -88,7 +113,7 @@ const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile
   display: block;
   color: inherit;
   text-decoration: none;
-  padding: 50px 24px;
+  padding: 2rem 24px;
 }
 
 .wine-card__content {
@@ -124,6 +149,13 @@ const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile
   letter-spacing: -0.03em;
   margin: 0;
   line-height: 1.1;
+}
+
+.wine-card__award {
+  color: var(--rosso);
+  font-family: var(--cormorant-garamond);
+  font-weight: 600;
+  font-size: 1.4rem;
 }
 
 .wine-card__region {
