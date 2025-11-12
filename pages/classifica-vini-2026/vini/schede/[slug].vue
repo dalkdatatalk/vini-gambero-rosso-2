@@ -236,4 +236,10 @@ useHead({
     flex: 1 1 auto;
   }
 }
+
+@media (min-width: 1920px){
+  .detail-page{
+    padding: 7rem 20rem;
+  }
+}
 </style>
