@@ -7,6 +7,7 @@
           <div class="wine-column technical">
             <header class="detail-page__header">
               <h1 class="name-wine">{{ wine.name }}</h1>
+              <WineSingleSponsor v-if="premioName" :premio-name="premioName" />
             </header>
             <WineTechnicalDetails
               :wine="wine"
@@ -33,6 +34,11 @@ import { computed } from 'vue';
 import { createError, useHead, useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
 import { slugify } from '~/utils/slugify';
+import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
+import rawWines from '~/data/wines.json';
+
+type RawPremio = { name?: string | null };
+type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
 
 const route = useRoute();
 const { bySlug, getMacroWineTypes } = useWines();
@@ -71,6 +77,19 @@ const macroCategoriaLink = computed(() => {
   }
 
   return `/classifica-vini-2026/vini/${macroCategoria.value.id}`;
+});
+
+const premioName = computed(() => {
+  const slugValue = wine.value.slug.toLowerCase();
+  const match = (rawWines as RawWineWithPremi[]).find(
+    (item) => (item.slug ?? '').toLowerCase() === slugValue
+  );
+
+  const firstValid = match?.premi?.find(
+    (premio) => typeof premio?.name === 'string' && premio.name.trim().length > 0
+  );
+
+  return firstValid?.name ?? undefined;
 });
 
 const wineryName = computed(() => wine.value.relatedLocale?.title ?? null);
