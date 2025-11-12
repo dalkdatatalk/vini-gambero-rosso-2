@@ -6,8 +6,8 @@
         <div class="wine-details-container">
           <div class="wine-column technical">
             <header class="detail-page__header">
-              <h1 class="name-wine">{{ wine.name }}</h1>
               <WineSingleSponsor v-if="premioName" :premio-name="premioName" />
+              <h1 class="name-wine">{{ wine.name }}</h1>
             </header>
             <WineTechnicalDetails
               :wine="wine"

@@ -25,12 +25,15 @@ const label = computed(() => parsed.value.label);
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
 }
 
 .name-premio-vino {
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1.4rem;
+  font-family: var(--cormorant-garamond), serif;
+  font-weight: 600;
+  color: var(--rosso);
 }
 
 .img-premio-vino {
