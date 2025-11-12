@@ -24,7 +24,7 @@ const label = computed(() => parsed.value.label);
 .wine-single-sponsor {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 }
 
@@ -34,6 +34,8 @@ const label = computed(() => parsed.value.label);
   font-family: var(--cormorant-garamond), serif;
   font-weight: 600;
   color: var(--rosso);
+  max-width: 50%;
+  padding-bottom: 1.2rem;
 }
 
 .img-premio-vino {
