@@ -77,17 +77,31 @@ defineProps<{
   align-items: center;
   border-top: 1px solid var(--rosso);
   border-bottom: 1px solid var(--rosso);
-  padding: 1rem 0;
+  padding: 2rem 0;
   text-align: center;
 }
 
 .box-newsletter p {
   margin: 0 0 0.5rem;
+  font-family: var(--cormorant-garamond);
+  color: var(--rosso);
+  font-weight: 600;
+  font-size: 1.4rem;
+  line-height: 1.4rem;
+  padding: 1rem 0;
 }
 
 .box-newsletter a {
-  color: var(--rosso);
+  color: var(--rosso-scuro);
   font-weight: 600;
-  text-decoration: underline;
+  text-decoration: none;
+  border: 1px solid var(--rosso);
+  padding: 14px;
+  border-radius: 10px;
+}
+
+.box-newsletter a:hover{
+  background-color: var(--rosso);
+  color: var(--bianco);
 }
 </style>
