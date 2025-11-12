@@ -3,7 +3,6 @@
     <NuxtLink :to="detailLink" class="wine-card__link">
       <div class="wine-card__content">
         <div class="wine-card__info">
-          <!-- <p v-if="wine.priceRange" class="wine-card__badge">Premio</p> -->
           <h3 class="wine-card__name">{{ wine.name }}</h3>
           <p class="wine-card__region">{{ regionLabel }}</p>
           <p v-if="wine.type" class="wine-card__type">{{ wine.type }}</p>
