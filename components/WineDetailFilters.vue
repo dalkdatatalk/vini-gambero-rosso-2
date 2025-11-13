@@ -135,6 +135,42 @@
         </ul>
       </div>
 
+      <!-- 4 Abbinamento -->
+      <div class="filter-item">
+        <p class="filter-label">Abbinamento</p>
+        <button
+          type="button"
+          class="filter-dropdown"
+          :aria-expanded="dropdownState.pairing ? 'true' : 'false'"
+          :aria-controls="pairingDropdownId"
+          @click.stop="toggleDropdown('pairing')"
+        >
+          <span>{{ pairingLabel }}</span>
+          <span
+            class="dropdown-icon"
+            :class="{ 'dropdown-icon--open': dropdownState.pairing }"
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 15 13" fill="none">
+              <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+            </svg>
+          </span>
+        </button>
+        <ul
+          v-if="dropdownState.pairing"
+          :id="pairingDropdownId"
+          class="dropdown-menu"
+          role="listbox"
+          @click.stop
+        >
+          <li v-for="option in pairingOptions" :key="option" class="dropdown-item">
+            <button type="button" class="dropdown-item-button" @click="selectPairing(option)">
+              {{ option }}
+            </button>
+          </li>
+        </ul>
+      </div>
+
       <div class="filter-item filter-item--search">
         <label class="visually-hidden" :for="queryInputId">Cerca vini per nome</label>
         <input
@@ -163,6 +199,7 @@ const props = defineProps<{
     query: string;
     region: string | null;
     grape: string | null;
+    abbinamento: string | null;
     score: number;
     price: number;
   };
@@ -171,7 +208,14 @@ const props = defineProps<{
 const emit = defineEmits<{
   (
     e: 'update:modelValue',
-    value: { query: string; region: string | null; grape: string | null; score: number; price: number }
+    value: {
+      query: string;
+      region: string | null;
+      grape: string | null;
+      abbinamento: string | null;
+      score: number;
+      price: number;
+    }
   ): void;
   (e: 'update:results', value: any[]): void;
 }>();
@@ -180,6 +224,7 @@ const internalState = reactive({
   query: '',
   region: null as string | null,
   grape: null as string | null,
+  abbinamento: null as string | null,
   score: 0,
   price: 0,
 });
@@ -190,6 +235,7 @@ const queryInputId = `wine-query-${componentId}`;
 const priceInputId = `wine-price-${componentId}`;
 const regionDropdownId = `wine-region-menu-${componentId}`;
 const grapeDropdownId = `wine-grape-menu-${componentId}`;
+const pairingDropdownId = `wine-pairing-menu-${componentId}`;
 const computedMinScore = computed(() => Number.isFinite(props.minScore) ? Number(props.minScore) : 0);
 const computedMaxScore = computed(() => Number.isFinite(props.maxScore) ? Number(props.maxScore) : 100);
 
@@ -259,6 +305,18 @@ const grapes = computed(() => {
   return Array.from(values).sort((a, b) => a.localeCompare(b));
 });
 
+const pairings = computed(() => {
+  const values = new Set<string>();
+  for (const wine of props.wines ?? []) {
+    for (const name of extractPairingTags(wine)) {
+      if (name) {
+        values.add(name);
+      }
+    }
+  }
+  return Array.from(values).sort((a, b) => a.localeCompare(b));
+});
+
 const regionModel = computed({
   get: () => internalState.region ?? '',
   set: (value: string) => {
@@ -271,6 +329,14 @@ const grapeModel = computed({
   get: () => internalState.grape ?? '',
   set: (value: string) => {
     internalState.grape = value ? value : null;
+    triggerUpdate(true);
+  },
+});
+
+const pairingModel = computed({
+  get: () => internalState.abbinamento ?? '',
+  set: (value: string) => {
+    internalState.abbinamento = value ? value : null;
     triggerUpdate(true);
   },
 });
@@ -307,8 +373,10 @@ const queryModel = computed({
 
 const regionOptions = computed(() => ['Tutte', ...regions.value]);
 const grapeOptions = computed(() => ['Tutti', ...grapes.value]);
+const pairingOptions = computed(() => ['Tutti gli abbinamenti', ...pairings.value]);
 const regionLabel = computed(() => regionModel.value || 'Tutte');
 const grapeLabel = computed(() => grapeModel.value || 'Tutti');
+const pairingLabel = computed(() => pairingModel.value || 'Tutti gli abbinamenti');
 
 const priceStep = computed(() => {
   const span = computedMaxPrice.value - computedMinPrice.value;
@@ -331,30 +399,31 @@ const priceMinLabel = computed(() => priceFormatter.format(computedMinPrice.valu
 const priceMaxLabel = computed(() => priceFormatter.format(computedMaxPrice.value));
 const priceValueLabel = computed(() => priceFormatter.format(priceModel.value));
 
+type DropdownKey = 'region' | 'grape' | 'pairing';
+const dropdownKeys: DropdownKey[] = ['region', 'grape', 'pairing'];
+
 const dropdownState = reactive({
   region: false,
   grape: false,
+  pairing: false,
 });
 
 const rootRef = ref<HTMLElement | null>(null);
 
-function toggleDropdown(type: 'region' | 'grape') {
-  if (type === 'region') {
-    dropdownState.region = !dropdownState.region;
-    if (dropdownState.region) {
-      dropdownState.grape = false;
-    }
-  } else {
-    dropdownState.grape = !dropdownState.grape;
-    if (dropdownState.grape) {
-      dropdownState.region = false;
+function toggleDropdown(type: DropdownKey) {
+  for (const key of dropdownKeys) {
+    if (key === type) {
+      dropdownState[key] = !dropdownState[key];
+    } else {
+      dropdownState[key] = false;
     }
   }
 }
 
 function closeDropdowns() {
-  dropdownState.region = false;
-  dropdownState.grape = false;
+  for (const key of dropdownKeys) {
+    dropdownState[key] = false;
+  }
 }
 
 function selectRegion(option: string) {
@@ -364,6 +433,11 @@ function selectRegion(option: string) {
 
 function selectGrape(option: string) {
   grapeModel.value = option === 'Tutti' ? '' : option;
+  closeDropdowns();
+}
+
+function selectPairing(option: string) {
+  pairingModel.value = option === 'Tutti gli abbinamenti' ? '' : option;
   closeDropdowns();
 }
 
@@ -386,6 +460,7 @@ function triggerUpdate(immediate: boolean, forceModel = false) {
     query: internalState.query,
     region: internalState.region,
     grape: internalState.grape,
+    abbinamento: internalState.abbinamento,
     score: internalState.score,
     price: internalState.price,
   };
@@ -419,6 +494,7 @@ watch(
     internalState.query = value?.query ?? '';
     internalState.region = value?.region ?? null;
     internalState.grape = value?.grape ?? null;
+    internalState.abbinamento = value?.abbinamento ?? null;
     const incomingScore = Number.isFinite(value?.score) ? Number(value?.score) : computedMinScore.value;
     internalState.score = clampScore(incomingScore);
     const incomingPrice = Number.isFinite(value?.price) ? Number(value?.price) : computedMinPrice.value;
@@ -578,6 +654,42 @@ function extractGrapes(wine: any): string[] {
   return Array.from(values);
 }
 
+function extractPairingTags(wine: any): string[] {
+  const values = new Set<string>();
+  const tryAdd = (input: unknown) => {
+    if (!input) {
+      return;
+    }
+    if (typeof input === 'string') {
+      const trimmed = input.trim();
+      if (trimmed) {
+        values.add(trimmed);
+      }
+      return;
+    }
+    if (Array.isArray(input)) {
+      for (const item of input) {
+        if (typeof item === 'string') {
+          const trimmed = item.trim();
+          if (trimmed) {
+            values.add(trimmed);
+          }
+        } else if (item && typeof item === 'object') {
+          const name = (item as any).name;
+          if (typeof name === 'string' && name.trim()) {
+            values.add(name.trim());
+          }
+        }
+      }
+    }
+  };
+
+  tryAdd(wine?.pairingTags);
+  tryAdd(wine?.tag_abbinamento);
+
+  return Array.from(values);
+}
+
 function collectSearchTokens(wine: any): string[] {
   const values = new Set<string>();
   const push = (input: unknown) => {
@@ -622,18 +734,29 @@ function collectSearchTokens(wine: any): string[] {
   for (const region of extractRegions(wine)) {
     values.add(region);
   }
+  for (const pairing of extractPairingTags(wine)) {
+    values.add(pairing);
+  }
 
   return Array.from(values);
 }
 
 function applyFilters(
   wines: any[],
-  state: { query: string; region: string | null; grape: string | null; score: number; price: number }
+  state: {
+    query: string;
+    region: string | null;
+    grape: string | null;
+    abbinamento: string | null;
+    score: number;
+    price: number;
+  }
 ) {
   const minimumScore = Number.isFinite(state.score) ? state.score : 0;
   const minimumPrice = Number.isFinite(state.price) ? state.price : computedMinPrice.value;
   const regionNeedle = norm(state.region);
   const grapeNeedle = norm(state.grape);
+  const pairingNeedle = norm(state.abbinamento);
   const queryNeedle = norm(state.query);
 
   return wines.filter((wine) => {
@@ -660,6 +783,14 @@ function applyFilters(
     if (grapeNeedle) {
       const grapesList = extractGrapes(wine);
       const match = grapesList.some((item) => norm(item) === grapeNeedle);
+      if (!match) {
+        return false;
+      }
+    }
+
+    if (pairingNeedle) {
+      const pairingsList = extractPairingTags(wine);
+      const match = pairingsList.some((item) => norm(item) === pairingNeedle);
       if (!match) {
         return false;
       }
