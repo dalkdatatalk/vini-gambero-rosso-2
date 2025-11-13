@@ -19,83 +19,72 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useWines } from '~/composables/useWines';
+import { computed } from 'vue'
+import { useWines } from '~/composables/useWines'
 
-const props = defineProps<{ modelValue?: string | string[] }>();
-const emit = defineEmits<{ (e: 'update:modelValue', value: string | string[]): void }>();
-
-const { getMacroWineTypes } = useWines();
-const macroTypes = getMacroWineTypes();
-
-const isMultiple = computed(() => Array.isArray(props.modelValue));
-
-const normalizedSelection = computed(() => {
-  const value = props.modelValue;
-  if (!value) {
-    return [] as string[];
-  }
-  const list = Array.isArray(value) ? value : [value];
-  return list
-    .map((item) => (item ?? '').toString().trim().toLowerCase())
-    .filter((item) => item.length > 0);
-});
-
-function emitSelection(selection: string[]) {
-  if (isMultiple.value) {
-    emit('update:modelValue', selection);
-    return;
-  }
-  emit('update:modelValue', selection[0] ?? '');
+type MacroCategory = {
+  id: string
+  label: string
+  types: string[]
 }
 
+type ModelValue = string | MacroCategory | null | undefined
+
+const props = defineProps<{ modelValue?: ModelValue }>()
+const emit = defineEmits<{ (e: 'update:modelValue', value: ModelValue): void }>()
+
+const { getMacroWineTypes } = useWines()
+
+const macroTypes = computed<MacroCategory[]>(() => {
+  const base = getMacroWineTypes().map<MacroCategory>((item) => ({
+    id: item.id,
+    label: item.label,
+    types: Array.isArray(item.types) ? [...item.types] : []
+  }))
+  const withoutTutti = base.filter((item) => item.id !== 'tutti')
+  return [{ id: 'tutti', label: 'Tutti', types: [] }, ...withoutTutti]
+})
+
+const expectsObject = computed(() => {
+  const value = props.modelValue
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
+})
+
+const activeId = computed(() => {
+  const value = props.modelValue
+  if (!value) {
+    return 'tutti'
+  }
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase()
+    return normalized.length > 0 ? normalized : 'tutti'
+  }
+  if (typeof value === 'object') {
+    const id = value.id?.trim().toLowerCase()
+    return id && id.length > 0 ? id : 'tutti'
+  }
+  return 'tutti'
+})
+
 function select(rawId: string) {
-  const id = (rawId ?? '').trim().toLowerCase();
-  if (!id) {
-    emitSelection([]);
-    return;
+  const id = (rawId ?? '').trim().toLowerCase() || 'tutti'
+  const macro =
+    macroTypes.value.find((item) => item.id === id) ?? ({ id, label: rawId, types: [] } satisfies MacroCategory)
+
+  if (expectsObject.value) {
+    emit('update:modelValue', macro)
+    return
   }
 
-  const current = [...normalizedSelection.value];
-
-  if (isMultiple.value) {
-    let next = current.filter((item) => item !== id);
-
-    if (current.includes(id)) {
-      // already handled by filter (toggle off)
-    } else {
-      if (id === 'tutti') {
-        next = ['tutti'];
-      } else {
-        next = next.filter((item) => item !== 'tutti');
-        next.push(id);
-      }
-    }
-
-    if (next.length === 0) {
-      next = ['tutti'];
-    }
-
-    emitSelection(next);
-    return;
-  }
-
-  emitSelection([id]);
+  emit('update:modelValue', macro.id)
 }
 
 function isActive(rawId: string) {
-  const id = (rawId ?? '').trim().toLowerCase();
+  const id = (rawId ?? '').trim().toLowerCase()
   if (!id) {
-    return false;
+    return false
   }
-  const selection = normalizedSelection.value;
-  if (selection.length === 0) {
-    return id === 'tutti';
-  }
-  if (selection.includes('tutti')) {
-    return id === 'tutti';
-  }
-  return selection.includes(id);
+  return id === activeId.value
 }
 </script>
 
