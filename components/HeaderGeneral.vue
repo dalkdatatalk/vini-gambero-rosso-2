@@ -1,7 +1,7 @@
 <template>
   <div class="header-general">
     <!-- no sponsor -->
-    <div class="header-general--no-sponsor">
+    <div class="header-general--no-sponsor" v-if="!showSponsor">
       <div class="header-general__logo">
         <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
       </div>
@@ -11,7 +11,7 @@
     </div>
 
     <!-- sponsor -->
-    <div class="header-general--sponsor">
+    <div class="header-general--sponsor" v-else>
       <div class="header-general__logo">
         <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
       </div>
@@ -22,7 +22,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { computed } from 'vue'
+
+const props = defineProps<{
+  sponsor?: boolean | string | null
+}>()
+
+const showSponsor = computed(() => props.sponsor !== false)
 </script>
 
 <style scoped>
