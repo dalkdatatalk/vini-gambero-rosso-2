@@ -1,5 +1,4 @@
 <template>
-  <HeaderBereBene />
   <main class="detail-page">
     <div class="wine-info-page">
       <section class="detail-page__content">
@@ -183,6 +182,9 @@ useHead(() => ({
 </script>
 
 <style scoped>
+/* ============================
+   DESKTOP (stili attuali)
+   ============================ */
 .detail-page {
   padding: 6rem 6rem;
   display: flex;
@@ -220,7 +222,7 @@ useHead(() => ({
   width: 100%;
 }
 
-.wine-info-page{
+.wine-info-page {
   border: 1px solid var(--rosso);
   padding: 2rem;
   border-radius: 5px;
@@ -250,20 +252,93 @@ useHead(() => ({
 
 
 
-@media (max-width: 768px) {
-  .wine-details-container {
-    flex-direction: column;
+/* ============================
+   📱 MOBILE  (max 767px)
+   ============================ */
+@media (max-width: 767px) {
+  .detail-page {
+    padding: 2rem 1.5rem;
+    gap: 24px;
   }
 
-  .wine-column.technical,
+  .wine-info-page {
+    padding: 1.5rem;
+  }
+
+  .detail-page__header h1 {
+    font-size: 2rem;
+    line-height: 2.1rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .wine-details-container {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .wine-column.technical {
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 2px solid var(--rosso);
+    padding-bottom: 1.5rem;
+  }
+
   .wine-column.description {
-    flex: 1 1 auto;
+    padding-top: 1.5rem;
   }
 }
 
-@media (min-width: 1920px){
-  .detail-page{
+
+
+/* ============================
+   📲 TABLET  (768px – 1279px)
+   ============================ */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .detail-page {
+    padding: 3rem 3rem;
+    gap: 28px;
+  }
+
+  .wine-info-page {
+    padding: 2rem;
+  }
+
+  .detail-page__header h1 {
+    font-size: 2.75rem;
+    line-height: 2.6rem;
+  }
+
+  .wine-details-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .wine-column.technical {
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 2px solid var(--rosso);
+    padding-bottom: 2rem;
+  }
+
+  .wine-column.description {
+    padding-top: 2rem;
+  }
+}
+
+
+
+/* ============================
+   🖥️ DESKTOP ULTRA-WIDE (≥ 1920px)
+   ============================ */
+@media (min-width: 1920px) {
+  .detail-page {
     padding: 7rem 20rem;
+  }
+
+  .detail-page__header h1 {
+    font-size: 4rem;
+    line-height: 3.8rem;
   }
 }
 </style>
+
