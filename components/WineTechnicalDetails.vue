@@ -1,6 +1,5 @@
 <template>
   <section class="detail-page__info">
-
     <div class="detail-page__info-item cantina">
       <span class="detail-page__info-value">
         <template v-if="decodedWineryName">
@@ -17,17 +16,24 @@
     <div class="region-price">
       <div class="detail-page__info-item regione">
         <span class="detail-page__info-label">Provenienza</span>
-        <span class="detail-page__info-value">{{ decodedPrimaryRegion ?? 'Informazione non disponibile' }}</span>
+        <span class="detail-page__info-value">
+          {{ decodedPrimaryRegion ?? 'Informazione non disponibile' }}
+        </span>
       </div>
 
       <div class="detail-page__info-item punteggio">
         <span class="detail-page__info-label">Punteggio</span>
-        <span class="detail-page__info-value">{{ decodedScore ?? 'Informazione non disponibile' }}</span>
+        <span class="detail-page__info-value">
+          {{ decodedScore ?? 'Informazione non disponibile' }}
+        </span>
       </div>
     </div>
+
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Tipologia</span>
-      <span class="detail-page__info-value">{{ decodedWineType ?? 'Informazione non disponibile' }}</span>
+      <span class="detail-page__info-value">
+        {{ decodedWineType ?? 'Informazione non disponibile' }}
+      </span>
     </div>
 
     <div class="detail-page__info-item">
@@ -44,22 +50,30 @@
 
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Annata</span>
-      <span class="detail-page__info-value">{{ wine.year ?? 'Informazione non disponibile' }}</span>
+      <span class="detail-page__info-value">
+        {{ wine.year ?? 'Informazione non disponibile' }}
+      </span>
     </div>
 
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Denominazione</span>
-      <span class="detail-page__info-value">{{ decodedDenominazione ?? 'Informazione non disponibile' }}</span>
+      <span class="detail-page__info-value">
+        {{ decodedDenominazione ?? 'Informazione non disponibile' }}
+      </span>
     </div>
 
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Bottiglie prodotte</span>
-      <span class="detail-page__info-value">{{ decodedFormattedBottles ?? 'Informazione non disponibile' }}</span>
+      <span class="detail-page__info-value">
+        {{ decodedFormattedBottles ?? 'Informazione non disponibile' }}
+      </span>
     </div>
 
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Prezzo</span>
-      <span class="detail-page__info-value">{{ decodedFormattedPrice ?? 'Informazione non disponibile' }}</span>
+      <span class="detail-page__info-value">
+        {{ decodedFormattedPrice ?? 'Informazione non disponibile' }}
+      </span>
     </div>
 
     <WineRelatedWines
@@ -116,89 +130,189 @@ const decodedFormattedPrice = computed(() => decodeOptional(props.formattedPrice
 </script>
 
 <style scoped>
-
-h3{
+h3 {
   font-family: var(--cormorant-garamond);
   font-size: 1.4rem;
 }
 
-.cantina .detail-page__info-value{
+/* BASE / DESKTOP */
+.detail-page__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cantina .detail-page__info-value {
   font-family: var(--cormorant-garamond);
   font-size: 1.5rem;
   font-weight: 500;
   color: var(--rosso-scuro);
 }
 
-.cantina .detail-page__info-value a{
+.cantina .detail-page__info-value a {
   color: var(--rosso-scuro);
 }
 
-.detail-page__info{
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.region-price{
+.region-price {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--rosso);
 }
 
-.detail-page__info-item.regione{
+.detail-page__info-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.detail-page__info-item.regione {
   display: flex;
   flex-direction: column;
 }
 
-.detail-page__info-item.regione .detail-page__info-label{
+.detail-page__info-item.regione .detail-page__info-label {
   color: var(--rosso-scuro);
   font-family: var(--funnel-sans);
   font-weight: 300;
   font-size: 1.5rem;
 }
 
-.detail-page__info-item.regione .detail-page__info-value{
+.detail-page__info-item.regione .detail-page__info-value {
   color: var(--rosso);
   font-family: var(--cormorant-garamond);
   font-weight: 300;
   font-size: 3rem;
 }
 
-.detail-page__info-item.punteggio{
+.detail-page__info-item.punteggio {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
 }
 
-.punteggio .detail-page__info-label{
+.punteggio .detail-page__info-label {
   color: var(--rosso-scuro);
   font-family: var(--funnel-sans);
 }
 
-.punteggio .detail-page__info-value{
+.punteggio .detail-page__info-value {
   color: var(--rosso-scuro);
   font-family: var(--cormorant-garamond);
   font-size: 5rem;
   font-weight: 600;
 }
 
-.detail-page__info-item{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.detail-page__info-label{
+.detail-page__info-label {
   color: var(--rosso);
   font-family: var(--funnel-sans);
   font-size: 1.1rem;
 }
 
-.detail-page__info-value{
+.detail-page__info-value {
   color: var(--rosso-scuro);
   font-family: var(--funnel-sans);
   font-size: 1.1rem;
   text-transform: capitalize;
+  text-align: right;
+  word-break: break-word;
+}
+
+/* ============================
+   TABLET (max-width: 1279px)
+   ============================ */
+@media (max-width: 1279px) {
+  .detail-page__info {
+    gap: 1.25rem;
+  }
+
+  .region-price {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .detail-page__info-item {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .detail-page__info-item.regione .detail-page__info-label {
+    font-size: 1.3rem;
+  }
+
+  .detail-page__info-item.regione .detail-page__info-value {
+    font-size: 2.4rem;
+  }
+
+  .punteggio .detail-page__info-value {
+    font-size: 3.8rem;
+  }
+
+  .detail-page__info-value {
+    text-align: left;
+  }
+}
+
+/* ============================
+   MOBILE (max-width: 767px)
+   ============================ */
+@media (max-width: 767px) {
+  .detail-page__info {
+    gap: 1.1rem;
+  }
+
+  .region-price {
+    padding-bottom: 1.5rem;
+    gap: 1.25rem;
+  }
+
+  .detail-page__info-item.regione .detail-page__info-label {
+    font-size: 1.1rem;
+  }
+
+  .detail-page__info-item.regione .detail-page__info-value {
+    font-size: 2rem;
+  }
+
+  .punteggio .detail-page__info-label {
+    font-size: 0.95rem;
+  }
+
+  .punteggio .detail-page__info-value {
+    font-size: 3rem;
+  }
+
+  .detail-page__info-label {
+    font-size: 1rem;
+  }
+
+  .detail-page__info-value {
+    font-size: 1rem;
+    text-align: right;
+  }
+}
+
+/* ============================
+   DESKTOP ULTRA-WIDE (≥ 1920px)
+   ============================ */
+@media (min-width: 1920px) {
+  .detail-page__info {
+    gap: 1.75rem;
+  }
+
+  .detail-page__info-item.regione .detail-page__info-value {
+    font-size: 3.2rem;
+  }
+
+  .punteggio .detail-page__info-value {
+    font-size: 5.2rem;
+  }
 }
 </style>

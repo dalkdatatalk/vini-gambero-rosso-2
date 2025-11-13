@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   css: [
     '@/assets/main.css'
   ],
+  modules: [
+    '@vueuse/nuxt',
+  ],
   app: {
     head: {
       script: [
