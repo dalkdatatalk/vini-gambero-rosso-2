@@ -180,6 +180,10 @@ function isActive(rawId: string) {
 .btn-category.active .btn-category__label {
   color: #f6f6f6;
 }
+
+.btn-category:last-child{
+  display: none;
+}
 </style>
 
 <style>
