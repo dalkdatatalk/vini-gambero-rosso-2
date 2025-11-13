@@ -19,6 +19,12 @@
         <span v-else>Informazione non disponibile</span>
       </div>
     </div>
+    <WineRelatedWines
+      v-if="isMobileOrTablet"
+      :current-wine="wine"
+      :primary-region="decodedPrimaryRegion"
+      class="related-wines-section"
+    />
     <div class="box-newsletter">
       <p>
         Degusta con noi! Iscriviti per ricevere<br />
@@ -37,12 +43,22 @@
 </template>
 
 <script setup lang="ts">
+import { computed, toRefs } from 'vue';
+import { useMediaQuery } from '@vueuse/core';
 import type { Wine } from '~/composables/useWines';
 import SocialMediaShareButtons from '~/components/SocialMediaShareButtons.vue';
+import WineRelatedWines from '~/components/WineRelatedWines.vue';
 
-defineProps<{
+const props = defineProps<{
   wine: Wine;
+  primaryRegion?: string | null;
 }>();
+
+const { wine, primaryRegion } = toRefs(props);
+
+const isMobileOrTablet = useMediaQuery('(max-width: 1279px)');
+
+const decodedPrimaryRegion = computed(() => primaryRegion.value ?? null);
 </script>
 
 <style scoped>
