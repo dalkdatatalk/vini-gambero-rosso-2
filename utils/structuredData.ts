@@ -195,3 +195,63 @@ export function buildWineProductJsonLd(
   } satisfies WineProductJsonLd;
 }
 
+export interface WineListItemInput {
+  name: string;
+  url: string;
+  category?: string | null;
+}
+
+export interface BuildWineListJsonLdOptions {
+  canonicalUrl: string;
+  title: string;
+  items: WineListItemInput[];
+}
+
+export interface WineListJsonLd {
+  '@context': 'https://schema.org';
+  '@type': 'ItemList';
+  '@id': string;
+  name: string;
+  url: string;
+  itemListOrder: 'https://schema.org/ItemListOrderAscending';
+  numberOfItems: number;
+  itemListElement: {
+    '@type': 'ListItem';
+    position: number;
+    item: {
+      '@type': 'Product';
+      '@id': string;
+      name: string;
+      url: string;
+      category?: string;
+    };
+  }[];
+}
+
+export function buildWineListJsonLd(
+  options: BuildWineListJsonLdOptions
+): WineListJsonLd {
+  const { canonicalUrl, title, items } = options;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': canonicalUrl,
+    name: title,
+    url: canonicalUrl,
+    itemListOrder: 'https://schema.org/ItemListOrderAscending',
+    numberOfItems: items.length,
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Product',
+        '@id': item.url,
+        name: item.name,
+        url: item.url,
+        ...(item.category ? { category: item.category } : {}),
+      },
+    })),
+  };
+}
+
