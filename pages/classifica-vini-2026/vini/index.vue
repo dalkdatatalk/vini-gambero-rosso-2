@@ -1,18 +1,14 @@
 <template>
-  <main class="page">
+  <HeaderBereBene />
+  <main class="type-page">
 
-    <WineTypeFilters v-model="typeSelection" class="page__filters" />
-
-    <WineDetailFilters
-      :wines="wines"
-      v-model="filterStateBinding"
-      :min-score="0"
-      :max-score="100"
-      @update:results="onFilterResults"
-      class="page__filters"
+    <WineList
+      :wines="filteredWines"
+      empty-message="Nessun vino disponibile per questa tipologia."
+      grid-class="type-page__grid"
+      empty-class="type-page__empty"
+      empty-variant="simple"
     />
-
-    <WineList :wines="filteredWines" empty-message="Nessun vino corrisponde alla ricerca." />
   </main>
 
   <ScrollToTopButton />
@@ -23,14 +19,44 @@ import { computed, reactive, ref } from 'vue';
 import { useHead } from '#imports';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
-import { slugify } from '~/utils/slugify';
 
-const wineTools = useWines();
-const { wines } = wineTools;
-const macroTypes = wineTools.getMacroWineTypes();
+const { filterByMacroType } = useWines();
 
-const typeSelection = ref<string | string[]>('tutti');
+/**
+ * 👇 Partiamo SEMPRE dalla macrocategoria "tutti"
+ * (id presente in MACRO_WINE_TYPES dentro useWines.ts)
+ */
+const typeSelection = ref<'tutti' | string>('tutti');
 
+/**
+ * Lista di vini in base alla macro selezionata.
+ * Per ora usiamo sempre "tutti", ma se in futuro
+ * il componente <WineTypeFilters> cambia typeSelection,
+ * questa computed seguirà la scelta dell'utente.
+ */
+const winesBySelection = computed<Wine[]>(() => {
+  return filterByMacroType(typeSelection.value || 'tutti');
+});
+
+/**
+ * Ordinamento base: prima per punteggio desc, poi per nome asc.
+ */
+const baseSortedWines = computed<Wine[]>(() => {
+  return [...winesBySelection.value].sort((a, b) => {
+    const scoreA = a.score ?? 0;
+    const scoreB = b.score ?? 0;
+
+    if (scoreA !== scoreB) {
+      return scoreB - scoreA;
+    }
+
+    return a.name.localeCompare(b.name);
+  });
+});
+
+/**
+ * Stato filtri di dettaglio (search, regione, vitigno, punteggio, prezzo).
+ */
 const filterState = reactive({
   query: '',
   region: null as string | null,
@@ -50,52 +76,16 @@ const filterStateBinding = computed({
   },
 });
 
+/**
+ * Gestione risultati filtrati da <WineDetailFilters>.
+ */
 const detailFiltersApplied = ref(false);
 const detailResults = ref<Wine[]>([]);
 
-const normalizedTypeSelection = computed(() => {
-  const value = typeSelection.value;
-  const list = Array.isArray(value) ? value : value ? [value] : [];
-  return list
-    .map((item) => (item ?? '').toString().trim().toLowerCase())
-    .filter((item) => item.length > 0);
-});
+const filteredWines = computed<Wine[]>(() => {
+  const base = detailFiltersApplied.value ? detailResults.value : baseSortedWines.value;
 
-const macroMap = computed(() => {
-  const map = new Map<string, (typeof macroTypes)[number]>();
-  for (const macro of macroTypes) {
-    map.set(macro.id, macro);
-  }
-  return map;
-});
-
-function matchesType(wine: Wine, selections: string[]) {
-  if (selections.length === 0 || selections.includes('tutti')) {
-    return true;
-  }
-
-  const wineType = (wine.type ?? '').toLowerCase().trim();
-  const wineTypeSlug = slugify(wine.type ?? '');
-
-  return selections.some((selection) => {
-    const macro = macroMap.value.get(selection);
-    if (macro) {
-      if (!macro.types) {
-        return true;
-      }
-      return macro.types.some((type) => type.toLowerCase().trim() === wineType);
-    }
-
-    return wineType === selection || slugify(selection) === wineTypeSlug;
-  });
-}
-
-const baseList = computed(() => (detailFiltersApplied.value ? detailResults.value : wines.value));
-
-const filteredWines = computed(() => {
-  const filteredByType = baseList.value.filter((wine) => matchesType(wine, normalizedTypeSelection.value));
-
-  return [...filteredByType].sort((a, b) => {
+  return [...base].sort((a, b) => {
     const scoreA = a.score ?? 0;
     const scoreB = b.score ?? 0;
 
@@ -112,27 +102,30 @@ function onFilterResults(list: Wine[]) {
   detailResults.value = [...list];
 }
 
+/**
+ * SEO fissa per la pagina "Tutti".
+ */
 useHead({
   title: 'Berebene 2026 | Classifica migliori vini economici',
   meta: [
     {
       name: 'description',
       content:
-        'Scopri quali vini sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, tipologia e altro.',
+        'Scopri tutti i vini sotto ai 30 euro selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, tipologia e altro.',
     },
   ],
   link: [
     {
       rel: 'canonical',
-      href: 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/',
+      href: 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/tutti',
     },
   ],
 });
-
 </script>
 
+
 <style scoped>
-.page {
+.type-page {
   margin: 0 auto;
   max-width: 1080px;
   padding: 48px 24px;
@@ -141,21 +134,18 @@ useHead({
   gap: 32px;
 }
 
-.page__header {
+.type-page__header {
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
-.page__header h1 {
-  font-size: 2.5rem;
+.type-page__header h1 {
+  font-size: 2.25rem;
   margin: 0;
   color: #1f2937;
 }
 
-.page__header p {
-  margin: 0;
+.type-page__header p {
+  margin: 12px 0 0;
   color: #4b5563;
 }
 
