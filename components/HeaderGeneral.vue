@@ -18,6 +18,10 @@
       <div class="header-general__logo">
         <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
       </div>
+      <div class="header-general__logo sponsor-area">
+        <p>in collaborazione con</p>
+        <img src="/img/logo-sponsor.png" alt="Sponsor" />
+      </div>
     </div>
   </div>
 </template>
@@ -50,6 +54,21 @@ const showSponsor = computed(() => props.sponsor !== false)
 
 .header-general__logo:first-child img{
   max-height: 40px;
+}
+
+.header-general--sponsor{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.sponsor-area{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
 }
 
 </style>

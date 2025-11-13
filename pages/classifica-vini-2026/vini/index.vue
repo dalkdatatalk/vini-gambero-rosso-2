@@ -1,5 +1,5 @@
 <template>
-  <HeaderGeneral/>
+  <HeaderGeneral :sponsor="true"/>
   <main class="page">
     <WineTypeFilters v-model="typeSelection" class="page__filters" />
 
