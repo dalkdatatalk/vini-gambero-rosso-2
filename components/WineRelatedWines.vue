@@ -151,13 +151,18 @@ onMounted(async () => {
 
 @media (max-width: 1024px) {
   .related-wines__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+  }
+
+  .related-wines__grid article{
+    min-width: 200px;
   }
 }
 
 @media (max-width: 640px) {
   .related-wines__grid {
-    grid-template-columns: 1fr;
   }
 }
 </style>
