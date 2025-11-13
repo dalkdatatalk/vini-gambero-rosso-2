@@ -182,25 +182,27 @@ useHead(() => ({
 </script>
 
 <style scoped>
-/* ============================
-   DESKTOP (stili attuali)
-   ============================ */
 .detail-page {
-  padding: 6rem 6rem;
   display: flex;
   flex-direction: column;
   gap: 32px;
+  padding: 6rem 6rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-.detail-page__back {
-  color: #b45309;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.95rem;
+.detail-page__content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
 }
 
-.detail-page__back:hover {
-  text-decoration: underline;
+.detail-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .detail-page__header h1 {
@@ -210,92 +212,57 @@ useHead(() => ({
   color: var(--rosso-scuro);
   font-family: var(--cormorant-garamond);
   padding-bottom: 2rem;
+  word-break: break-word;
 }
 
 .detail-page__header p {
-  margin: 8px 0 0;
+  margin: 0;
   color: #4b5563;
   font-size: 1rem;
 }
 
-.detail-page__content {
-  width: 100%;
-}
-
 .wine-info-page {
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--rosso);
-  padding: 2rem;
   border-radius: 5px;
+  padding: 2.5rem 3rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  gap: 2rem;
 }
 
 .wine-details-container {
   display: flex;
   flex-direction: row;
   gap: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: flex-start;
+  overflow-x: hidden;
 }
 
 .wine-column {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  width: 100%;
 }
 
 .wine-column.technical {
-  flex: 0 0 50%;
+  flex: 1 1 0;
   padding-right: 2rem;
   border-right: 2px solid var(--rosso);
 }
 
 .wine-column.description {
-  flex: 1 1 50%;
+  flex: 1 1 0;
 }
 
-
-
-/* ============================
-   📱 MOBILE  (max 767px)
-   ============================ */
-@media (max-width: 767px) {
+@media (max-width: 1279px) {
   .detail-page {
-    padding: 2rem 1.5rem;
-    gap: 24px;
-  }
-
-  .wine-info-page {
-    padding: 1.5rem;
-  }
-
-  .detail-page__header h1 {
-    font-size: 2rem;
-    line-height: 2.1rem;
-    padding-bottom: 1.5rem;
-  }
-
-  .wine-details-container {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .wine-column.technical {
-    padding-right: 0;
-    border-right: none;
-    border-bottom: 2px solid var(--rosso);
-    padding-bottom: 1.5rem;
-  }
-
-  .wine-column.description {
-    padding-top: 1.5rem;
-  }
-}
-
-
-
-/* ============================
-   📲 TABLET  (768px – 1279px)
-   ============================ */
-@media (min-width: 768px) and (max-width: 1279px) {
-  .detail-page {
-    padding: 3rem 3rem;
+    padding: 4rem 3rem;
     gap: 28px;
   }
 
@@ -305,7 +272,8 @@ useHead(() => ({
 
   .detail-page__header h1 {
     font-size: 2.75rem;
-    line-height: 2.6rem;
+    line-height: 2.8rem;
+    padding-bottom: 1.75rem;
   }
 
   .wine-details-container {
@@ -315,9 +283,9 @@ useHead(() => ({
 
   .wine-column.technical {
     padding-right: 0;
+    padding-bottom: 2rem;
     border-right: none;
     border-bottom: 2px solid var(--rosso);
-    padding-bottom: 2rem;
   }
 
   .wine-column.description {
@@ -325,11 +293,43 @@ useHead(() => ({
   }
 }
 
+@media (max-width: 767px) {
+  .detail-page {
+    padding: 2.5rem 1.5rem;
+    gap: 24px;
+  }
 
+  .wine-info-page {
+    padding: 1.5rem;
+  }
 
-/* ============================
-   🖥️ DESKTOP ULTRA-WIDE (≥ 1920px)
-   ============================ */
+  .detail-page__header {
+    gap: 1rem;
+  }
+
+  .detail-page__header h1 {
+    font-size: 2.1rem;
+    line-height: 2.2rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .detail-page__header p {
+    font-size: 0.95rem;
+  }
+
+  .wine-details-container {
+    gap: 1.5rem;
+  }
+
+  .wine-column.technical {
+    padding-bottom: 1.5rem;
+  }
+
+  .wine-column.description {
+    padding-top: 1.5rem;
+  }
+}
+
 @media (min-width: 1920px) {
   .detail-page {
     padding: 7rem 20rem;
@@ -341,4 +341,3 @@ useHead(() => ({
   }
 }
 </style>
-
