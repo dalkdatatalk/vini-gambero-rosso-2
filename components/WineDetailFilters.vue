@@ -5,6 +5,7 @@
     aria-label="Filtri di dettaglio vini"
   >
     <div class="filter-controls">
+      <!-- 1 Regione -->
       <div class="filter-item">
         <p class="filter-label">Regione</p>
         <button
@@ -40,7 +41,8 @@
         </ul>
       </div>
 
-      <div class="filter-item">
+      <!-- Fascia di Prezzo -->
+      <!-- <div class="filter-item">
         <p class="filter-label">Fascia di prezzo</p>
         <div class="filter-range" role="group" aria-label="Filtra per prezzo minimo">
           <span class="range-min">{{ priceMinLabel }}</span>
@@ -66,8 +68,9 @@
             </svg>
           </span>
         </div>
-      </div>
+      </div> -->
 
+      <!-- 2 Punteggio -->
       <div class="filter-item">
         <p class="filter-label">Punteggio</p>
         <div class="filter-range" role="group" aria-label="Filtra per punteggio minimo">
@@ -96,6 +99,7 @@
         </div>
       </div>
 
+      <!-- 3 Vitigno -->
       <div class="filter-item">
         <p class="filter-label">Vitigno</p>
         <button
