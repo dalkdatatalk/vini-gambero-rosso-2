@@ -1,162 +1,154 @@
 <template>
   <main class="page">
-
-    <WineTypeFilters v-model="typeSelection" class="page__filters" />
-
-    <WineDetailFilters
-      :wines="wines"
-      v-model="filterStateBinding"
-      :min-score="0"
-      :max-score="100"
-      @update:results="onFilterResults"
+    <WineTypeFilters
+      v-model="macroBinding"
       class="page__filters"
+      data-test="macro-filter"
     />
 
-    <WineList :wines="filteredWines" empty-message="Nessun vino corrisponde alla ricerca." />
+    <WineDetailFilters
+      :wines="baseList"
+      v-model="detailState"
+      :min-score="0"
+      :max-score="100"
+      @update:results="onFiltered"
+      class="page__filters"
+      data-test="detail-filters"
+    />
+
+    <WineList
+      :wines="finalList"
+      empty-message="Nessun vino corrisponde alla ricerca."
+      data-test="wine-list"
+    />
   </main>
 
   <ScrollToTopButton />
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
-import { useHead } from '#imports';
-import { useWines } from '~/composables/useWines';
-import type { Wine } from '~/composables/useWines';
-import { slugify } from '~/utils/slugify';
+import { computed, ref, watch } from 'vue'
+import { useHead } from '#imports'
+import { useWines } from '~/composables/useWines'
+import type { Wine as DatasetWine } from '~/composables/useWines'
 
-const wineTools = useWines();
-const { wines } = wineTools;
-const macroTypes = wineTools.getMacroWineTypes();
+/** Tipi di dominio */
+type Wine = DatasetWine
 
-const typeSelection = ref<string | string[]>('tutti');
-
-const filterState = reactive({
-  query: '',
-  region: null as string | null,
-  grape: null as string | null,
-  score: 0,
-  price: 0,
-});
-
-const filterStateBinding = computed({
-  get: () => filterState,
-  set: (value) => {
-    filterState.query = value?.query ?? '';
-    filterState.region = value?.region ?? null;
-    filterState.grape = value?.grape ?? null;
-    filterState.score = Number.isFinite(value?.score) ? Number(value?.score) : 0;
-    filterState.price = Number.isFinite(value?.price) ? Number(value?.price) : 0;
-  },
-});
-
-const detailFiltersApplied = ref(false);
-const detailResults = ref<Wine[]>([]);
-
-const normalizedTypeSelection = computed(() => {
-  const value = typeSelection.value;
-  const list = Array.isArray(value) ? value : value ? [value] : [];
-  return list
-    .map((item) => (item ?? '').toString().trim().toLowerCase())
-    .filter((item) => item.length > 0);
-});
-
-const macroMap = computed(() => {
-  const map = new Map<string, (typeof macroTypes)[number]>();
-  for (const macro of macroTypes) {
-    map.set(macro.id, macro);
-  }
-  return map;
-});
-
-function matchesType(wine: Wine, selections: string[]) {
-  if (selections.length === 0 || selections.includes('tutti')) {
-    return true;
-  }
-
-  const wineType = (wine.type ?? '').toLowerCase().trim();
-  const wineTypeSlug = slugify(wine.type ?? '');
-
-  return selections.some((selection) => {
-    const macro = macroMap.value.get(selection);
-    if (macro) {
-      if (!macro.types) {
-        return true;
-      }
-      return macro.types.some((type) => type.toLowerCase().trim() === wineType);
-    }
-
-    return wineType === selection || slugify(selection) === wineTypeSlug;
-  });
+type MacroCategory = {
+  id: string
+  label: string
+  types: string[]
 }
 
-const baseList = computed(() => (detailFiltersApplied.value ? detailResults.value : wines.value));
+type DetailFilterState = {
+  query: string
+  region: string | null
+  grape: string | null
+  score: number
+  price: number
+}
 
-const filteredWines = computed(() => {
-  const filteredByType = baseList.value.filter((wine) => matchesType(wine, normalizedTypeSelection.value));
+const DEFAULT_MACRO: MacroCategory = { id: 'tutti', label: 'Tutti', types: [] }
 
-  return [...filteredByType].sort((a, b) => {
-    const scoreA = a.score ?? 0;
-    const scoreB = b.score ?? 0;
+const { wines, getMacroWineTypes } = useWines()
 
-    if (scoreA !== scoreB) {
-      return scoreB - scoreA;
+const macroOptions = computed<MacroCategory[]>(() => {
+  const base = getMacroWineTypes().map<MacroCategory>((item) => ({
+    id: item.id,
+    label: item.label,
+    types: Array.isArray(item.types) ? [...item.types] : []
+  }))
+  const withoutTutti = base.filter((item) => item.id !== 'tutti')
+  return [{ ...DEFAULT_MACRO }, ...withoutTutti]
+})
+
+const macroMap = computed(() => {
+  const map = new Map<string, MacroCategory>()
+  for (const option of macroOptions.value) {
+    map.set(option.id, option)
+  }
+  return map
+})
+
+const macro = ref<MacroCategory>({ ...DEFAULT_MACRO })
+const detailState = ref<DetailFilterState>({
+  query: '',
+  region: null,
+  grape: null,
+  score: 0,
+  price: 0
+})
+const filtered = ref<Wine[] | null>(null)
+
+const macroBinding = computed<MacroCategory>({
+  get: () => macro.value,
+  set: (value: MacroCategory | string | null | undefined) => {
+    let next: MacroCategory | undefined
+    if (value && typeof value === 'object') {
+      next = macroMap.value.get(value.id)
+    } else if (typeof value === 'string') {
+      next = macroMap.value.get(value)
     }
+    macro.value = next ? { ...next, types: [...next.types] } : { ...DEFAULT_MACRO }
+  }
+})
 
-    return a.name.localeCompare(b.name);
-  });
-});
+watch(
+  () => macro.value.id,
+  () => {
+    filtered.value = null
+  }
+)
 
-function onFilterResults(list: Wine[]) {
-  detailFiltersApplied.value = true;
-  detailResults.value = [...list];
+const baseList = computed<Wine[]>(() => {
+  const all = Array.isArray(wines.value) ? wines.value : []
+  const activeMacro = macro.value
+  if (!activeMacro || activeMacro.id === 'tutti' || activeMacro.types.length === 0) {
+    return all
+  }
+  const allowed = new Set(activeMacro.types.map((type) => type.toLowerCase().trim()))
+  return all.filter((wine) => {
+    const wineType = (wine.type ?? '').toLowerCase().trim()
+    return allowed.size === 0 || allowed.has(wineType)
+  })
+})
+
+const finalList = computed<Wine[]>(() => filtered.value ?? baseList.value)
+
+function onFiltered(list: Wine[] | null) {
+  filtered.value = Array.isArray(list) ? list : null
 }
 
 useHead({
-  title: 'Berebene 2026 | Classifica migliori vini economici',
+  title: 'Classifica Vini 2026 — Tutti i vini',
   meta: [
     {
       name: 'description',
       content:
-        'Scopri quali vini sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, tipologia e altro.',
-    },
+        'Sfoglia e filtra tutti i vini della Classifica 2026 per tipologia, punteggio e altre caratteristiche.'
+    }
   ],
   link: [
     {
       rel: 'canonical',
-      href: 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/',
-    },
-  ],
-});
-
+      href: 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/'
+    }
+  ]
+})
 </script>
 
 <style scoped>
 .page {
+  padding: 2rem 1rem 3rem;
+  max-width: 1200px;
   margin: 0 auto;
-  max-width: 1080px;
-  padding: 48px 24px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 1.5rem;
 }
 
-.page__header {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.page__filters {
+  margin-bottom: 1rem;
 }
-
-.page__header h1 {
-  font-size: 2.5rem;
-  margin: 0;
-  color: #1f2937;
-}
-
-.page__header p {
-  margin: 0;
-  color: #4b5563;
-}
-
 </style>
