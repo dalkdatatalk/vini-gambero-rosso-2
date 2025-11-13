@@ -15,7 +15,6 @@
 
     <div class="region-price">
       <div class="detail-page__info-item regione">
-        <span class="detail-page__info-label">Provenienza</span>
         <span class="detail-page__info-value">
           {{ decodedPrimaryRegion ?? 'Informazione non disponibile' }}
         </span>
@@ -247,6 +246,14 @@ h3 {
     align-items: flex-start;
   }
 
+  .cantina{
+    justify-content: center;
+  }
+
+  .cantina .detail-page__info-value{
+    font-size: 1.2rem;
+  }
+
   .detail-page__info-item.regione .detail-page__info-label {
     font-size: 1.3rem;
   }
@@ -262,6 +269,11 @@ h3 {
   .detail-page__info-value {
     text-align: left;
   }
+
+  .region-price{
+    display: flex;
+    flex-direction: row;
+  }
 }
 
 /* ============================
@@ -273,6 +285,8 @@ h3 {
   }
 
   .region-price {
+    display: flex;
+    flex-direction: row;
     padding-bottom: 1.5rem;
     gap: 1.25rem;
   }
@@ -282,7 +296,7 @@ h3 {
   }
 
   .detail-page__info-item.regione .detail-page__info-value {
-    font-size: 2rem;
+    font-size: 1.2rem;
   }
 
   .punteggio .detail-page__info-label {

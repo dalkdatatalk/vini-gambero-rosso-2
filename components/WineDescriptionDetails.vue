@@ -56,7 +56,7 @@ const props = defineProps<{
 
 const { wine, primaryRegion } = toRefs(props);
 
-const isMobileOrTablet = useMediaQuery('(max-width: 1024px)');
+const isMobileOrTablet = useMediaQuery('(max-width: 1279px)');
 
 const decodedPrimaryRegion = computed(() => primaryRegion.value ?? null);
 </script>

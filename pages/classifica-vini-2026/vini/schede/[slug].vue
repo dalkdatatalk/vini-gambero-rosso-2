@@ -291,6 +291,11 @@ useHead(() => ({
   .wine-column.description {
     padding-top: 2rem;
   }
+
+  .name-wine{
+    text-align: center;
+    font-size: 1rem;
+  }
 }
 
 @media (max-width: 767px) {
@@ -308,8 +313,8 @@ useHead(() => ({
   }
 
   .detail-page__header h1 {
-    font-size: 2.1rem;
-    line-height: 2.2rem;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
     padding-bottom: 1.25rem;
   }
 
@@ -328,6 +333,7 @@ useHead(() => ({
   .wine-column.description {
     padding-top: 1.5rem;
   }
+
 }
 
 @media (min-width: 1920px) {
