@@ -1,10 +1,23 @@
 <template>
   <div class="header-general">
-    <div class="header-general__logo">
-      <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+    <!-- no sponsor -->
+    <div class="header-general--no-sponsor">
+      <div class="header-general__logo">
+        <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+      </div>
+      <div class="header-general__logo">
+        <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+      </div>
     </div>
-    <div class="header-general__logo">
-      <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+
+    <!-- sponsor -->
+    <div class="header-general--sponsor">
+      <div class="header-general__logo">
+        <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+      </div>
+      <div class="header-general__logo">
+        <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+      </div>
     </div>
   </div>
 </template>
@@ -13,17 +26,23 @@
 </script>
 
 <style scoped>
-.header-general {
+.header-general--no-sponsor {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  padding: 4rem;
+  padding: 2rem 0;
 }
 
 .header-general__logo img {
+  position: relative;
   display: block;
-  max-width: 100%;
+  max-height: 70px;
   height: auto;
 }
+
+.header-general__logo:first-child img{
+  max-height: 40px;
+}
+
 </style>

@@ -1,6 +1,6 @@
 <template>
+  <HeaderGeneral/>
   <main class="page">
-
     <WineTypeFilters v-model="typeSelection" class="page__filters" />
 
     <WineDetailFilters
