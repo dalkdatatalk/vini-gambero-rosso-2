@@ -34,6 +34,7 @@ import { computed } from 'vue';
 import { createError, useHead, useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
 import { slugify } from '~/utils/slugify';
+import { buildWineProductJsonLd } from '~/utils/structuredData';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
 import rawWines from '~/data/wines.json';
 
@@ -141,7 +142,24 @@ const grapesList = computed(() => {
   });
 });
 
-useHead({
+const canonicalUrl = computed(() => {
+  return `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${wine.value.slug}`;
+});
+
+const productJsonLd = computed(() =>
+  buildWineProductJsonLd({
+    wine: wine.value,
+    canonicalUrl: canonicalUrl.value,
+    wineryName: wineryName.value,
+    wineryLink: wineryLink.value,
+    primaryRegion: primaryRegion.value,
+    macroCategoryLabel: macroCategoria.value?.label ?? null,
+    premioName: premioName.value,
+    formattedBottles: formattedBottles.value,
+  })
+);
+
+useHead(() => ({
   title: `${wine.value.name} | Berebene 2026`,
   meta: [
     {
@@ -152,10 +170,16 @@ useHead({
   link: [
     {
       rel: 'canonical',
-      href: `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${wine.value.slug}`,
+      href: canonicalUrl.value,
     },
   ],
-});
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(productJsonLd.value),
+    },
+  ],
+}));
 </script>
 
 <style scoped>
