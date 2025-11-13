@@ -105,6 +105,8 @@ const props = defineProps<{
 
 const { decodeHtml } = useHtmlEntities();
 
+const isDesktop = useMediaQuery('(min-width: 1280px)');
+
 const decodeOptional = (value?: string | null) => {
   const decoded = decodeHtml(value ?? null);
   const normalized = decoded.trim();
@@ -129,7 +131,6 @@ const decodedGrapesList = computed(() => {
 const decodedDenominazione = computed(() => decodeOptional(props.wine.denominazione));
 const decodedFormattedBottles = computed(() => decodeOptional(props.formattedBottles));
 const decodedFormattedPrice = computed(() => decodeOptional(props.formattedPrice));
-const isDesktop = useMediaQuery('(min-width: 1280px)');
 </script>
 
 <style scoped>
