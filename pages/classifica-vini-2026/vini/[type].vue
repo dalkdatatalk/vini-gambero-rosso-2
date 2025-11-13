@@ -30,6 +30,7 @@ import { computed, reactive, ref, watch } from 'vue';
 import { navigateTo, useHead, useRoute, useRouter } from '#imports';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
+import { buildWineListJsonLd } from '~/utils/structuredData';
 
 const route = useRoute();
 const router = useRouter();
@@ -124,6 +125,8 @@ const filteredWines = computed(() => {
   });
 });
 
+const wines = filteredWines;
+
 function onFilterResults(list: Wine[]) {
   detailFiltersApplied.value = true;
   detailResults.value = [...list];
@@ -190,13 +193,6 @@ const typeLabel = computed(() => currentMacro.value?.label ?? fallbackLabel.valu
 
 const isTuttiPage = computed(() => currentType.value === 'tutti');
 
-const metaTitle = computed(() => {
-  if (isTuttiPage.value) {
-    return 'Berebene 2026 | Classifica migliori vini economici';
-  }
-  return `Berebene 2026 | Classifica migliori vini ${typeLabel.value} economici`;
-});
-
 const metaDescription = computed(() => {
   if (isTuttiPage.value) {
     return 'Scopri quali vini sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, tipologia e altro.';
@@ -204,27 +200,37 @@ const metaDescription = computed(() => {
   return `Scopri quali vini ${typeLabel.value} sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026.`;
 });
 
-const canonicalSegment = computed(() => {
-  const param = route.params.type;
-  if (Array.isArray(param)) {
-    return param[0] ?? '';
-  }
-  return String(param ?? '');
+const canonicalUrl = computed(() => {
+  const type = String(route.params.type ?? 'tutti');
+  return `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${type}`;
 });
 
-const canonicalHref = computed(() => {
-  if (isTuttiPage.value) {
-    return 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/tutti';
-  }
-  const segment = canonicalSegment.value.trim().replace(/\/+$/, '');
-  if (!segment) {
-    return 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/';
-  }
-  return `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${segment}/`;
+const listTitle = computed(() => {
+  const label = isTuttiPage.value ? 'Tutti i vini' : typeLabel.value || 'Tutti i vini';
+  return `${label} | Berebene 2026`;
 });
 
-useHead({
-  title: metaTitle.value,
+const listItems = computed(() =>
+  wines.value.map((wine) => {
+    const url = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${wine.slug}`;
+    return {
+      name: wine.name,
+      url,
+      category: wine.type ?? null,
+    };
+  })
+);
+
+const listJsonLd = computed(() =>
+  buildWineListJsonLd({
+    canonicalUrl: canonicalUrl.value,
+    title: listTitle.value,
+    items: listItems.value,
+  })
+);
+
+useHead(() => ({
+  title: listTitle.value,
   meta: [
     {
       name: 'description',
@@ -234,10 +240,16 @@ useHead({
   link: [
     {
       rel: 'canonical',
-      href: canonicalHref.value,
+      href: canonicalUrl.value,
     },
   ],
-});
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(listJsonLd.value),
+    },
+  ],
+}));
 </script>
 
 <style scoped>
