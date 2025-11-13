@@ -46,6 +46,7 @@ type RawWine = {
   vino_categoria?: TaxonomyItem[];
   vino_bicchieri?: TaxonomyItem[];
   prodotti_denominazione_vino?: TaxonomyItem[];
+  tag_abbinamento?: TaxonomyItem[] | null;
   anno?: string | number | null;
   vino_centesimi?: string | number | null;
   alcol?: string | null;
@@ -80,6 +81,7 @@ export interface Wine {
   bottles: number | null;
   grapes: GrapeComposition[];
   pairing: string | null;
+  pairingTags: string[];
   relatedLocale: RelatedLocale | null;
 }
 
@@ -127,12 +129,29 @@ function parseGrapes(raw?: RawGrape[] | null): GrapeComposition[] {
     .filter((item): item is GrapeComposition => item !== null);
 }
 
+function parsePairingTags(items?: TaxonomyItem[] | null): string[] {
+  if (!items || items.length === 0) {
+    return [];
+  }
+
+  const values = new Set<string>();
+  for (const item of items) {
+    const label = safeText(item?.name ?? null);
+    if (label) {
+      values.add(label);
+    }
+  }
+
+  return Array.from(values);
+}
+
 export function normalizeWine(raw: RawWine): Wine {
   const name = safeText(raw.title) ?? 'Senza nome';
   const slug = safeText(raw.slug) ?? slugify(name);
 
   const rawGrapes = raw.vitigni ?? raw.vino_vitigni ?? raw.prodotti_vitigni ?? null;
   const pairingText = safeText(raw.abbinamento ?? raw.vino_abbinamento ?? null);
+  const pairingTags = parsePairingTags(raw.tag_abbinamento ?? null);
 
   return {
     id: raw.id,
@@ -149,6 +168,7 @@ export function normalizeWine(raw: RawWine): Wine {
     bottles: toNumber(raw.numero_bottiglie),
     grapes: parseGrapes(rawGrapes),
     pairing: pairingText,
+    pairingTags,
     relatedLocale: raw.related_locale ?? null,
   };
 }
