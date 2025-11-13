@@ -77,6 +77,7 @@
     </div>
 
     <WineRelatedWines
+      v-if="isDesktop"
       :current-wine="wine"
       :primary-region="decodedPrimaryRegion"
       class="related-wines-section"
@@ -86,6 +87,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useMediaQuery } from '@vueuse/core';
 import type { Wine } from '~/composables/useWines';
 import WineRelatedWines from '~/components/WineRelatedWines.vue';
 import { useHtmlEntities } from '~/composables/useHtmlEntities';
@@ -127,6 +129,7 @@ const decodedGrapesList = computed(() => {
 const decodedDenominazione = computed(() => decodeOptional(props.wine.denominazione));
 const decodedFormattedBottles = computed(() => decodeOptional(props.formattedBottles));
 const decodedFormattedPrice = computed(() => decodeOptional(props.formattedPrice));
+const isDesktop = useMediaQuery('(min-width: 1280px)');
 </script>
 
 <style scoped>
