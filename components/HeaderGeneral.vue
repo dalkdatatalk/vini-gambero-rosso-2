@@ -3,24 +3,24 @@
     <!-- no sponsor -->
     <div class="header-general--no-sponsor" v-if="!showSponsor">
       <div class="header-general__logo">
-        <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+        <img src="img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
       </div>
       <div class="header-general__logo">
-        <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+        <img src="img/logo-bere-bene-sm.png" alt="Berebene" />
       </div>
     </div>
 
     <!-- sponsor -->
     <div class="header-general--sponsor" v-else>
       <div class="header-general__logo">
-        <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+        <img src="img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
       </div>
       <div class="header-general__logo">
-        <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+        <img src="img/logo-bere-bene-sm.png" alt="Berebene" />
       </div>
       <div class="header-general__logo sponsor-area">
         <p>in collaborazione con</p>
-        <img src="/img/logo-sponsor.png" alt="Sponsor" />
+        <img src="img/logo-sponsor.png" alt="Sponsor" />
       </div>
     </div>
   </div>
