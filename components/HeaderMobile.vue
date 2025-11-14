@@ -15,11 +15,13 @@
         <span class="burger-menu__bar" />
         <span class="burger-menu__bar" />
       </button>
-      <img
-        class="logo"
-        src="/img/logo-bere-bene-sm.png"
-        alt="Berebene logo"
-      />
+      <a href="https://berebene.gamberorosso.it/classifica-vini-2026/vini/bianchi">
+        <img
+          class="logo"
+          src="/img/logo-bere-bene-sm.png"
+          alt="Berebene logo"
+        />
+      </a>
     </div>
 
     <div
@@ -53,11 +55,13 @@
         </ul>
       </nav>
       <div class="mobile-menu-footer">
-        <img
-          class="mobile-menu-footer__logo"
-          src="/img/logo-gambero-rosso-sm.png"
-          alt="Gambero Rosso"
-        />
+        <a href="https://gamberorosso.it">
+          <img
+            class="mobile-menu-footer__logo"
+            src="/img/logo-gambero-rosso-sm.png"
+            alt="Gambero Rosso"
+          />
+        </a>
       </div>
     </div>
   </div>
@@ -195,11 +199,10 @@ watch(isMobile, (value) => {
   width: 40px;
   height: 40px;
   padding: 8px;
-  background-color: #eee;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  background-color: transparent;
 }
 
 .burger-menu:focus-visible {
@@ -208,7 +211,7 @@ watch(isMobile, (value) => {
 }
 
 .burger-menu--open {
-  background-color: #ddd;
+
 }
 
 .burger-menu__bar {
