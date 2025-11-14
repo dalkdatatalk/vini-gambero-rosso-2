@@ -1,4 +1,5 @@
 <template>
+  <HeaderMobile v-if="isMobile" />
   <main class="detail-page">
     <div class="wine-info-page">
       <section class="detail-page__content">
@@ -30,11 +31,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useMediaQuery } from '@vueuse/core';
 import { createError, useHead, useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
 import { slugify } from '~/utils/slugify';
 import { buildWineProductJsonLd } from '~/utils/structuredData';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
+import HeaderMobile from '~/components/HeaderMobile.vue';
 import rawWines from '~/data/wines.json';
 
 type RawPremio = { name?: string | null };
@@ -42,6 +45,8 @@ type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
 
 const route = useRoute();
 const { bySlug, getMacroWineTypes } = useWines();
+
+const isMobile = useMediaQuery('(max-width: 767px)');
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
