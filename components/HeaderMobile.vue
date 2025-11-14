@@ -1,70 +1,74 @@
 <template>
-  <div
-    v-if="isMobile"
-    :class="['header-mobile', { 'header-mobile--open': isMenuOpen }]"
-  >
-    <div class="header-mobile__bar">
-      <button
-        type="button"
-        :class="['burger-menu', { 'burger-menu--open': isMenuOpen }]"
-        :aria-expanded="isMenuOpen ? 'true' : 'false'"
-        aria-controls="mobile-wine-menu"
-        @click="toggleMenu"
-      >
-        <span class="burger-menu__bar" />
-        <span class="burger-menu__bar" />
-        <span class="burger-menu__bar" />
-      </button>
-      <a href="https://berebene.gamberorosso.it/classifica-vini-2026/vini/bianchi">
-        <img
-          class="logo"
-          src="/img/logo-bere-bene-sm.png"
-          alt="Berebene logo"
-        />
-      </a>
-    </div>
-
-    <div
-      v-if="isMenuOpen"
-      id="mobile-wine-menu"
-      class="header-mobile__menu"
-    >
-      <nav class="mobile-menu-nav" aria-label="Menu principale">
-        <ul class="mobile-menu-list">
-          <li v-for="item in mobileMenuItems" :key="item.id" class="mobile-menu-item">
-            <a
-              v-if="item.href"
-              :href="item.href"
-              :class="['mobile-menu-link', { active: isActive(item.id) }]"
-              target="_blank"
-              rel="noopener noreferrer"
-              @click="closeMenu"
-            >
-              {{ item.displayLabel }}
-            </a>
-            <NuxtLink
-              v-else
-              :to="item.to"
-              :class="['mobile-menu-link', { active: isActive(item.id) }]"
-              :aria-current="isActive(item.id) ? 'page' : undefined"
-              @click="closeMenu"
-            >
-              {{ item.displayLabel }}
-            </NuxtLink>
-          </li>
-        </ul>
-      </nav>
-      <div class="mobile-menu-footer">
-        <a href="https://gamberorosso.it">
+  <template v-if="isMobile">
+    <div :class="['header-mobile', { 'header-mobile--open': isMenuOpen }]">
+      <div class="header-mobile__bar">
+        <button
+          type="button"
+          :class="['burger-menu', { 'burger-menu--open': isMenuOpen }]"
+          :aria-expanded="isMenuOpen ? 'true' : 'false'"
+          aria-controls="mobile-wine-menu"
+          @click="toggleMenu"
+        >
+          <span class="burger-menu__bar" />
+          <span class="burger-menu__bar" />
+          <span class="burger-menu__bar" />
+        </button>
+        <a href="https://berebene.gamberorosso.it/classifica-vini-2026/vini/bianchi">
           <img
-            class="mobile-menu-footer__logo"
-            src="/img/logo-gambero-rosso-sm.png"
-            alt="Gambero Rosso"
+            class="logo"
+            src="/img/logo-bere-bene-sm.png"
+            alt="Berebene logo"
           />
         </a>
       </div>
+
+      <div
+        v-if="isMenuOpen"
+        id="mobile-wine-menu"
+        class="header-mobile__menu"
+      >
+        <nav class="mobile-menu-nav" aria-label="Menu principale">
+          <ul class="mobile-menu-list">
+            <li v-for="item in mobileMenuItems" :key="item.id" class="mobile-menu-item">
+              <a
+                v-if="item.href"
+                :href="item.href"
+                :class="['mobile-menu-link', { active: isActive(item.id) }]"
+                target="_blank"
+                rel="noopener noreferrer"
+                @click="closeMenu"
+              >
+                {{ item.displayLabel }}
+              </a>
+              <NuxtLink
+                v-else
+                :to="item.to"
+                :class="['mobile-menu-link', { active: isActive(item.id) }]"
+                :aria-current="isActive(item.id) ? 'page' : undefined"
+                @click="closeMenu"
+              >
+                {{ item.displayLabel }}
+              </NuxtLink>
+            </li>
+          </ul>
+        </nav>
+        <div class="mobile-menu-footer">
+          <a href="https://gamberorosso.it">
+            <img
+              class="mobile-menu-footer__logo"
+              src="/img/logo-gambero-rosso-sm.png"
+              alt="Gambero Rosso"
+            />
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
+    <div
+      class="header-mobile__spacer"
+      :class="{ 'header-mobile__spacer--hidden': isMenuOpen }"
+      aria-hidden="true"
+    />
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -84,12 +88,11 @@ const MACROS = getMacroWineTypes();
 type MobileMenuItem = WineMenuItem & { displayLabel: string };
 
 const mobileMenuOrder: WineMenuItem['id'][] = [
-  'home',
-  'rossi',
-  'bianchi',
   'bollicine',
-  'vini-dolci',
+  'bianchi',
   'rosati',
+  'rossi',
+  'vini-dolci',
 ];
 
 const mobileMenuItems = computed<MobileMenuItem[]>(() =>
@@ -162,11 +165,17 @@ watch(isMobile, (value) => {
 
 <style scoped>
 .header-mobile {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
   box-sizing: border-box;
-  z-index: 20;
+  z-index: 1000;
+  min-height: 64px;
 }
 
 .header-mobile--open {
@@ -178,7 +187,7 @@ watch(isMobile, (value) => {
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  z-index: 1000;
+  z-index: 1100;
 }
 
 .header-mobile__bar {
@@ -302,5 +311,13 @@ watch(isMobile, (value) => {
 .mobile-menu-footer__logo {
   height: 32px;
   object-fit: contain;
+}
+
+.header-mobile__spacer {
+  height: 64px;
+}
+
+.header-mobile__spacer--hidden {
+  height: 0;
 }
 </style>
