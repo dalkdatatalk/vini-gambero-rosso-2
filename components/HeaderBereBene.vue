@@ -115,6 +115,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from '#imports'
 import { useWines } from '~/composables/useWines'
+import { wineMenuItems } from '~/lib/wineMenuItems'
 
 const props = withDefaults(
   defineProps<{
@@ -141,19 +142,7 @@ const cssVars = computed(() => ({
   '--logo-max-height': props.logoMaxHeight,
 }))
 
-const items = [
-  {
-    id: 'home',
-    label: 'Home',
-    href: 'https://gambero-rosso---bere-bene.webflow.io/old-home',
-  },
-  { id: 'bianchi', label: 'Bianchi', to: '/classifica-vini-2026/vini/bianchi' },
-  { id: 'rossi', label: 'Rossi', to: '/classifica-vini-2026/vini/rossi' },
-  { id: 'bollicine', label: 'Bollicine', to: '/classifica-vini-2026/vini/bollicine' },
-  { id: 'rosati', label: 'Rosati', to: '/classifica-vini-2026/vini/rosati' },
-  { id: 'vini-dolci', label: 'Vini Dolci', to: '/classifica-vini-2026/vini/vini-dolci' },
-  { id: 'tutti', label: 'Tutti', to: '/classifica-vini-2026/vini/tutti' },
-]
+const items = wineMenuItems
 
 const isWineDetailPage = computed(() => {
   const path = route.path || ''
