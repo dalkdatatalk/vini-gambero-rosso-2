@@ -88,6 +88,7 @@ const MACROS = getMacroWineTypes();
 type MobileMenuItem = WineMenuItem & { displayLabel: string };
 
 const mobileMenuOrder: WineMenuItem['id'][] = [
+  'home',
   'bollicine',
   'bianchi',
   'rosati',
