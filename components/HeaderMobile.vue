@@ -33,7 +33,7 @@
             <a
               v-if="item.href"
               :href="item.href"
-              class="mobile-menu-link"
+              :class="['mobile-menu-link', { active: isActive(item.id) }]"
               target="_blank"
               rel="noopener noreferrer"
               @click="closeMenu"
@@ -43,8 +43,7 @@
             <NuxtLink
               v-else
               :to="item.to"
-              class="mobile-menu-link"
-              :class="{ active: isActive(item.id) }"
+              :class="['mobile-menu-link', { active: isActive(item.id) }]"
               :aria-current="isActive(item.id) ? 'page' : undefined"
               @click="closeMenu"
             >
@@ -53,6 +52,13 @@
           </li>
         </ul>
       </nav>
+      <div class="mobile-menu-footer">
+        <img
+          class="mobile-menu-footer__logo"
+          src="/img/logo-gambero-rosso-sm.png"
+          alt="Gambero Rosso"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -245,6 +251,9 @@ watch(isMobile, (value) => {
 
 .mobile-menu-nav {
   width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .mobile-menu-list {
@@ -264,20 +273,31 @@ watch(isMobile, (value) => {
   font-size: 1.4rem;
   font-weight: 600;
   color: var(--rosso-scuro);
-  border-radius: 8px;
-  background-color: rgba(243, 243, 243, 1);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  opacity: 0.75;
+  transition: color 0.2s ease, opacity 0.2s ease;
 }
 
 .mobile-menu-link:hover,
 .mobile-menu-link:focus-visible {
-  background-color: var(--rosso-chiaro, #fbe9e9);
   color: var(--rosso, #b00);
   outline: none;
 }
 
 .mobile-menu-link.active {
-  background-color: var(--rosso, #b00);
-  color: #fff;
+  opacity: 1;
+  text-decoration: underline;
+  text-decoration-color: var(--rosso);
+}
+
+.mobile-menu-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 32px;
+}
+
+.mobile-menu-footer__logo {
+  height: 32px;
+  object-fit: contain;
 }
 </style>
