@@ -930,7 +930,6 @@ onBeforeUnmount(() => {
 
 .filter-controls {
   display: flex;
-  gap: 40px;
   align-items: flex-start;
   width: 100%;
   flex-wrap: wrap;
@@ -938,12 +937,12 @@ onBeforeUnmount(() => {
 
 .filter-item {
   position: relative;
-  flex: 1 1 220px;
+  flex: 1 1 1rem;
   min-width: 220px;
 }
 
 .filter-item--search {
-  flex: 1 1 280px;
+  flex: 1 1 1;
   min-width: 280px;
 }
 
@@ -1171,7 +1170,6 @@ onBeforeUnmount(() => {
 
 @media (max-width: 900px) {
   .filter-controls {
-    gap: 24px;
   }
 
   .filter-item {
