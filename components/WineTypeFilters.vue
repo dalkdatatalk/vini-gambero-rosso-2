@@ -105,39 +105,43 @@ function isActive(rawId: string) {
 .wine-type-filters {
   position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .title {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 3rem;
+  font-size: clamp(2rem, 4vw, 3rem);
   color: #ca1f1e;
   letter-spacing: 0;
   line-height: normal;
-  white-space: nowrap;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   text-align: left;
 }
 
 .category-buttons {
   display: flex;
   justify-content: flex-start;
-  gap: 14px;
-  align-items: center;
-  line-height: 0;
+  gap: 0.75rem;
+  align-items: stretch;
+  flex-wrap: wrap;
 }
 
 .btn-category {
   position: relative;
   border: 1px solid #ca1f1e;
   border-radius: 10px;
-  display: inline-grid;
-  place-items: start;
-  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 1 auto;
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 0;
+  min-width: 7.5rem;
 }
 
 .btn-category:hover,
@@ -175,10 +179,48 @@ function isActive(rawId: string) {
   text-align: center;
   position: relative;
   padding: 10px 14px;
+  white-space: normal;
 }
 
 .btn-category.active .btn-category__label {
   color: #f6f6f6;
+}
+
+@media (max-width: 1024px) {
+  .wine-type-filters {
+    gap: 1rem;
+  }
+
+  .title {
+    text-align: center;
+  }
+
+  .category-buttons {
+    justify-content: center;
+  }
+
+  .btn-category {
+    min-width: 6.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .wine-type-filters {
+    align-items: stretch;
+  }
+
+  .title {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+
+  .category-buttons {
+    justify-content: flex-start;
+  }
+
+  .btn-category {
+    flex: 1 1 calc(50% - 0.75rem);
+    min-width: 0;
+  }
 }
 </style>
 
