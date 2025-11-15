@@ -1,6 +1,5 @@
 <template>
   <HeaderMobile v-if="isMobile || isTablet" />
-  <HeaderGeneral :sponsor="true"/>
   <main class="type-page">
 
     <WineTypeFilters v-model="typeSelection" class="type-page__filters page__filters" />
