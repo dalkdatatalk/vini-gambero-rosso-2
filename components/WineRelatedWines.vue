@@ -88,9 +88,14 @@ onMounted(async () => {
 }
 
 .related-wines__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-direction: row;
   gap: 1.25rem;
+  overflow-x: auto;
+}
+
+.related-wines__grid article {
+  min-width: 200px;
 }
 
 .related-wines__card {
@@ -149,20 +154,22 @@ onMounted(async () => {
   color: var(--rosso-scuro);
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 768px) {
   .related-wines__grid {
-    display: flex;
-    flex-direction: row;
-    overflow-x: scroll;
-  }
-
-  .related-wines__grid article{
-    min-width: 200px;
+    gap: 1.5rem;
   }
 }
 
-@media (max-width: 640px) {
+@media (min-width: 1280px) {
   .related-wines__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    overflow-x: visible;
+  }
+
+  .related-wines__grid article {
+    min-width: 0;
   }
 }
 </style>
