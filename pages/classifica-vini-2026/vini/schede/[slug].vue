@@ -38,7 +38,7 @@ import { computed } from 'vue';
 import { createError, useHead, useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
 import { useBreakpoints } from '~/composables/useBreakpoints';
-import { slugify } from '~/utils/slugify';
+import { findWineMenuItemByType } from '~/lib/wineMenuItems';
 import { buildWineProductJsonLd } from '~/utils/structuredData';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
@@ -52,7 +52,7 @@ const route = useRoute();
 
 const { isMobile, isTablet } = useBreakpoints();
 
-const { bySlug, getMacroWineTypes } = useWines();
+const { bySlug } = useWines();
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
@@ -65,29 +65,14 @@ if (!rawWine.value) {
 // secondo step: da qui in poi è DEFINITO
 const wine = computed(() => rawWine.value!);
 
-const macroCategories = getMacroWineTypes();
-
-const macroCategoria = computed(() => {
-  const wineType = wine.value.type;
-  if (!wineType) {
-    return null;
-  }
-
-  const normalizedWineType = slugify(wineType);
-
-  return (
-    macroCategories.find((category) =>
-      category.types.some((type) => slugify(type) === normalizedWineType)
-    ) ?? null
-  );
-});
+const macroCategoria = computed(() => findWineMenuItemByType(wine.value.type ?? null));
 
 const backToCategoryHref = computed(() => {
   if (!macroCategoria.value) {
     return '/classifica-vini-2026/vini/tutti';
   }
 
-  return `/classifica-vini-2026/vini/${macroCategoria.value.id}`;
+  return macroCategoria.value.routePath;
 });
 
 const premioName = computed(() => {

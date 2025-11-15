@@ -115,7 +115,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from '#imports'
 import { useWines } from '~/composables/useWines'
-import { wineMenuItems } from '~/lib/wineMenuItems'
+import { WINE_NAVIGATION_ITEMS, findWineMenuItemByType } from '~/lib/wineMenuItems'
 
 const props = withDefaults(
   defineProps<{
@@ -131,8 +131,7 @@ const props = withDefaults(
 )
 
 const route = useRoute()
-const { bySlug, getMacroWineTypes } = useWines()
-const MACROS = getMacroWineTypes()
+const { bySlug } = useWines()
 
 // Reactive scroll state toggles background when passing the threshold
 const isScrolled = ref(false)
@@ -142,7 +141,7 @@ const cssVars = computed(() => ({
   '--logo-max-height': props.logoMaxHeight,
 }))
 
-const items = wineMenuItems
+const items = WINE_NAVIGATION_ITEMS
 
 const isWineDetailPage = computed(() => {
   const path = route.path || ''
@@ -159,29 +158,20 @@ const currentWine = computed(() => {
 const macroCategoria = computed(() => {
   const wine = currentWine.value
   if (!wine?.type) return null
-  const macroId = macroIdFromWineType(wine.type)
-  if (!macroId) return null
-  return MACROS.find((macro) => macro.id === macroId) ?? null
+  return findWineMenuItemByType(wine.type)
 })
 
 const macroCategoriaLink = computed(() => {
   if (!macroCategoria.value) {
     return '/classifica-vini-2026/vini/tutti'
   }
-  return `/classifica-vini-2026/vini/${macroCategoria.value.id}`
+  return macroCategoria.value.routePath
 })
 
 const homeLink = computed(() => items.find((item) => item.id === 'home')?.href ?? '/')
 
 function macroIdFromWineType(wineType?: string | null): string | null {
-  const t = (wineType ?? '').toLowerCase().trim()
-  if (!t) return null
-  for (const macro of MACROS) {
-    if (!macro.types) continue
-    const match = macro.types.some((x) => (x ?? '').toLowerCase().trim() === t)
-    if (match) return macro.id
-  }
-  return null
+  return findWineMenuItemByType(wineType)?.id ?? null
 }
 
 function isHomePath(path: string) {

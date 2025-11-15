@@ -20,13 +20,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useWines } from '~/composables/useWines';
+import { WINE_MENU_ITEMS } from '~/lib/wineMenuItems';
 
 const props = defineProps<{ modelValue?: string | string[] }>();
 const emit = defineEmits<{ (e: 'update:modelValue', value: string | string[]): void }>();
 
-const { getMacroWineTypes } = useWines();
-const macroTypes = getMacroWineTypes();
+const macroTypes = WINE_MENU_ITEMS;
 
 const isMultiple = computed(() => Array.isArray(props.modelValue));
 
