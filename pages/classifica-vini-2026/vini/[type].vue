@@ -40,9 +40,9 @@ const route = useRoute();
 const router = useRouter();
 const { byType, bySlug, filterByMacroType, getMacroWineTypes } = useWines();
 
-const macroTypes = getMacroWineTypes();
-
 const { isMobile, isTablet } = useBreakpoints();
+
+const macroTypes = getMacroWineTypes();
 
 const typeParamRaw = computed(() => String(route.params.type ?? ''));
 const currentType = computed(() => typeParamRaw.value.trim().toLowerCase());

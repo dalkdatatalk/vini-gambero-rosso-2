@@ -46,9 +46,10 @@ type RawPremio = { name?: string | null };
 type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
 
 const route = useRoute();
-const { bySlug, getMacroWineTypes } = useWines();
 
 const { isMobile, isTablet } = useBreakpoints();
+
+const { bySlug, getMacroWineTypes } = useWines();
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
