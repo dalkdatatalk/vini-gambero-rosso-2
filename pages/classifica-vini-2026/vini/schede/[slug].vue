@@ -1,5 +1,6 @@
 <template>
   <HeaderMobile v-if="isMobile || isTablet" />
+  <HeaderGeneral v-if="!isMobile && !isTablet" />
   <main class="detail-page">
     <div class="wine-info-page">
       <section class="detail-page__content">
@@ -36,6 +37,7 @@ import { useWines } from '~/composables/useWines';
 import { useBreakpoints } from '~/composables/useBreakpoints';
 import { slugify } from '~/utils/slugify';
 import { buildWineProductJsonLd } from '~/utils/structuredData';
+import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
 import rawWines from '~/data/wines.json';
