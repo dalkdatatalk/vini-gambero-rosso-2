@@ -44,7 +44,6 @@ import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
 import rawWines from '~/data/wines.json';
-import { useWineListNavigation } from '~/composables/useWineListNavigation';
 
 type RawPremio = { name?: string | null };
 type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
@@ -54,7 +53,6 @@ const route = useRoute();
 const { isMobile, isTablet } = useBreakpoints();
 
 const { bySlug, getMacroWineTypes } = useWines();
-const { lastListContext } = useWineListNavigation();
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
@@ -84,37 +82,13 @@ const macroCategoria = computed(() => {
   );
 });
 
-const fallbackCategoryHref = computed(() => {
+const backToCategoryHref = computed(() => {
   if (!macroCategoria.value) {
     return '/classifica-vini-2026/vini/tutti';
   }
 
   return `/classifica-vini-2026/vini/${macroCategoria.value.id}`;
 });
-
-const storedListHref = computed(() => {
-  const context = lastListContext.value;
-  if (!context?.route) {
-    return null;
-  }
-
-  if (context.macroId === 'tutti') {
-    return context.route;
-  }
-
-  const macroId = macroCategoria.value?.id ?? null;
-  if (macroId && context.macroId === macroId) {
-    return context.route;
-  }
-
-  if (!context.macroId) {
-    return context.route;
-  }
-
-  return null;
-});
-
-const backToCategoryHref = computed(() => storedListHref.value ?? fallbackCategoryHref.value);
 
 const premioName = computed(() => {
   const slugValue = wine.value.slug.toLowerCase();
