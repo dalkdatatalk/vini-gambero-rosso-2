@@ -270,6 +270,12 @@ useHead(() => ({
   gap: 32px;
 }
 
+@media (max-width: 1279px) {
+  .type-page {
+    padding-top: 112px;
+  }
+}
+
 .type-page__header {
   text-align: center;
 }

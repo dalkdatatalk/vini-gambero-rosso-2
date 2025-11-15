@@ -155,11 +155,14 @@ watch(isMobile, (value) => {
 
 <style scoped>
 .header-mobile {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   background-color: #fff;
   box-sizing: border-box;
-  z-index: 20;
+  z-index: 1000;
 }
 
 .header-mobile--open {

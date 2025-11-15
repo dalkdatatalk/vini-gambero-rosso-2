@@ -149,6 +149,12 @@ useHead({
   gap: 32px;
 }
 
+@media (max-width: 1279px) {
+  .page {
+    padding-top: 112px;
+  }
+}
+
 .page__header {
   text-align: center;
   display: flex;

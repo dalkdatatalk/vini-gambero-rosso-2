@@ -195,6 +195,7 @@ useHead(() => ({
   flex-direction: column;
   gap: 24px;
   padding: 2.5rem 1.5rem;
+  padding-top: 112px;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -277,7 +278,7 @@ useHead(() => ({
 
 @media (min-width: 768px) {
   .detail-page {
-    padding: 4rem 3rem;
+    padding: 112px 3rem 4rem;
     gap: 28px;
   }
 
