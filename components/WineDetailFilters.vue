@@ -930,21 +930,22 @@ onBeforeUnmount(() => {
 
 .filter-controls {
   display: flex;
-  gap: 40px;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: stretch;
   width: 100%;
-  flex-wrap: wrap;
 }
 
 .filter-item {
   position: relative;
-  flex: 1 1 220px;
-  min-width: 220px;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
 }
 
 .filter-item--search {
-  flex: 1 1 280px;
-  min-width: 280px;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
 }
 
 .filter-label {
@@ -1136,7 +1137,7 @@ onBeforeUnmount(() => {
   background: transparent;
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
-  font-size: 32px;
+  font-size: 24px;
   color: #290005;
   letter-spacing: -0.96px;
   outline: none;
@@ -1169,13 +1170,22 @@ onBeforeUnmount(() => {
   border: 0;
 }
 
-@media (max-width: 900px) {
+@media (min-width: 768px) {
   .filter-controls {
-    gap: 24px;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0;
   }
 
   .filter-item {
+    flex: 1 1 200px;
     min-width: 200px;
+  }
+
+  .filter-item--search {
+    flex: 1 1 280px;
+    min-width: 280px;
   }
 
   .filter-input {
@@ -1183,19 +1193,17 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 640px) {
-  .filter-controls {
-    flex-direction: column;
+@media (min-width: 1280px) {
+  .filter-item {
+    min-width: 220px;
   }
 
-  .filter-item,
   .filter-item--search {
-    width: 100%;
-    min-width: 0;
+    min-width: 280px;
   }
 
   .filter-input {
-    font-size: 24px;
+    font-size: 32px;
   }
 }
 </style>

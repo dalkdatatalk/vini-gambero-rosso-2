@@ -1,6 +1,6 @@
 <template>
   <nav class="filters" aria-label="Filtra per tipologia di vino">
-    <ul class="filters__list">
+    <ul class="filters__list category-buttons">
       <li v-for="macro in macroTypes" :key="macro.id" class="filters__item">
         <NuxtLink
           class="filters__link"
@@ -46,31 +46,62 @@ const activeType = computed(() => {
 
 .filters__list {
   list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
   padding: 0;
   margin: 0;
-  justify-content: center;
 }
 
 .filters__item {
   margin: 0;
+  display: flex;
+  flex: 1 1 120px;
+  min-width: 0;
 }
 
 .filters__link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 8px 12px;
   border-radius: 999px;
   border: 1px solid #d1d5db;
   background-color: #ffffff;
   color: #1f2937;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.35;
+}
+
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .category-buttons {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .filters__item {
+    flex: 1 1 160px;
+  }
+
+  .filters__link {
+    padding: 10px 16px;
+    font-size: 0.95rem;
+  }
 }
 
 .filters__link:hover,

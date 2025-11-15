@@ -31,9 +31,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useMediaQuery } from '@vueuse/core';
 import { createError, useHead, useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
+import { useBreakpoints } from '~/composables/useBreakpoints';
 import { slugify } from '~/utils/slugify';
 import { buildWineProductJsonLd } from '~/utils/structuredData';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
@@ -46,7 +46,7 @@ type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
 const route = useRoute();
 const { bySlug, getMacroWineTypes } = useWines();
 
-const isMobile = useMediaQuery('(max-width: 767px)');
+const { isMobile } = useBreakpoints();
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
@@ -190,8 +190,8 @@ useHead(() => ({
 .detail-page {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  padding: 6rem 6rem;
+  gap: 24px;
+  padding: 2.5rem 1.5rem;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -207,23 +207,23 @@ useHead(() => ({
 .detail-page__header {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .detail-page__header h1 {
   margin: 0;
-  font-size: 3.5rem;
-  line-height: 3.4rem;
+  font-size: 1.2rem;
+  line-height: 1.2rem;
   color: var(--rosso-scuro);
   font-family: var(--cormorant-garamond);
-  padding-bottom: 2rem;
+  padding-bottom: 1.25rem;
   word-break: break-word;
 }
 
 .detail-page__header p {
   margin: 0;
   color: #4b5563;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .wine-info-page {
@@ -231,7 +231,7 @@ useHead(() => ({
   flex-direction: column;
   border: 1px solid var(--rosso);
   border-radius: 5px;
-  padding: 2.5rem 3rem;
+  padding: 1.5rem;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -240,8 +240,8 @@ useHead(() => ({
 
 .wine-details-container {
   display: flex;
-  flex-direction: row;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 1.5rem;
   width: 100%;
   box-sizing: border-box;
   align-items: flex-start;
@@ -257,15 +257,22 @@ useHead(() => ({
 
 .wine-column.technical {
   flex: 1 1 0;
-  padding-right: 2rem;
-  border-right: 2px solid var(--rosso);
+  padding-right: 0;
+  padding-bottom: 1.5rem;
+  border-right: none;
+  border-bottom: 2px solid var(--rosso);
 }
 
 .wine-column.description {
   flex: 1 1 0;
+  padding-top: 1.5rem;
 }
 
-@media (max-width: 1279px) {
+.name-wine {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
   .detail-page {
     padding: 4rem 3rem;
     gap: 28px;
@@ -275,70 +282,68 @@ useHead(() => ({
     padding: 2rem;
   }
 
+  .detail-page__header {
+    gap: 1.5rem;
+  }
+
   .detail-page__header h1 {
     font-size: 2.75rem;
     line-height: 2.8rem;
     padding-bottom: 1.75rem;
   }
 
+  .detail-page__header p {
+    font-size: 1rem;
+  }
+
   .wine-details-container {
-    flex-direction: column;
     gap: 2rem;
   }
 
   .wine-column.technical {
-    padding-right: 0;
     padding-bottom: 2rem;
-    border-right: none;
-    border-bottom: 2px solid var(--rosso);
   }
 
   .wine-column.description {
     padding-top: 2rem;
   }
-
-  .name-wine{
-    text-align: center;
-    font-size: 1rem;
-  }
 }
 
-@media (max-width: 767px) {
+@media (min-width: 1280px) {
   .detail-page {
-    padding: 2.5rem 1.5rem;
-    gap: 24px;
-  }
-
-  .wine-info-page {
-    padding: 1.5rem;
-  }
-
-  .detail-page__header {
-    gap: 1rem;
+    padding: 6rem 6rem;
+    gap: 32px;
   }
 
   .detail-page__header h1 {
-    font-size: 1.2rem;
-    line-height: 1.2rem;
-    padding-bottom: 1.25rem;
+    font-size: 3.5rem;
+    line-height: 3.4rem;
+    padding-bottom: 2rem;
   }
 
-  .detail-page__header p {
-    font-size: 0.95rem;
+  .wine-info-page {
+    padding: 2.5rem 3rem;
   }
 
   .wine-details-container {
-    gap: 1.5rem;
+    flex-direction: row;
+    gap: 2rem;
   }
 
   .wine-column.technical {
-    padding-bottom: 1.5rem;
+    padding-right: 2rem;
+    padding-bottom: 0;
+    border-right: 2px solid var(--rosso);
+    border-bottom: none;
   }
 
   .wine-column.description {
-    padding-top: 1.5rem;
+    padding-top: 0;
   }
 
+  .name-wine {
+    text-align: left;
+  }
 }
 
 @media (min-width: 1920px) {

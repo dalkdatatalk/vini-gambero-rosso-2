@@ -113,15 +113,15 @@ const premioLabel = computed(() => {
   display: block;
   color: inherit;
   text-decoration: none;
-  padding: 2rem 24px;
+  padding: 24px;
 }
 
 .wine-card__content {
   position: relative;
   display: flex;
   align-items: stretch;
-  gap: 32px;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .wine-card__info {
@@ -129,7 +129,7 @@ const premioLabel = computed(() => {
   flex-direction: column;
   gap: 8px;
   flex: 1;
-  max-width: 65%;
+  max-width: 100%;
 }
 
 .wine-card__badge {
@@ -144,7 +144,7 @@ const premioLabel = computed(() => {
 .wine-card__name {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
-  font-size: clamp(2.5rem, 3vw, 3.2rem);
+  font-size: clamp(1.8rem, 3vw, 3.2rem);
   color: #290005;
   letter-spacing: -0.03em;
   margin: 0;
@@ -162,7 +162,7 @@ const premioLabel = computed(() => {
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 600;
   font-style: italic;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: #ca1f1e;
   letter-spacing: -0.02em;
   margin: 0;
@@ -173,7 +173,7 @@ const premioLabel = computed(() => {
 .wine-card__price {
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 400;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: #290005;
   letter-spacing: -0.02em;
   margin: 0;
@@ -184,7 +184,7 @@ const premioLabel = computed(() => {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
   gap: 8px;
   min-width: 180px;
@@ -207,11 +207,12 @@ const premioLabel = computed(() => {
 .wine-card__score-value {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
-  font-size: clamp(5rem, 4vw, 6rem);
+  font-size: clamp(3rem, 4vw, 6rem);
   color: #290005;
   letter-spacing: -0.05em;
   line-height: 0.9;
   margin: 0;
+  text-align: left;
 }
 
 .wine-card__arrow {
@@ -237,26 +238,28 @@ const premioLabel = computed(() => {
   background: rgba(202, 31, 30, 0.5);
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
+
   .wine-card__link {
-    padding: 24px;
+    padding: 2rem 24px;
   }
 
   .wine-card__content {
-    flex-direction: column;
-    gap: 24px;
+    flex-direction: row;
+    gap: 32px;
+    justify-content: space-between;
   }
 
   .wine-card__info {
-    max-width: 100%;
+    max-width: 65%;
   }
 
   .wine-card__score {
-    align-items: flex-start;
+    align-items: center;
   }
 
   .wine-card__score-value {
-    text-align: left;
+    text-align: center;
   }
 }
 </style>

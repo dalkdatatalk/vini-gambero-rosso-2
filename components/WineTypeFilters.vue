@@ -123,6 +123,7 @@ function isActive(rawId: string) {
 .category-buttons {
   display: flex;
   justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 14px;
   align-items: center;
   line-height: 0;
