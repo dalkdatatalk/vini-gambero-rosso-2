@@ -253,7 +253,7 @@ onBeforeUnmount(() => {
   z-index: 50;
   display: flex;
   justify-content: center;
-  padding: 12px 24px;
+  padding: 12px 16px;
   background-color: transparent;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   backdrop-filter: blur(6px);
@@ -271,7 +271,7 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -347,13 +347,13 @@ onBeforeUnmount(() => {
   opacity: 1;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .bbb-header {
-    padding: 12px 16px;
+    padding: 12px 24px;
   }
 
   .bbb-header__inner {
-    gap: 12px;
+    gap: 16px;
   }
 }
 </style>

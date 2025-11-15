@@ -138,18 +138,17 @@ h3 {
   font-size: 1.4rem;
 }
 
-/* BASE / DESKTOP */
 .detail-page__info {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.1rem;
   width: 100%;
   box-sizing: border-box;
 }
 
 .cantina .detail-page__info-value {
   font-family: var(--cormorant-garamond);
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 500;
   color: var(--rosso-scuro);
 }
@@ -163,8 +162,8 @@ h3 {
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 2rem;
-  padding-bottom: 2rem;
+  gap: 1.25rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--rosso);
 }
 
@@ -173,6 +172,7 @@ h3 {
   flex-direction: row;
   justify-content: space-between;
   gap: 1rem;
+  align-items: flex-start;
 }
 
 .detail-page__info-item.regione {
@@ -184,14 +184,14 @@ h3 {
   color: var(--rosso-scuro);
   font-family: var(--funnel-sans);
   font-weight: 300;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
 }
 
 .detail-page__info-item.regione .detail-page__info-value {
   color: var(--rosso);
   font-family: var(--cormorant-garamond);
   font-weight: 300;
-  font-size: 3rem;
+  font-size: 1.2rem;
 }
 
 .detail-page__info-item.punteggio {
@@ -203,55 +203,40 @@ h3 {
 .punteggio .detail-page__info-label {
   color: var(--rosso-scuro);
   font-family: var(--funnel-sans);
+  font-size: 0.95rem;
 }
 
 .punteggio .detail-page__info-value {
   color: var(--rosso-scuro);
   font-family: var(--cormorant-garamond);
-  font-size: 5rem;
+  font-size: 3rem;
   font-weight: 600;
 }
 
 .detail-page__info-label {
   color: var(--rosso);
   font-family: var(--funnel-sans);
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .detail-page__info-value {
   color: var(--rosso-scuro);
   font-family: var(--funnel-sans);
-  font-size: 1.1rem;
+  font-size: 1rem;
   text-transform: capitalize;
   text-align: right;
   word-break: break-word;
 }
 
-/* ============================
-   TABLET (max-width: 1279px)
-   ============================ */
-@media (max-width: 1279px) {
+@media (min-width: 768px) {
   .detail-page__info {
     gap: 1.25rem;
   }
 
   .region-price {
-    flex-direction: column;
-    align-items: flex-start;
     gap: 1.5rem;
-  }
-
-  .detail-page__info-item {
-    flex-direction: row;
+    padding-bottom: 2rem;
     align-items: flex-start;
-  }
-
-  .cantina{
-    justify-content: center;
-  }
-
-  .cantina .detail-page__info-value{
-    font-size: 1.2rem;
   }
 
   .detail-page__info-item.regione .detail-page__info-label {
@@ -262,64 +247,59 @@ h3 {
     font-size: 2.4rem;
   }
 
+  .punteggio .detail-page__info-label {
+    font-size: 1rem;
+  }
+
   .punteggio .detail-page__info-value {
     font-size: 3.8rem;
   }
 
-  .detail-page__info-value {
-    text-align: left;
-  }
-
-  .region-price{
-    display: flex;
-    flex-direction: row;
-  }
-}
-
-/* ============================
-   MOBILE (max-width: 767px)
-   ============================ */
-@media (max-width: 767px) {
-  .detail-page__info {
-    gap: 1.1rem;
-  }
-
-  .region-price {
-    display: flex;
-    flex-direction: row;
-    padding-bottom: 1.5rem;
-    gap: 1.25rem;
-  }
-
-  .detail-page__info-item.regione .detail-page__info-label {
+  .detail-page__info-label {
     font-size: 1.1rem;
   }
 
+  .detail-page__info-value {
+    font-size: 1.1rem;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1280px) {
+  .detail-page__info {
+    gap: 1.5rem;
+  }
+
+  .region-price {
+    gap: 2rem;
+    align-items: flex-end;
+  }
+
+  .cantina .detail-page__info-value {
+    font-size: 1.5rem;
+  }
+
+  .detail-page__info-item.regione .detail-page__info-label {
+    font-size: 1.5rem;
+  }
+
   .detail-page__info-item.regione .detail-page__info-value {
-    font-size: 1.2rem;
-  }
-
-  .punteggio .detail-page__info-label {
-    font-size: 0.95rem;
-  }
-
-  .punteggio .detail-page__info-value {
     font-size: 3rem;
   }
 
-  .detail-page__info-label {
-    font-size: 1rem;
+  .punteggio .detail-page__info-label {
+    font-size: 1.1rem;
+  }
+
+  .punteggio .detail-page__info-value {
+    font-size: 5rem;
   }
 
   .detail-page__info-value {
-    font-size: 1rem;
     text-align: right;
   }
 }
 
-/* ============================
-   DESKTOP ULTRA-WIDE (≥ 1920px)
-   ============================ */
 @media (min-width: 1920px) {
   .detail-page__info {
     gap: 1.75rem;
