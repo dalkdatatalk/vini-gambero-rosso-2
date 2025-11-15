@@ -1,6 +1,6 @@
 <template>
   <HeaderMobile v-if="isMobile || isTablet" />
-  <HeaderGeneral v-if="!isMobile && !isTablet" />
+  <HeaderGeneral v-if="!(isMobile || isTablet)" />
   <main class="page">
     <WineTypeFilters v-model="typeSelection" class="page__filters" />
 
