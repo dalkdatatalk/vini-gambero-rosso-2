@@ -174,7 +174,7 @@ function isActive(id: string) {
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  padding: 2rem 0;
+  padding: 1rem 0 0;
 }
 
 .header-general__logo img {
@@ -184,8 +184,12 @@ function isActive(id: string) {
   height: auto;
 }
 
-.header-general__logo:first-child img {
-  max-height: 40px;
+.header-general__logo img[alt='Gambero Rosso'] {
+  max-height: 30px;
+}
+
+.header-general__logo img[alt='Berebene'] {
+  max-height: 50px;
 }
 
 .header-general--sponsor {
@@ -208,6 +212,7 @@ function isActive(id: string) {
   justify-content: center;
   align-items: center;
   min-width: 0;
+  padding: 1rem 0;
 }
 
 .bbb-header__nav {
