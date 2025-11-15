@@ -1,6 +1,6 @@
 <template>
   <HeaderMobile v-if="isMobile || isTablet" />
-  <HeaderGeneral v-if="!(isMobile || isTablet)" />
+  <HeaderGeneral v-else />
   <main class="detail-page">
     <div class="wine-info-page">
       <section class="detail-page__content">
