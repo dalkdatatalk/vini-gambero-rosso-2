@@ -1,5 +1,5 @@
 <template>
-  <HeaderMobile v-if="isMobile" />
+  <HeaderMobile v-if="isMobile || isTablet" />
   <main class="detail-page">
     <div class="wine-info-page">
       <section class="detail-page__content">
@@ -46,7 +46,7 @@ type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
 const route = useRoute();
 const { bySlug, getMacroWineTypes } = useWines();
 
-const { isMobile } = useBreakpoints();
+const { isMobile, isTablet } = useBreakpoints();
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
