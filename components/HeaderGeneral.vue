@@ -1,62 +1,65 @@
 <template>
-  <div class="header-general">
-    <!-- no sponsor -->
-    <div class="header-general--no-sponsor" v-if="!showSponsor">
-      <div class="header-general__logo">
-        <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+  <div class="header-general-container">
+    <header ref="headerRef" class="header-general">
+      <!-- no sponsor -->
+      <div class="header-general--no-sponsor" v-if="!showSponsor">
+        <div class="header-general__logo">
+          <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+        </div>
+        <div class="header-general__logo">
+          <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+        </div>
       </div>
-      <div class="header-general__logo">
-        <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
-      </div>
-    </div>
 
-    <!-- sponsor -->
-    <div class="header-general--sponsor" v-else>
-      <div class="header-general__logo">
-        <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+      <!-- sponsor -->
+      <div class="header-general--sponsor" v-else>
+        <div class="header-general__logo">
+          <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+        </div>
+        <div class="header-general__logo">
+          <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+        </div>
+        <div class="header-general__logo sponsor-area">
+          <p>in collaborazione con</p>
+          <img src="/img/logo-sponsor.png" alt="Sponsor" />
+        </div>
       </div>
-      <div class="header-general__logo">
-        <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
-      </div>
-      <div class="header-general__logo sponsor-area">
-        <p>in collaborazione con</p>
-        <img src="/img/logo-sponsor.png" alt="Sponsor" />
-      </div>
-    </div>
 
-    <div class="bbb-header__center">
-      <slot>
-        <nav class="bbb-header__nav" aria-label="Sezioni vini">
-          <ul class="bbb-header__menu">
-            <li v-for="item in items" :key="item.id">
-              <a
-                v-if="item.href"
-                :href="item.href"
-                class="bbb-header__link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {{ item.label }}
-              </a>
-              <NuxtLink
-                v-else
-                :to="item.to"
-                class="bbb-header__link"
-                :class="{ active: isActive(item.id) }"
-                :aria-current="isActive(item.id) ? 'page' : undefined"
-              >
-                {{ item.label }}
-              </NuxtLink>
-            </li>
-          </ul>
-        </nav>
-      </slot>
-    </div>
+      <div class="bbb-header__center">
+        <slot>
+          <nav class="bbb-header__nav" aria-label="Sezioni vini">
+            <ul class="bbb-header__menu">
+              <li v-for="item in items" :key="item.id">
+                <a
+                  v-if="item.href"
+                  :href="item.href"
+                  class="bbb-header__link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ item.label }}
+                </a>
+                <NuxtLink
+                  v-else
+                  :to="item.to"
+                  class="bbb-header__link"
+                  :class="{ active: isActive(item.id) }"
+                  :aria-current="isActive(item.id) ? 'page' : undefined"
+                >
+                  {{ item.label }}
+                </NuxtLink>
+              </li>
+            </ul>
+          </nav>
+        </slot>
+      </div>
+    </header>
+    <div class="header-general__spacer" :style="{ height: spacerHeightStyle }" aria-hidden="true"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from '#imports'
 import { useWines } from '~/composables/useWines'
 import { wineMenuItems } from '~/lib/wineMenuItems'
@@ -72,6 +75,36 @@ const { bySlug, getMacroWineTypes } = useWines()
 const MACROS = getMacroWineTypes()
 
 const items = wineMenuItems
+
+const headerRef = ref<HTMLElement | null>(null)
+const headerHeight = ref(0)
+
+const spacerHeightStyle = computed(() => `${headerHeight.value}px`)
+
+function updateHeaderHeight() {
+  headerHeight.value = headerRef.value?.offsetHeight ?? 0
+}
+
+let resizeObserver: ResizeObserver | null = null
+
+onMounted(() => {
+  updateHeaderHeight()
+  if (headerRef.value && typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(() => updateHeaderHeight())
+    resizeObserver.observe(headerRef.value)
+  }
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', updateHeaderHeight)
+  }
+})
+
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+  resizeObserver = null
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', updateHeaderHeight)
+  }
+})
 
 function macroIdFromWineType(wineType?: string | null): string | null {
   const t = (wineType ?? '').toLowerCase().trim()
@@ -111,6 +144,31 @@ function isActive(id: string) {
 </script>
 
 <style scoped>
+.header-general-container {
+  position: relative;
+  width: 100%;
+}
+
+.header-general {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+  padding: 0 24px;
+}
+
+.header-general__spacer {
+  width: 100%;
+  display: block;
+  pointer-events: none;
+}
+
 .header-general--no-sponsor {
   display: flex;
   flex-direction: row;
