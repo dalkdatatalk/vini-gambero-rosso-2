@@ -1,4 +1,5 @@
 <template>
+  <HeaderMobile v-if="isMobile || isTablet" />
   <HeaderGeneral :sponsor="true"/>
   <main class="page">
     <WineTypeFilters v-model="typeSelection" class="page__filters" />
@@ -21,6 +22,8 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 import { useHead } from '#imports';
+import HeaderMobile from '~/components/HeaderMobile.vue';
+import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
 import { slugify } from '~/utils/slugify';
@@ -28,6 +31,8 @@ import { slugify } from '~/utils/slugify';
 const wineTools = useWines();
 const { wines } = wineTools;
 const macroTypes = wineTools.getMacroWineTypes();
+
+const { isMobile, isTablet } = useBreakpoints();
 
 const typeSelection = ref<string | string[]>('tutti');
 

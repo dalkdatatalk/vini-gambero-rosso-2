@@ -1,4 +1,5 @@
 <template>
+  <HeaderMobile v-if="isMobile || isTablet" />
   <HeaderGeneral :sponsor="true"/>
   <main class="type-page">
 
@@ -28,6 +29,8 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import { navigateTo, useHead, useRoute, useRouter } from '#imports';
+import HeaderMobile from '~/components/HeaderMobile.vue';
+import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
 import { buildWineListJsonLd } from '~/utils/structuredData';
@@ -37,6 +40,8 @@ const router = useRouter();
 const { byType, bySlug, filterByMacroType, getMacroWineTypes } = useWines();
 
 const macroTypes = getMacroWineTypes();
+
+const { isMobile, isTablet } = useBreakpoints();
 
 const typeParamRaw = computed(() => String(route.params.type ?? ''));
 const currentType = computed(() => typeParamRaw.value.trim().toLowerCase());
