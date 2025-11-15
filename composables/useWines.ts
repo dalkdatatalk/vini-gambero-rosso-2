@@ -1,15 +1,13 @@
 import { useState } from '#imports';
 import rawWines from '~/data/wines.json';
+import {
+  WINE_MENU_ITEMS,
+  getWineMenuItemById,
+  isWineMacroCategoryId,
+} from '~/lib/wineMenuItems';
 import { slugify } from '~/utils/slugify';
 
-const MACRO_WINE_TYPES = [
-  { id: 'bianchi', label: 'Bianchi', types: ['bianco', 'bianco macerato/orange wine', 'bianco liquoroso'] },
-  { id: 'rossi', label: 'Rossi', types: ['rosso'] },
-  { id: 'bollicine', label: 'Bollicine', types: ['spumante bianco', 'spumante rosato', 'spumante rosso', 'spumante dolce bianco'] },
-  { id: 'rosati', label: 'Rosati', types: ['rose'] },
-  { id: 'vini-dolci', label: 'Vini dolci', types: ['dolce bianco', 'dolce rosso'] },
-  { id: 'tutti', label: 'Tutti', types: ['bianco', 'bianco macerato/orange wine', 'bianco liquoroso','rosso','spumante bianco', 'spumante rosato', 'spumante rosso', 'spumante dolce bianco','rose','dolce bianco', 'dolce rosso'] },
-];
+const MACRO_WINE_TYPES = WINE_MENU_ITEMS;
 
 type TaxonomyItem = {
   id: number;
@@ -245,10 +243,10 @@ export function useWines() {
 
   function filterByMacroType(macroId: string): Wine[] {
     const normalizedId = macroId.trim().toLowerCase();
-    const macro = MACRO_WINE_TYPES.find((item) => item.id === normalizedId);
-    if (!macro) {
+    if (!isWineMacroCategoryId(normalizedId)) {
       return [];
     }
+    const macro = getWineMenuItemById(normalizedId);
     if (!macro.types) {
       return wines.value;
     }

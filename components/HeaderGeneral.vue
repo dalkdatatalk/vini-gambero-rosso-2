@@ -62,7 +62,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from '#imports'
 import { useWines } from '~/composables/useWines'
-import { wineMenuItems } from '~/lib/wineMenuItems'
+import { WINE_NAVIGATION_ITEMS, findWineMenuItemByType } from '~/lib/wineMenuItems'
 
 const props = defineProps<{
   sponsor?: boolean | string | null
@@ -71,10 +71,9 @@ const props = defineProps<{
 const showSponsor = computed(() => props.sponsor !== false)
 
 const route = useRoute()
-const { bySlug, getMacroWineTypes } = useWines()
-const MACROS = getMacroWineTypes()
+const { bySlug } = useWines()
 
-const items = wineMenuItems
+const items = WINE_NAVIGATION_ITEMS
 
 const headerRef = ref<HTMLElement | null>(null)
 const headerHeight = ref(0)
@@ -107,14 +106,7 @@ onBeforeUnmount(() => {
 })
 
 function macroIdFromWineType(wineType?: string | null): string | null {
-  const t = (wineType ?? '').toLowerCase().trim()
-  if (!t) return null
-  for (const macro of MACROS) {
-    if (!macro.types) continue
-    const match = macro.types.some((x) => (x ?? '').toLowerCase().trim() === t)
-    if (match) return macro.id
-  }
-  return null
+  return findWineMenuItemByType(wineType)?.id ?? null
 }
 
 function isHomePath(path: string) {
