@@ -8,12 +8,10 @@
           <div class="wine-column technical">
             <header class="detail-page__header">
               <WineSingleSponsor v-if="premioName" :premio-name="premioName" />
-              <div class="wine-header-row">
-                <NuxtLink :to="backToCategoryHref" class="wine-back-button" aria-label="Torna alla lista dei vini">
-                  <Icon name="ph:arrow-left" class="wine-back-button__icon" />
-                </NuxtLink>
-                <h1 class="name-wine">{{ wine.name }}</h1>
-              </div>
+              <NuxtLink :to="backToCategoryHref" class="wine-back-button" aria-label="Torna alla lista dei vini">
+                <Icon name="ph:arrow-left" class="wine-back-button__icon" />
+              </NuxtLink>
+              <h1 class="name-wine">{{ wine.name }}</h1>
             </header>
             <WineTechnicalDetails
               :wine="wine"
@@ -245,17 +243,6 @@ useHead(() => ({
   gap: 1rem;
 }
 
-.wine-header-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.75rem;
-  flex-wrap: nowrap;
-  width: 100%;
-  position: relative;
-}
-
 .wine-back-button {
   display: inline-flex;
   align-items: center;
@@ -266,6 +253,8 @@ useHead(() => ({
   border-radius: 999px;
   transition: color 0.2s ease;
   flex-shrink: 0;
+  align-self: flex-start;
+  margin-bottom: 0.5rem;
 }
 
 .wine-back-button:focus-visible,
@@ -276,12 +265,6 @@ useHead(() => ({
 .wine-back-button__icon {
   width: 1.85rem;
   height: 1.85rem;
-}
-
-.wine-header-row .name-wine {
-  flex: 1 1 auto;
-  min-width: 0;
-  text-align: left;
 }
 
 .detail-page__header h1 {
@@ -360,12 +343,9 @@ useHead(() => ({
     gap: 1.5rem;
   }
 
-  .wine-header-row {
-    gap: 1rem;
-  }
-
   .wine-back-button {
     padding: 0.35rem;
+    margin-bottom: 0.75rem;
   }
 
   .wine-back-button__icon {
@@ -412,16 +392,8 @@ useHead(() => ({
     padding: 2.5rem 3rem;
   }
 
-  .wine-header-row {
-    justify-content: flex-start;
-    min-height: 3rem;
-  }
-
   .wine-back-button {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translate(-120%, -50%);
+    margin-bottom: 1rem;
   }
 
   .wine-details-container {
