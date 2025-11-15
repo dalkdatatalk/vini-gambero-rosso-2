@@ -31,9 +31,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useMediaQuery } from '@vueuse/core';
 import { createError, useHead, useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
+import { useBreakpoints } from '~/composables/useBreakpoints';
 import { slugify } from '~/utils/slugify';
 import { buildWineProductJsonLd } from '~/utils/structuredData';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
@@ -46,7 +46,7 @@ type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
 const route = useRoute();
 const { bySlug, getMacroWineTypes } = useWines();
 
-const isMobile = useMediaQuery('(max-width: 767px)');
+const { isMobile } = useBreakpoints();
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
