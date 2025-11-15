@@ -8,8 +8,16 @@
       </div>
     </div>
 
-    <div class="wine-image-placeholder" style="display: flex; flex-direction: column; align-items: center;">
-      <img src="/img/placeholder-img-vino.png" alt="Immagine del vino" style="max-width: 200px;" />
+    <div
+      v-if="wine.thumbnail?.medium"
+      class="wine-image-placeholder"
+    >
+      <img
+        :src="wine.thumbnail.medium"
+        :alt="wine.name"
+        class="wine-image"
+        loading="lazy"
+      />
     </div>
 
     <div class="detail-page__info-item detail-page__info-item--stacked">
@@ -118,5 +126,20 @@ const decodedPrimaryRegion = computed(() => primaryRegion.value ?? null);
 .box-newsletter a:hover{
   background-color: var(--rosso);
   color: var(--bianco);
+}
+
+.wine-image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.wine-image {
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
 }
 </style>
