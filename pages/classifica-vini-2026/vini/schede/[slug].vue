@@ -46,6 +46,7 @@ import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
 import rawWines from '~/data/wines.json';
+import { useWineListNavigation } from '~/composables/useWineListNavigation';
 
 type RawPremio = { name?: string | null };
 type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
@@ -55,6 +56,7 @@ const route = useRoute();
 const { isMobile, isTablet } = useBreakpoints();
 
 const { bySlug, getMacroWineTypes } = useWines();
+const { lastListContext } = useWineListNavigation();
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
@@ -84,13 +86,37 @@ const macroCategoria = computed(() => {
   );
 });
 
-const backToCategoryHref = computed(() => {
+const fallbackCategoryHref = computed(() => {
   if (!macroCategoria.value) {
     return '/classifica-vini-2026/vini/tutti';
   }
 
   return `/classifica-vini-2026/vini/${macroCategoria.value.id}`;
 });
+
+const storedListHref = computed(() => {
+  const context = lastListContext.value;
+  if (!context?.route) {
+    return null;
+  }
+
+  if (context.macroId === 'tutti') {
+    return context.route;
+  }
+
+  const macroId = macroCategoria.value?.id ?? null;
+  if (macroId && context.macroId === macroId) {
+    return context.route;
+  }
+
+  if (!context.macroId) {
+    return context.route;
+  }
+
+  return null;
+});
+
+const backToCategoryHref = computed(() => storedListHref.value ?? fallbackCategoryHref.value);
 
 const premioName = computed(() => {
   const slugValue = wine.value.slug.toLowerCase();
@@ -223,21 +249,20 @@ useHead(() => ({
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.75rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   width: 100%;
+  position: relative;
 }
 
 .wine-back-button {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.75rem;
+  justify-content: center;
+  padding: 0.35rem;
   color: var(--rosso-scuro);
   text-decoration: none;
-  font-weight: 600;
-  font-size: 0.95rem;
   border-radius: 999px;
   transition: color 0.2s ease;
   flex-shrink: 0;
@@ -249,12 +274,12 @@ useHead(() => ({
 }
 
 .wine-back-button__icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.85rem;
+  height: 1.85rem;
 }
 
 .wine-header-row .name-wine {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   min-width: 0;
   text-align: left;
 }
@@ -318,7 +343,7 @@ useHead(() => ({
 }
 
 .name-wine {
-  text-align: center;
+  text-align: left;
 }
 
 @media (min-width: 768px) {
@@ -340,8 +365,12 @@ useHead(() => ({
   }
 
   .wine-back-button {
-    font-size: 1rem;
-    gap: 0.5rem;
+    padding: 0.35rem;
+  }
+
+  .wine-back-button__icon {
+    width: 2rem;
+    height: 2rem;
   }
 
   .detail-page__header h1 {
@@ -385,6 +414,14 @@ useHead(() => ({
 
   .wine-header-row {
     justify-content: flex-start;
+    min-height: 3rem;
+  }
+
+  .wine-back-button {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-120%, -50%);
   }
 
   .wine-details-container {

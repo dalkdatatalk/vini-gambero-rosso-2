@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { navigateTo, useHead, useRoute, useRouter } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
@@ -35,10 +35,12 @@ import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
 import { buildWineListJsonLd } from '~/utils/structuredData';
+import { useWineListNavigation } from '~/composables/useWineListNavigation';
 
 const route = useRoute();
 const router = useRouter();
 const { byType, bySlug, filterByMacroType, getMacroWineTypes } = useWines();
+const { setListContext, saveScrollPosition, restoreScrollPosition } = useWineListNavigation();
 
 const { isMobile, isTablet } = useBreakpoints();
 
@@ -52,6 +54,43 @@ const currentMacro = computed(() => {
     return null;
   }
   return macroTypes.find((macro) => macro.id === currentType.value) ?? null;
+});
+
+const normalizedListRoute = computed(() => {
+  const suffix = currentType.value || 'tutti';
+  return `/classifica-vini-2026/vini/${suffix}`;
+});
+
+const currentMacroId = computed(() => currentMacro.value?.id ?? currentType.value ?? null);
+
+watch(
+  () => [normalizedListRoute.value, currentMacroId.value],
+  ([routeValue, macroId]) => {
+    setListContext({ route: routeValue, macroId });
+  },
+  { immediate: true }
+);
+
+const handleListScroll = () => {
+  if (!process.client || typeof window === 'undefined') {
+    return;
+  }
+  saveScrollPosition(normalizedListRoute.value, window.scrollY);
+};
+
+onMounted(() => {
+  restoreScrollPosition(normalizedListRoute.value);
+  if (process.client && typeof window !== 'undefined') {
+    window.addEventListener('scroll', handleListScroll, { passive: true });
+  }
+});
+
+onBeforeUnmount(() => {
+  if (!process.client || typeof window === 'undefined') {
+    return;
+  }
+  window.removeEventListener('scroll', handleListScroll);
+  saveScrollPosition(normalizedListRoute.value, window.scrollY);
 });
 
 const redirectTarget = computed(() => {

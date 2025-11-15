@@ -20,20 +20,56 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
-import { useHead } from '#imports';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
+import { useHead, useRoute } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
 import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
 import { slugify } from '~/utils/slugify';
+import { useWineListNavigation } from '~/composables/useWineListNavigation';
 
 const { isMobile, isTablet } = useBreakpoints();
 
 const wineTools = useWines();
 const { wines } = wineTools;
 const macroTypes = wineTools.getMacroWineTypes();
+
+const route = useRoute();
+const { setListContext, saveScrollPosition, restoreScrollPosition } = useWineListNavigation();
+
+const tuttiListRoute = computed(() => route.path || '/classifica-vini-2026/vini');
+
+watch(
+  () => tuttiListRoute.value,
+  (value) => {
+    setListContext({ route: value, macroId: 'tutti' });
+  },
+  { immediate: true }
+);
+
+const handleListScroll = () => {
+  if (!process.client || typeof window === 'undefined') {
+    return;
+  }
+  saveScrollPosition(tuttiListRoute.value, window.scrollY);
+};
+
+onMounted(() => {
+  restoreScrollPosition(tuttiListRoute.value);
+  if (process.client && typeof window !== 'undefined') {
+    window.addEventListener('scroll', handleListScroll, { passive: true });
+  }
+});
+
+onBeforeUnmount(() => {
+  if (!process.client || typeof window === 'undefined') {
+    return;
+  }
+  window.removeEventListener('scroll', handleListScroll);
+  saveScrollPosition(tuttiListRoute.value, window.scrollY);
+});
 
 const typeSelection = ref<string | string[]>('tutti');
 
