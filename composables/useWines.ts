@@ -59,6 +59,11 @@ type RawWine = {
   vino_abbinamento?: string | null;
   content?: string | null;
   related_locale?: RelatedLocale | null;
+  thumbnail?: {
+    full?: string | null;
+    medium?: string | null;
+    thumbnail?: string | null;
+  } | null;
 };
 
 export interface GrapeComposition {
@@ -83,6 +88,11 @@ export interface Wine {
   pairing: string | null;
   pairingTags: string[];
   relatedLocale: RelatedLocale | null;
+  thumbnail: {
+    full: string | null;
+    medium: string | null;
+    thumbnail: string | null;
+  } | null;
 }
 
 function toNumber(value: string | number | null | undefined): number | null {
@@ -145,6 +155,24 @@ function parsePairingTags(items?: TaxonomyItem[] | null): string[] {
   return Array.from(values);
 }
 
+function parseThumbnail(
+  raw?: { full?: string | null; medium?: string | null; thumbnail?: string | null } | null
+) {
+  if (!raw) return null;
+
+  const full = safeText(raw.full ?? null);
+  const medium = safeText(raw.medium ?? null);
+  const thumb = safeText(raw.thumbnail ?? null);
+
+  if (!full && !medium && !thumb) return null;
+
+  return {
+    full,
+    medium,
+    thumbnail: thumb,
+  };
+}
+
 export function normalizeWine(raw: RawWine): Wine {
   const name = safeText(raw.title) ?? 'Senza nome';
   const slug = safeText(raw.slug) ?? slugify(name);
@@ -170,6 +198,7 @@ export function normalizeWine(raw: RawWine): Wine {
     pairing: pairingText,
     pairingTags,
     relatedLocale: raw.related_locale ?? null,
+    thumbnail: parseThumbnail(raw.thumbnail),
   };
 }
 
