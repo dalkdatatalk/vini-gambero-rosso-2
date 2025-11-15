@@ -8,7 +8,12 @@
           <div class="wine-column technical">
             <header class="detail-page__header">
               <WineSingleSponsor v-if="premioName" :premio-name="premioName" />
-              <h1 class="name-wine">{{ wine.name }}</h1>
+              <div class="wine-header-row">
+                <NuxtLink :to="backToCategoryHref" class="wine-back-button" aria-label="Torna alla lista dei vini">
+                  <Icon name="ph:arrow-left" class="wine-back-button__icon" />
+                </NuxtLink>
+                <h1 class="name-wine">{{ wine.name }}</h1>
+              </div>
             </header>
             <WineTechnicalDetails
               :wine="wine"
@@ -79,7 +84,7 @@ const macroCategoria = computed(() => {
   );
 });
 
-const macroCategoriaLink = computed(() => {
+const backToCategoryHref = computed(() => {
   if (!macroCategoria.value) {
     return '/classifica-vini-2026/vini/tutti';
   }
@@ -214,6 +219,46 @@ useHead(() => ({
   gap: 1rem;
 }
 
+.wine-header-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.wine-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  color: var(--rosso-scuro);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 999px;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.wine-back-button:focus-visible,
+.wine-back-button:hover {
+  color: var(--rosso);
+}
+
+.wine-back-button__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.wine-header-row .name-wine {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: left;
+}
+
 .detail-page__header h1 {
   margin: 0;
   font-size: 1.2rem;
@@ -290,6 +335,15 @@ useHead(() => ({
     gap: 1.5rem;
   }
 
+  .wine-header-row {
+    gap: 1rem;
+  }
+
+  .wine-back-button {
+    font-size: 1rem;
+    gap: 0.5rem;
+  }
+
   .detail-page__header h1 {
     font-size: 2.75rem;
     line-height: 2.8rem;
@@ -327,6 +381,10 @@ useHead(() => ({
 
   .wine-info-page {
     padding: 2.5rem 3rem;
+  }
+
+  .wine-header-row {
+    justify-content: flex-start;
   }
 
   .wine-details-container {
