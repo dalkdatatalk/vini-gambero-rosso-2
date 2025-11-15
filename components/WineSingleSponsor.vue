@@ -3,9 +3,11 @@
     <div class="name-premio-vino">
       {{ label || 'Premio non disponibile' }}
     </div>
+    <!--
     <div class="img-premio-vino" aria-hidden="true">
       <div class="placeholder-icon" />
     </div>
+    -->
   </div>
 </template>
 
