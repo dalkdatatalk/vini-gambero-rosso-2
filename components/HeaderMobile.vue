@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="isMobile"
-    :class="['header-mobile', { 'header-mobile--open': isMenuOpen }]"
-  >
+  <div :class="['header-mobile', { 'header-mobile--open': isMenuOpen }]">
     <div class="header-mobile__bar">
       <button
         type="button"

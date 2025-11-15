@@ -1,6 +1,6 @@
 <template>
   <HeaderMobile v-if="isMobile || isTablet" />
-  <HeaderGeneral v-if="!isMobile && !isTablet" />
+  <HeaderGeneral v-else />
   <main class="page">
     <WineTypeFilters v-model="typeSelection" class="page__filters" />
 
@@ -29,11 +29,11 @@ import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
 import { slugify } from '~/utils/slugify';
 
+const { isMobile, isTablet } = useBreakpoints();
+
 const wineTools = useWines();
 const { wines } = wineTools;
 const macroTypes = wineTools.getMacroWineTypes();
-
-const { isMobile, isTablet } = useBreakpoints();
 
 const typeSelection = ref<string | string[]>('tutti');
 
