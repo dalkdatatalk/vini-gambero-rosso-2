@@ -8,6 +8,9 @@
           <div class="wine-column technical">
             <header class="detail-page__header">
               <WineSingleSponsor v-if="premioName" :premio-name="premioName" />
+              <NuxtLink :to="backToCategoryHref" class="wine-back-button" aria-label="Torna alla lista dei vini">
+                <Icon name="ph:arrow-left" class="wine-back-button__icon" />
+              </NuxtLink>
               <h1 class="name-wine">{{ wine.name }}</h1>
             </header>
             <WineTechnicalDetails
@@ -79,7 +82,7 @@ const macroCategoria = computed(() => {
   );
 });
 
-const macroCategoriaLink = computed(() => {
+const backToCategoryHref = computed(() => {
   if (!macroCategoria.value) {
     return '/classifica-vini-2026/vini/tutti';
   }
@@ -214,6 +217,30 @@ useHead(() => ({
   gap: 1rem;
 }
 
+.wine-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem;
+  color: var(--rosso-scuro);
+  text-decoration: none;
+  border-radius: 999px;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.wine-back-button:focus-visible,
+.wine-back-button:hover {
+  color: var(--rosso);
+}
+
+.wine-back-button__icon {
+  width: 1.85rem;
+  height: 1.85rem;
+}
+
 .detail-page__header h1 {
   margin: 0;
   font-size: 1.2rem;
@@ -273,7 +300,7 @@ useHead(() => ({
 }
 
 .name-wine {
-  text-align: center;
+  text-align: left;
 }
 
 @media (min-width: 768px) {
@@ -288,6 +315,16 @@ useHead(() => ({
 
   .detail-page__header {
     gap: 1.5rem;
+  }
+
+  .wine-back-button {
+    padding: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .wine-back-button__icon {
+    width: 2rem;
+    height: 2rem;
   }
 
   .detail-page__header h1 {
@@ -327,6 +364,10 @@ useHead(() => ({
 
   .wine-info-page {
     padding: 2.5rem 3rem;
+  }
+
+  .wine-back-button {
+    margin-bottom: 1rem;
   }
 
   .wine-details-container {
