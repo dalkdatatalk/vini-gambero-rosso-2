@@ -121,7 +121,6 @@ const premioLabel = computed(() => {
   display: flex;
   align-items: stretch;
   flex-direction: column;
-  gap: 24px;
   justify-content: flex-start;
 }
 
@@ -145,7 +144,7 @@ const premioLabel = computed(() => {
 .wine-card__name {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
-  font-size: clamp(2.5rem, 3vw, 3.2rem);
+  font-size: clamp(1.8rem, 3vw, 3.2rem);
   color: #290005;
   letter-spacing: -0.03em;
   margin: 0;
@@ -163,7 +162,7 @@ const premioLabel = computed(() => {
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 600;
   font-style: italic;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: #ca1f1e;
   letter-spacing: -0.02em;
   margin: 0;
@@ -174,7 +173,7 @@ const premioLabel = computed(() => {
 .wine-card__price {
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 400;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: #290005;
   letter-spacing: -0.02em;
   margin: 0;
@@ -185,7 +184,7 @@ const premioLabel = computed(() => {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: flex-start;
   gap: 8px;
   min-width: 180px;
@@ -208,7 +207,7 @@ const premioLabel = computed(() => {
 .wine-card__score-value {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
-  font-size: clamp(5rem, 4vw, 6rem);
+  font-size: clamp(3rem, 4vw, 6rem);
   color: #290005;
   letter-spacing: -0.05em;
   line-height: 0.9;
@@ -240,6 +239,7 @@ const premioLabel = computed(() => {
 }
 
 @media (min-width: 768px) {
+
   .wine-card__link {
     padding: 2rem 24px;
   }
