@@ -1,5 +1,6 @@
 <template>
-  <HeaderGeneral :sponsor="true"/>
+  <HeaderMobile v-if="isMobile || isTablet" />
+  <HeaderGeneral v-else />
   <main class="type-page">
 
     <WineTypeFilters v-model="typeSelection" class="type-page__filters page__filters" />
@@ -28,6 +29,9 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import { navigateTo, useHead, useRoute, useRouter } from '#imports';
+import HeaderGeneral from '~/components/HeaderGeneral.vue';
+import HeaderMobile from '~/components/HeaderMobile.vue';
+import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
 import { buildWineListJsonLd } from '~/utils/structuredData';
@@ -35,6 +39,8 @@ import { buildWineListJsonLd } from '~/utils/structuredData';
 const route = useRoute();
 const router = useRouter();
 const { byType, bySlug, filterByMacroType, getMacroWineTypes } = useWines();
+
+const { isMobile, isTablet } = useBreakpoints();
 
 const macroTypes = getMacroWineTypes();
 

@@ -1,5 +1,6 @@
 <template>
-  <HeaderGeneral :sponsor="true"/>
+  <HeaderMobile v-if="isMobile || isTablet" />
+  <HeaderGeneral v-else />
   <main class="page">
     <WineTypeFilters v-model="typeSelection" class="page__filters" />
 
@@ -21,9 +22,14 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 import { useHead } from '#imports';
+import HeaderGeneral from '~/components/HeaderGeneral.vue';
+import HeaderMobile from '~/components/HeaderMobile.vue';
+import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
 import { slugify } from '~/utils/slugify';
+
+const { isMobile, isTablet } = useBreakpoints();
 
 const wineTools = useWines();
 const { wines } = wineTools;

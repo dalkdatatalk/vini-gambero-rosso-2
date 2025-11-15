@@ -1,5 +1,6 @@
 <template>
-  <HeaderMobile v-if="isMobile" />
+  <HeaderMobile v-if="isMobile || isTablet" />
+  <HeaderGeneral v-else />
   <main class="detail-page">
     <div class="wine-info-page">
       <section class="detail-page__content">
@@ -36,6 +37,7 @@ import { useWines } from '~/composables/useWines';
 import { useBreakpoints } from '~/composables/useBreakpoints';
 import { slugify } from '~/utils/slugify';
 import { buildWineProductJsonLd } from '~/utils/structuredData';
+import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
 import rawWines from '~/data/wines.json';
@@ -44,9 +46,10 @@ type RawPremio = { name?: string | null };
 type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
 
 const route = useRoute();
-const { bySlug, getMacroWineTypes } = useWines();
 
-const { isMobile } = useBreakpoints();
+const { isMobile, isTablet } = useBreakpoints();
+
+const { bySlug, getMacroWineTypes } = useWines();
 
 // primo step: potrebbe essere undefined
 const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
