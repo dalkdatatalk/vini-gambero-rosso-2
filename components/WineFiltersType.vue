@@ -53,7 +53,7 @@ const activeType = computed(() => {
 .filters__item {
   margin: 0;
   display: flex;
-  flex: 1 1 160px;
+  flex: 1 1 120px;
   min-width: 0;
 }
 
@@ -61,13 +61,13 @@ const activeType = computed(() => {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 8px 12px;
   border-radius: 999px;
   border: 1px solid #d1d5db;
   background-color: #ffffff;
   color: #1f2937;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   width: 100%;
@@ -81,41 +81,26 @@ const activeType = computed(() => {
 .category-buttons {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 8px;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .category-buttons {
-    gap: 10px;
+    justify-content: center;
+    gap: 12px;
   }
 
   .filters__item {
-    flex: 1 1 140px;
+    flex: 1 1 160px;
   }
 
   .filters__link {
-    padding: 9px 14px;
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .category-buttons {
-    justify-content: flex-start;
-    gap: 8px;
-  }
-
-  .filters__item {
-    flex: 1 1 120px;
-  }
-
-  .filters__link {
-    padding: 8px 12px;
-    font-size: 0.85rem;
+    padding: 10px 16px;
+    font-size: 0.95rem;
   }
 }
 
