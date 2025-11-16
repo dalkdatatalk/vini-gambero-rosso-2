@@ -64,7 +64,7 @@ export const WINE_MENU_ITEMS: WineMenuItem[] = [
   },
   {
     id: 'vini-dolci',
-    label: 'Vini Dolci',
+    label: 'Dolci',
     routePath: '/classifica-vini-2026/vini/vini-dolci',
     order: 5,
     types: SWEET_TYPES,
