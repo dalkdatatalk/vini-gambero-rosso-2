@@ -55,7 +55,7 @@ const { isMobile, isTablet } = useBreakpoints();
 const { bySlug, getMacroWineTypes } = useWines();
 
 // primo step: potrebbe essere undefined
-const rawWine = computed(() => bySlug(String(route.params.slug ?? '')));
+const rawWine = computed(() => bySlug(route.params.slug));
 
 // se non esiste, 404
 if (!rawWine.value) {
