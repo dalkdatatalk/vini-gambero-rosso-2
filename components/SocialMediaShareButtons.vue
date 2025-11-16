@@ -16,7 +16,6 @@
           class="social-share__icon"
           aria-hidden="true"
         />
-        <span>{{ button.label }}</span>
       </a>
     </div>
   </section>
@@ -30,7 +29,6 @@ type ShareNetwork = 'facebook' | 'x' | 'whatsapp';
 
 interface SocialButtonConfig {
   id: ShareNetwork;
-  label: string;
   icon: string;
   ariaLabel: string;
 }
@@ -46,19 +44,16 @@ const { links } = useShareLinks({ title });
 const buttonConfigs: SocialButtonConfig[] = [
   {
     id: 'facebook',
-    label: 'Facebook',
     icon: 'mdi:facebook',
     ariaLabel: 'Condividi su Facebook',
   },
   {
     id: 'x',
-    label: 'X',
-    icon: 'mdi:twitter',
+    icon: 'simple-icons:x',
     ariaLabel: 'Condividi su X',
   },
   {
     id: 'whatsapp',
-    label: 'WhatsApp',
     icon: 'mdi:whatsapp',
     ariaLabel: 'Condividi su WhatsApp',
   },
