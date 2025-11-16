@@ -306,7 +306,7 @@ h3 {
     font-size: 1.1rem;
   }
 
-  .punteggio .detail-page__info-value {
+  .detail-page__info-value--score-unavailable.detail-page__info-value{
     font-size: 1.1rem;
   }
 
@@ -326,6 +326,10 @@ h3 {
 
   .punteggio .detail-page__info-value {
     font-size: 5.2rem;
+  }
+
+  .detail-page__info-value--score-unavailable.detail-page__info-value{
+    font-size: 1.1rem;
   }
 }
 
