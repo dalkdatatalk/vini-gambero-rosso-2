@@ -34,6 +34,11 @@ import HeaderMobile from '~/components/HeaderMobile.vue';
 import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
+import {
+  getWineMenuItemById,
+  isWineMacroCategoryId,
+  type WineMacroCategoryId,
+} from '~/lib/wineMenuItems';
 import { buildWineListJsonLd } from '~/utils/structuredData';
 
 const route = useRoute();
@@ -48,10 +53,11 @@ const typeParamRaw = computed(() => String(route.params.type ?? ''));
 const currentType = computed(() => typeParamRaw.value.trim().toLowerCase());
 
 const currentMacro = computed(() => {
-  if (!currentType.value) {
+  const id = currentType.value;
+  if (!id || !isWineMacroCategoryId(id)) {
     return null;
   }
-  return macroTypes.find((macro) => macro.id === currentType.value) ?? null;
+  return getWineMenuItemById(id) ?? null;
 });
 
 const redirectTarget = computed(() => {
@@ -75,7 +81,7 @@ const winesBySelection = computed(() => {
   }
 
   if (currentMacro.value) {
-    return filterByMacroType(currentType.value);
+    return filterByMacroType(currentMacro.value.id);
   }
 
   return byType(typeParamRaw.value);
@@ -140,7 +146,7 @@ function onFilterResults(list: Wine[]) {
   detailResults.value = [...list];
 }
 
-const typeSelection = ref('');
+const typeSelection = ref<WineMacroCategoryId | string>('');
 
 watch(
   () => currentType.value,
@@ -163,6 +169,10 @@ watch(
       return;
     }
     if (normalized === currentType.value) {
+      return;
+    }
+    if (isWineMacroCategoryId(normalized)) {
+      router.push(getWineMenuItemById(normalized)?.routePath ?? `/classifica-vini-2026/vini/${normalized}`);
       return;
     }
     router.push(`/classifica-vini-2026/vini/${normalized}`);

@@ -65,18 +65,21 @@ import { computed, ref, watch } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
 import { useRoute } from '#imports';
 import { useWines } from '~/composables/useWines';
-import { wineMenuItems, type WineMenuItem } from '~/lib/wineMenuItems';
+import {
+  WINE_NAVIGATION_ITEMS,
+  findWineMenuItemByType,
+  type WineNavigationItem,
+} from '~/lib/wineMenuItems';
 
 const isMobile = useMediaQuery('(max-width: 767px)');
 const isMenuOpen = ref(false);
 
 const route = useRoute();
-const { bySlug, getMacroWineTypes } = useWines();
-const MACROS = getMacroWineTypes();
+const { bySlug } = useWines();
 
-type MobileMenuItem = WineMenuItem & { displayLabel: string };
+type MobileMenuItem = WineNavigationItem & { displayLabel: string };
 
-const mobileMenuOrder: WineMenuItem['id'][] = [
+const mobileMenuOrder: WineNavigationItem['id'][] = [
   'home',
   'rossi',
   'bianchi',
@@ -87,8 +90,8 @@ const mobileMenuOrder: WineMenuItem['id'][] = [
 
 const mobileMenuItems = computed<MobileMenuItem[]>(() =>
   mobileMenuOrder
-    .map((id) => wineMenuItems.find((item) => item.id === id))
-    .filter((item): item is WineMenuItem => Boolean(item))
+    .map((id) => WINE_NAVIGATION_ITEMS.find((item) => item.id === id))
+    .filter((item): item is WineNavigationItem => Boolean(item))
     .map((item) => ({
       ...item,
       displayLabel: item.id === 'vini-dolci' ? 'Dolci' : item.label,
@@ -113,14 +116,7 @@ const activeId = computed(() => {
 });
 
 function macroIdFromWineType(wineType?: string | null): string | null {
-  const t = (wineType ?? '').toLowerCase().trim();
-  if (!t) return null;
-  for (const macro of MACROS) {
-    if (!macro.types) continue;
-    const match = macro.types.some((x) => (x ?? '').toLowerCase().trim() === t);
-    if (match) return macro.id;
-  }
-  return null;
+  return findWineMenuItemByType(wineType)?.id ?? null;
 }
 
 function isHomePath(path: string) {

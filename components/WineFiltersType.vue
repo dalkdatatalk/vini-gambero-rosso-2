@@ -5,7 +5,7 @@
         <NuxtLink
           class="filters__link"
           :class="{ 'filters__link--active': macro.id === activeType }"
-          :to="`/classifica-vini-2026/vini/${macro.id}`"
+          :to="macro.routePath"
         >
           {{ macro.label }}
         </NuxtLink>
@@ -17,12 +17,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from '#imports';
-import { useWines } from '~/composables/useWines';
+import { WINE_MENU_ITEMS } from '~/lib/wineMenuItems';
 
 const route = useRoute();
-const { getMacroWineTypes } = useWines();
 
-const macroTypes = getMacroWineTypes();
+const macroTypes = WINE_MENU_ITEMS;
 
 const activeType = computed(() => {
   const param = route.params?.type;
