@@ -89,7 +89,7 @@ export interface WineNavigationItem {
 const HOME_NAV_ITEM: WineNavigationItem = {
   id: 'home',
   label: 'Home',
-  href: 'https://gambero-rosso---bere-bene.webflow.io/old-home',
+  href: 'https://berebene.gamberorosso.it/classifica-vini-2026.html',
   order: 0,
 }
 
