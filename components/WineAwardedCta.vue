@@ -13,11 +13,11 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  padding: 2rem 1.5rem;
-  border: 1px solid var(--rosso);
-  border-radius: 10px;
-  background-color: var(--bianco);
+  padding: 1rem 0;
+  border-top: 1px solid var(--rosso);
+  border-bottom: 1px solid var(--rosso);
   text-align: center;
+  background-color: transparent;
 }
 
 .wine-cta-premiati__link {
@@ -30,17 +30,16 @@
   font-family: var(--funnel-sans);
   font-weight: 300;
   font-size: 1rem;
-  color: var(--rosso-scuro);
+  color: var(--rosso);
   text-align: left;
-  text-decoration: none;
-  border: 1px solid var(--rosso);
-  border-radius: 999px;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  text-decoration: underline;
+  border: none;
+  border-radius: 0;
+  transition: color 0.2s ease;
 }
 
 .wine-cta-premiati__link:focus-visible,
 .wine-cta-premiati__link:hover {
   color: var(--rosso);
-  border-color: var(--rosso);
 }
 </style>
