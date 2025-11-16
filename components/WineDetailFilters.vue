@@ -1171,6 +1171,12 @@ onBeforeUnmount(() => {
 }
 
 @media (min-width: 1280px) {
+  .filter-controls {
+    gap: 24px 32px;
+    padding: 16px 24px 24px;
+    align-items: stretch;
+  }
+
   .filter-item {
     min-width: 220px;
   }
