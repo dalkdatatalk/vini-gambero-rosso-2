@@ -289,6 +289,14 @@ useHead(() => ({
   text-align: left;
 }
 
+@media (max-width: 1279px) {
+  .name-wine {
+    font-size: 2rem;
+    line-height: 2rem;
+    text-align: center;
+  }
+}
+
 @media (min-width: 768px) {
   .detail-page {
     padding: 112px 3rem 4rem;
