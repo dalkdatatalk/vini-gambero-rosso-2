@@ -87,8 +87,8 @@ const socialButtons = computed(() =>
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
+  justify-content: space-around;
+  width: 100%;
 }
 
 .social-share__button {
