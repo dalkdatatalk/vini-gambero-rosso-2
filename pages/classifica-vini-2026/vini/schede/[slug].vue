@@ -22,10 +22,11 @@
               :grapes-list="grapesList"
               :formatted-bottles="formattedBottles"
               :formatted-price="formattedPrice"
+              :premio-name="premioName"
             />
           </div>
           <div class="wine-column description">
-            <WineDescriptionDetails :wine="wine" />
+            <WineDescriptionDetails :wine="wine" :premio-name="premioName" />
           </div>
         </div>
       </section>

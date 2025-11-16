@@ -75,6 +75,7 @@
       </span>
     </div>
 
+    <WineGoBackCta v-if="isDesktop" :wine="wine" :premio-name="premioName" />
     <WineRelatedWines
       v-if="isDesktop"
       :current-wine="wine"
@@ -89,6 +90,7 @@ import { computed } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
 import type { Wine } from '~/composables/useWines';
 import WineRelatedWines from '~/components/WineRelatedWines.vue';
+import WineGoBackCta from '~/components/WineGoBackCta.vue';
 import { useHtmlEntities } from '~/composables/useHtmlEntities';
 
 const props = defineProps<{
@@ -100,6 +102,7 @@ const props = defineProps<{
   grapesList: string[] | null;
   formattedBottles: string | null;
   formattedPrice: string | null;
+  premioName?: string;
 }>();
 
 const { decodeHtml } = useHtmlEntities();
