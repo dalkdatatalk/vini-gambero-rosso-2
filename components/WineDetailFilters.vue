@@ -61,12 +61,6 @@
             />
           </div>
           <span class="range-value">{{ priceValueLabel }}</span>
-          <span class="range-max">{{ priceMaxLabel }}</span>
-          <span class="arrow-down" aria-hidden="true">
-            <svg viewBox="0 0 15 13" fill="none">
-              <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
-            </svg>
-          </span>
         </div>
       </div> -->
 
@@ -90,12 +84,6 @@
             />
           </div>
           <span class="range-value">{{ scoreModel }}</span>
-          <span class="range-max">{{ computedMaxScore }}</span>
-          <span class="arrow-down" aria-hidden="true">
-            <svg viewBox="0 0 15 13" fill="none">
-              <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
-            </svg>
-          </span>
         </div>
       </div>
 
@@ -396,7 +384,6 @@ const priceFormatter = new Intl.NumberFormat('it-IT', {
 });
 
 const priceMinLabel = computed(() => priceFormatter.format(computedMinPrice.value));
-const priceMaxLabel = computed(() => priceFormatter.format(computedMaxPrice.value));
 const priceValueLabel = computed(() => priceFormatter.format(priceModel.value));
 
 type DropdownKey = 'region' | 'grape' | 'pairing';
@@ -933,17 +920,18 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: stretch;
   width: 100%;
+  gap: 16px;
 }
 
 .filter-item {
   position: relative;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-width: 0;
   width: 100%;
 }
 
 .filter-item--search {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-width: 0;
   width: 100%;
 }
@@ -998,8 +986,7 @@ onBeforeUnmount(() => {
   transform: rotate(0deg);
 }
 
-.dropdown-icon svg,
-.arrow-down svg {
+.dropdown-icon svg {
   display: block;
   width: 100%;
   height: 100%;
@@ -1053,7 +1040,6 @@ onBeforeUnmount(() => {
 }
 
 .range-min,
-.range-max,
 .range-value {
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 600;
@@ -1062,8 +1048,7 @@ onBeforeUnmount(() => {
   letter-spacing: -0.48px;
 }
 
-.range-min,
-.range-max {
+.range-min {
   opacity: 0.4;
 }
 
@@ -1124,13 +1109,6 @@ onBeforeUnmount(() => {
   border: 2px solid #290005;
 }
 
-.arrow-down {
-  width: 17px;
-  height: 17px;
-  transform: rotate(180deg);
-  opacity: 0.6;
-}
-
 .filter-input {
   width: 100%;
   border: none;
@@ -1172,20 +1150,13 @@ onBeforeUnmount(() => {
 
 @media (min-width: 768px) {
   .filter-controls {
-    flex-direction: row;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 0;
+    flex-direction: column;
+    gap: 20px;
   }
 
-  .filter-item {
-    flex: 1 1 200px;
-    min-width: 200px;
-  }
-
+  .filter-item,
   .filter-item--search {
-    flex: 1 1 280px;
-    min-width: 280px;
+    flex: 0 0 100%;
   }
 
   .filter-input {
@@ -1194,11 +1165,21 @@ onBeforeUnmount(() => {
 }
 
 @media (min-width: 1280px) {
+  .filter-controls {
+    gap: 24px 32px;
+    padding: 16px 0 24px;
+    align-items: stretch;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
   .filter-item {
+    flex: 1 1 220px;
     min-width: 220px;
   }
 
   .filter-item--search {
+    flex: 1 1 280px;
     min-width: 280px;
   }
 
