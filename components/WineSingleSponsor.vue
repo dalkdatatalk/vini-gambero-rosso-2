@@ -50,4 +50,17 @@ const label = computed(() => parsed.value.label);
   background: #eee;
   border-radius: 0.25rem;
 }
+
+@media (max-width: 1279px) {
+  .wine-single-sponsor {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .wine-single-sponsor .name-premio-vino {
+    max-width: 100%;
+    text-align: center;
+  }
+}
 </style>
