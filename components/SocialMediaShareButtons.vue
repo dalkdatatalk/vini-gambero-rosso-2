@@ -84,35 +84,34 @@ const socialButtons = computed(() =>
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.75rem;
 }
 
 .social-share__button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.75rem;
-  border: 1px solid var(--rosso-scuro);
-  border-radius: 999px;
-  font-size: 1.2rem;
-  font-family: var(--cormorant-garamond);
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
   color: var(--rosso-scuro);
   text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .social-share__icon {
-  width: 1.25em;
-  height: 1.25em;
+  width: 1.75rem;
+  height: 1.75rem;
   display: inline-flex;
   color: currentColor;
 }
 
 .social-share__button:hover,
-.social-share__button:focus-visible {
-  background-color: var(--rosso-scuro);
-  color: #fff;
+.social-share__button:focus-visible,
+.social-share__button:active {
+  color: var(--rosso);
 }
 </style>
