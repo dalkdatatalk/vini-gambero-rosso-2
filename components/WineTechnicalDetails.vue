@@ -75,6 +75,7 @@
       </span>
     </div>
 
+    <WineAwardedCta v-if="isDesktop" />
     <WineRelatedWines
       v-if="isDesktop"
       :current-wine="wine"
@@ -89,6 +90,7 @@ import { computed } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
 import type { Wine } from '~/composables/useWines';
 import WineRelatedWines from '~/components/WineRelatedWines.vue';
+import WineAwardedCta from '~/components/WineAwardedCta.vue';
 import { useHtmlEntities } from '~/composables/useHtmlEntities';
 
 const props = defineProps<{

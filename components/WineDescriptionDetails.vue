@@ -33,6 +33,7 @@
       :primary-region="decodedPrimaryRegion"
       class="related-wines-section"
     />
+    <WineAwardedCta v-if="isMobileOrTablet" />
     <div class="box-newsletter">
       <p>
         Degusta con noi! Iscriviti per ricevere<br />
@@ -56,6 +57,7 @@ import { useMediaQuery } from '@vueuse/core';
 import type { Wine } from '~/composables/useWines';
 import SocialMediaShareButtons from '~/components/SocialMediaShareButtons.vue';
 import WineRelatedWines from '~/components/WineRelatedWines.vue';
+import WineAwardedCta from '~/components/WineAwardedCta.vue';
 
 const props = defineProps<{
   wine: Wine;
