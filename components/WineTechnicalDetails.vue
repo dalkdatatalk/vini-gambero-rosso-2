@@ -340,7 +340,7 @@ h3 {
   }
 
   .punteggio .detail-page__info-value {
-    font-size: 5rem;
+    font-size: 1.1rem;
   }
 
   .detail-page__info-value {
