@@ -920,17 +920,18 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: stretch;
   width: 100%;
+  gap: 16px;
 }
 
 .filter-item {
   position: relative;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-width: 0;
   width: 100%;
 }
 
 .filter-item--search {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-width: 0;
   width: 100%;
 }
@@ -1149,20 +1150,13 @@ onBeforeUnmount(() => {
 
 @media (min-width: 768px) {
   .filter-controls {
-    flex-direction: row;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 0;
+    flex-direction: column;
+    gap: 20px;
   }
 
-  .filter-item {
-    flex: 1 1 200px;
-    min-width: 200px;
-  }
-
+  .filter-item,
   .filter-item--search {
-    flex: 1 1 280px;
-    min-width: 280px;
+    flex: 0 0 100%;
   }
 
   .filter-input {
@@ -1173,15 +1167,19 @@ onBeforeUnmount(() => {
 @media (min-width: 1280px) {
   .filter-controls {
     gap: 24px 32px;
-    padding: 16px 24px 24px;
+    padding: 16px 0 24px;
     align-items: stretch;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 
   .filter-item {
+    flex: 1 1 220px;
     min-width: 220px;
   }
 
   .filter-item--search {
+    flex: 1 1 280px;
     min-width: 280px;
   }
 
