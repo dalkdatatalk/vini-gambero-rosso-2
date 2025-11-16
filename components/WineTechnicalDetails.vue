@@ -22,8 +22,11 @@
 
       <div class="detail-page__info-item punteggio">
         <span class="detail-page__info-label">Punteggio</span>
-        <span class="detail-page__info-value">
-          {{ decodedScore ?? 'Informazione non disponibile' }}
+        <span
+          class="detail-page__info-value"
+          :class="{ 'detail-page__info-value--score-unavailable': isScoreInfoUnavailable }"
+        >
+          {{ scoreDisplayValue }}
         </span>
       </div>
     </div>
@@ -148,6 +151,8 @@ const premioDisplayValue = computed(() => decodedPremioName.value ?? 'Informazio
 const isPremioInfoUnavailable = computed(
   () => premioDisplayValue.value === 'Informazione non disponibile'
 );
+const scoreDisplayValue = computed(() => decodedScore.value ?? 'Informazione non disponibile');
+const isScoreInfoUnavailable = computed(() => scoreDisplayValue.value === 'Informazione non disponibile');
 </script>
 
 <style scoped>
@@ -256,6 +261,13 @@ h3 {
   text-transform: none;
 }
 
+.punteggio .detail-page__info-value--score-unavailable {
+  font-family: var(--funnel-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: right;
+}
+
 @media (min-width: 768px) {
   .detail-page__info {
     gap: 1.25rem;
@@ -277,6 +289,11 @@ h3 {
 
   .detail-page__info-value--region-style {
     font-size: 2.4rem;
+  }
+
+  .punteggio .detail-page__info-value--score-unavailable {
+    font-size: 1.1rem;
+    text-align: left;
   }
 
   .punteggio .detail-page__info-label {
@@ -321,6 +338,10 @@ h3 {
 
   .detail-page__info-value--region-style {
     font-size: 3rem;
+  }
+
+  .punteggio .detail-page__info-value--score-unavailable {
+    text-align: right;
   }
 
   .punteggio .detail-page__info-label {
