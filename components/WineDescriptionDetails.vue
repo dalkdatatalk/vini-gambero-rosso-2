@@ -33,7 +33,7 @@
       :primary-region="decodedPrimaryRegion"
       class="related-wines-section"
     />
-    <WineAwardedCta v-if="isMobileOrTablet" />
+    <WineAwardedCta v-if="isMobileOrTablet" :wine="wine" />
     <div class="box-newsletter">
       <p>
         Degusta con noi! Iscriviti per ricevere<br />

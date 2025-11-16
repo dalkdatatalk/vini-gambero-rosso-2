@@ -1,10 +1,34 @@
 <template>
   <div class="wine-cta-premiati">
-    <a href="" class="wine-cta-premiati__link">
+    <NuxtLink
+      :to="ctaHref"
+      class="wine-cta-premiati__link"
+      aria-label="Vedi tutti i vini premiati"
+    >
       Vedi tutti i vini premiati
-    </a>
+    </NuxtLink>
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import type { Wine } from '~/composables/useWines';
+import { findWineMenuItemByType } from '~/lib/wineMenuItems';
+
+const props = defineProps<{
+  wine: Wine;
+}>();
+
+const macroCategoria = computed(() => findWineMenuItemByType(props.wine.type ?? null));
+
+const ctaHref = computed(() => {
+  if (!macroCategoria.value) {
+    return '/classifica-vini-2026/vini/tutti';
+  }
+
+  return macroCategoria.value.routePath;
+});
+</script>
 
 <style scoped>
 .wine-cta-premiati {

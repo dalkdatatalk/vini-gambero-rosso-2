@@ -75,7 +75,7 @@
       </span>
     </div>
 
-    <WineAwardedCta v-if="isDesktop" />
+    <WineAwardedCta v-if="isDesktop" :wine="wine" />
     <WineRelatedWines
       v-if="isDesktop"
       :current-wine="wine"
