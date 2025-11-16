@@ -28,6 +28,16 @@
       </div>
     </div>
 
+    <div class="detail-page__info-item premio">
+      <span class="detail-page__info-label">Premio</span>
+      <span
+        class="detail-page__info-value"
+        :class="{ 'detail-page__info-value--region-style': isPremioInfoUnavailable }"
+      >
+        {{ premioDisplayValue }}
+      </span>
+    </div>
+
     <div class="detail-page__info-item">
       <span class="detail-page__info-label">Tipologia</span>
       <span class="detail-page__info-value">
@@ -133,6 +143,11 @@ const decodedGrapesList = computed(() => {
 const decodedDenominazione = computed(() => decodeOptional(props.wine.denominazione));
 const decodedFormattedBottles = computed(() => decodeOptional(props.formattedBottles));
 const decodedFormattedPrice = computed(() => decodeOptional(props.formattedPrice));
+const decodedPremioName = computed(() => decodeOptional(props.premioName));
+const premioDisplayValue = computed(() => decodedPremioName.value ?? 'Informazione non disponibile');
+const isPremioInfoUnavailable = computed(
+  () => premioDisplayValue.value === 'Informazione non disponibile'
+);
 </script>
 
 <style scoped>
@@ -231,6 +246,16 @@ h3 {
   word-break: break-word;
 }
 
+.detail-page__info-value--region-style {
+  color: var(--rosso);
+  font-family: var(--cormorant-garamond);
+  font-weight: 300;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  text-align: left;
+  text-transform: none;
+}
+
 @media (min-width: 768px) {
   .detail-page__info {
     gap: 1.25rem;
@@ -247,6 +272,10 @@ h3 {
   }
 
   .detail-page__info-item.regione .detail-page__info-value {
+    font-size: 2.4rem;
+  }
+
+  .detail-page__info-value--region-style {
     font-size: 2.4rem;
   }
 
@@ -290,6 +319,10 @@ h3 {
     font-size: 3rem;
   }
 
+  .detail-page__info-value--region-style {
+    font-size: 3rem;
+  }
+
   .punteggio .detail-page__info-label {
     font-size: 1.1rem;
   }
@@ -312,8 +345,22 @@ h3 {
     font-size: 3.2rem;
   }
 
+  .detail-page__info-value--region-style {
+    font-size: 3.2rem;
+  }
+
   .punteggio .detail-page__info-value {
     font-size: 5.2rem;
+  }
+}
+
+@media (max-width: 1279px) {
+  .detail-page__info-item.cantina {
+    justify-content: center;
+  }
+
+  .detail-page__info-item.cantina .detail-page__info-value {
+    text-align: center;
   }
 }
 </style>
