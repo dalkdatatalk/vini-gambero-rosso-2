@@ -151,9 +151,7 @@ const isWineDetailPage = computed(() => {
 
 const currentWine = computed(() => {
   if (!isWineDetailPage.value) return null
-  const slug = String(route.params.slug ?? '').trim()
-  if (!slug) return null
-  return bySlug(slug) ?? null
+  return bySlug(route.params.slug) ?? null
 })
 
 const macroCategoria = computed(() => {
@@ -196,8 +194,7 @@ const activeId = computed(() => {
     return typeParam
   }
   if (path.includes('/schede/')) {
-    const slug = String(route.params.slug ?? '')
-    const wine = bySlug(slug)
+    const wine = bySlug(route.params.slug)
     const macroId = macroIdFromWineType(wine?.type ?? null)
     return macroId
   }
