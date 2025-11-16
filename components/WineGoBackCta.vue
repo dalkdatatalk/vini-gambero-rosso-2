@@ -1,11 +1,7 @@
 <template>
-  <div class="wine-cta-premiati">
-    <NuxtLink
-      :to="ctaHref"
-      class="wine-cta-premiati__link"
-      aria-label="Vedi tutti i vini premiati"
-    >
-      Vedi tutti i vini premiati
+  <div class="wine-go-back-cta">
+    <NuxtLink :to="ctaHref" class="wine-go-back-cta__link" :aria-label="ctaLabel">
+      {{ ctaLabel }}
     </NuxtLink>
   </div>
 </template>
@@ -17,6 +13,7 @@ import { findWineMenuItemByType } from '~/lib/wineMenuItems';
 
 const props = defineProps<{
   wine: Wine;
+  premioName?: string;
 }>();
 
 const macroCategoria = computed(() => findWineMenuItemByType(props.wine.type ?? null));
@@ -28,10 +25,21 @@ const ctaHref = computed(() => {
 
   return macroCategoria.value.routePath;
 });
+
+const hasAward = computed(() => Boolean(props.premioName?.trim().length));
+
+const ctaLabel = computed(() => {
+  if (hasAward.value) {
+    return 'Vedi tutti i vini premiati';
+  }
+
+  const categoryLabel = macroCategoria.value?.label ?? 'Tutti';
+  return `Vedi tutti i vini ${categoryLabel}`;
+});
 </script>
 
 <style scoped>
-.wine-cta-premiati {
+.wine-go-back-cta {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,7 +52,7 @@ const ctaHref = computed(() => {
   background-color: transparent;
 }
 
-.wine-cta-premiati__link {
+.wine-go-back-cta__link {
   width: 100%;
   display: inline-flex;
   align-items: center;
@@ -62,8 +70,8 @@ const ctaHref = computed(() => {
   transition: color 0.2s ease;
 }
 
-.wine-cta-premiati__link:focus-visible,
-.wine-cta-premiati__link:hover {
+.wine-go-back-cta__link:focus-visible,
+.wine-go-back-cta__link:hover {
   color: var(--rosso);
 }
 </style>

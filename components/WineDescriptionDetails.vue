@@ -33,7 +33,7 @@
       :primary-region="decodedPrimaryRegion"
       class="related-wines-section"
     />
-    <WineAwardedCta v-if="isMobileOrTablet" :wine="wine" />
+    <WineGoBackCta v-if="isMobileOrTablet" :wine="wine" :premio-name="premioName" />
     <div class="box-newsletter">
       <p>
         Degusta con noi! Iscriviti per ricevere<br />
@@ -57,14 +57,15 @@ import { useMediaQuery } from '@vueuse/core';
 import type { Wine } from '~/composables/useWines';
 import SocialMediaShareButtons from '~/components/SocialMediaShareButtons.vue';
 import WineRelatedWines from '~/components/WineRelatedWines.vue';
-import WineAwardedCta from '~/components/WineAwardedCta.vue';
+import WineGoBackCta from '~/components/WineGoBackCta.vue';
 
 const props = defineProps<{
   wine: Wine;
   primaryRegion?: string | null;
+  premioName?: string;
 }>();
 
-const { wine, primaryRegion } = toRefs(props);
+const { wine, primaryRegion, premioName } = toRefs(props);
 
 const isMobileOrTablet = useMediaQuery('(max-width: 1279px)');
 
