@@ -341,6 +341,7 @@ h3 {
   }
 
   .punteggio .detail-page__info-value--score-unavailable {
+    font-size: 1.1rem;
     text-align: right;
   }
 
@@ -368,6 +369,10 @@ h3 {
 
   .detail-page__info-value--region-style {
     font-size: 3.2rem;
+  }
+
+  .punteggio .detail-page__info-value--score-unavailable {
+    font-size: 1.1rem;
   }
 
   .punteggio .detail-page__info-value {
