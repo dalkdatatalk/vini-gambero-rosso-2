@@ -263,7 +263,7 @@ h3 {
 
 .punteggio .detail-page__info-value--score-unavailable {
   font-family: var(--funnel-sans);
-  font-size: 1rem;
+  font-size: inherit;
   font-weight: 400;
   text-align: right;
 }
@@ -289,11 +289,6 @@ h3 {
 
   .detail-page__info-value--region-style {
     font-size: 2.4rem;
-  }
-
-  .punteggio .detail-page__info-value--score-unavailable {
-    font-size: 1.1rem;
-    text-align: left;
   }
 
   .punteggio .detail-page__info-label {
@@ -340,11 +335,6 @@ h3 {
     font-size: 3rem;
   }
 
-  .punteggio .detail-page__info-value--score-unavailable {
-    font-size: 1.1rem;
-    text-align: right;
-  }
-
   .punteggio .detail-page__info-label {
     font-size: 1.1rem;
   }
@@ -369,10 +359,6 @@ h3 {
 
   .detail-page__info-value--region-style {
     font-size: 3.2rem;
-  }
-
-  .punteggio .detail-page__info-value--score-unavailable {
-    font-size: 1.1rem;
   }
 
   .punteggio .detail-page__info-value {
