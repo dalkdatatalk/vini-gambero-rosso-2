@@ -13,7 +13,10 @@
       >
         <Icon
           :name="button.icon"
-          class="social-share__icon"
+          :class="[
+            'social-share__icon',
+            { 'social-share__icon--x': button.id === 'x' },
+          ]"
           aria-hidden="true"
         />
       </a>
@@ -107,6 +110,11 @@ const socialButtons = computed(() =>
   height: 1.75rem;
   display: inline-flex;
   color: currentColor;
+}
+
+.social-share__icon--x {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .social-share__button:hover,
