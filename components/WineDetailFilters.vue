@@ -61,12 +61,6 @@
             />
           </div>
           <span class="range-value">{{ priceValueLabel }}</span>
-          <span class="range-max">{{ priceMaxLabel }}</span>
-          <span class="arrow-down" aria-hidden="true">
-            <svg viewBox="0 0 15 13" fill="none">
-              <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
-            </svg>
-          </span>
         </div>
       </div> -->
 
@@ -90,12 +84,6 @@
             />
           </div>
           <span class="range-value">{{ scoreModel }}</span>
-          <span class="range-max">{{ computedMaxScore }}</span>
-          <span class="arrow-down" aria-hidden="true">
-            <svg viewBox="0 0 15 13" fill="none">
-              <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
-            </svg>
-          </span>
         </div>
       </div>
 
@@ -396,7 +384,6 @@ const priceFormatter = new Intl.NumberFormat('it-IT', {
 });
 
 const priceMinLabel = computed(() => priceFormatter.format(computedMinPrice.value));
-const priceMaxLabel = computed(() => priceFormatter.format(computedMaxPrice.value));
 const priceValueLabel = computed(() => priceFormatter.format(priceModel.value));
 
 type DropdownKey = 'region' | 'grape' | 'pairing';
@@ -998,8 +985,7 @@ onBeforeUnmount(() => {
   transform: rotate(0deg);
 }
 
-.dropdown-icon svg,
-.arrow-down svg {
+.dropdown-icon svg {
   display: block;
   width: 100%;
   height: 100%;
@@ -1053,7 +1039,6 @@ onBeforeUnmount(() => {
 }
 
 .range-min,
-.range-max,
 .range-value {
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 600;
@@ -1062,8 +1047,7 @@ onBeforeUnmount(() => {
   letter-spacing: -0.48px;
 }
 
-.range-min,
-.range-max {
+.range-min {
   opacity: 0.4;
 }
 
@@ -1122,13 +1106,6 @@ onBeforeUnmount(() => {
   background: #ca1f1e;
   cursor: pointer;
   border: 2px solid #290005;
-}
-
-.arrow-down {
-  width: 17px;
-  height: 17px;
-  transform: rotate(180deg);
-  opacity: 0.6;
 }
 
 .filter-input {
