@@ -200,6 +200,17 @@ export function normalizeWine(raw: RawWine): Wine {
   };
 }
 
+export function normalizeSlugParamForLookup(
+  slugParam: string | string[] | undefined
+): string {
+  const rawValue = Array.isArray(slugParam) ? slugParam[0] ?? '' : slugParam ?? '';
+  const normalized = rawValue.trim().toLowerCase();
+  if (!normalized) {
+    return '';
+  }
+  return encodeURIComponent(normalized).toLowerCase();
+}
+
 const normalizedWines: Wine[] = (rawWines as RawWine[]).map(normalizeWine);
 
 export function useWines() {
@@ -232,9 +243,12 @@ export function useWines() {
     });
   }
 
-  function bySlug(slugParam: string): Wine | undefined {
-    const slugValue = slugParam.trim().toLowerCase();
-    return wines.value.find((wine) => wine.slug.toLowerCase() === slugValue);
+  function bySlug(slugParam: string | string[] | undefined): Wine | undefined {
+    const encodedSlug = normalizeSlugParamForLookup(slugParam);
+    if (!encodedSlug) {
+      return undefined;
+    }
+    return wines.value.find((wine) => wine.slug.trim().toLowerCase() === encodedSlug);
   }
 
   function getMacroWineTypes() {

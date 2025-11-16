@@ -106,8 +106,7 @@ const activeId = computed(() => {
     return typeParam;
   }
   if (path.includes('/schede/')) {
-    const slug = String(route.params.slug ?? '');
-    const wine = bySlug(slug);
+    const wine = bySlug(route.params.slug);
     const macroId = macroIdFromWineType(wine?.type ?? null);
     return macroId;
   }
