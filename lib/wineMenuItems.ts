@@ -86,7 +86,7 @@ export interface WineNavigationItem {
   order: number
 }
 
-const HOME_NAV_ITEM: WineNavigationItem = {
+export const HOME_NAV_ITEM: WineNavigationItem = {
   id: 'home',
   label: 'Home',
   href: 'https://berebene.gamberorosso.it/classifica-vini-2026.html',
