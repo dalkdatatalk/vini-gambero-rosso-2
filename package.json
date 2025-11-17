@@ -13,6 +13,7 @@
   "dependencies": {
     "@iconify/vue": "^5.0.0",
     "@nuxt/icon": "^2.1.0",
+    "@nuxtjs/sitemap": "^7.4.7",
     "@vueuse/core": "^14.0.0",
     "@vueuse/nuxt": "^14.0.0",
     "html-entities": "^2.5.2",
