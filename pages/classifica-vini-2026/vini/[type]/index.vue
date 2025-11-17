@@ -316,7 +316,6 @@ useHead(() => ({
 
 @media (max-width: 1279px) {
   .type-page {
-    padding-top: 112px;
   }
 }
 

@@ -226,7 +226,6 @@ useHead(() => ({
   flex-direction: column;
   gap: 24px;
   padding: 2.5rem 1.5rem;
-  padding-top: 112px;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
