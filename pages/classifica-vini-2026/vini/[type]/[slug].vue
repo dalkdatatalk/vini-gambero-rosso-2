@@ -162,9 +162,10 @@ const grapesList = computed(() => {
 
 const normalizedRouteType = computed(() => typeParam.value?.toString().trim().toLowerCase() ?? '');
 
-const canonicalTypeSegment = computed(
-  () => macroCategoria.value?.id ?? normalizedRouteType.value || 'tutti'
-);
+const canonicalTypeSegment = computed(() => {
+  const primary = macroCategoria.value?.id ?? normalizedRouteType.value;
+  return primary || 'tutti';
+});
 
 const canonicalUrl = computed(() => {
   return `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${canonicalTypeSegment.value}/${wine.value.slug}`;
