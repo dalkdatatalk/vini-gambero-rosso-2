@@ -250,16 +250,12 @@ h3 {
 
   .region-price {
     gap: 1.5rem;
-    padding-bottom: 2rem;
+    padding-bottom: 4rem;
     align-items: flex-start;
   }
 
   .detail-page__info-item.regione .detail-page__info-label {
     font-size: 1.3rem;
-  }
-
-  .detail-page__info-item.regione .detail-page__info-value {
-    font-size: 2.4rem;
   }
 
   .punteggio .detail-page__info-label {
@@ -268,6 +264,7 @@ h3 {
 
   .punteggio .detail-page__info-value {
     font-size: 3.8rem;
+    line-height: 1rem;
   }
 
   .detail-page__info-label {
@@ -285,13 +282,8 @@ h3 {
     gap: 1.5rem;
   }
 
-  .region-price {
-    gap: 2rem;
-    align-items: flex-end;
-  }
-
   .cantina .detail-page__info-value {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
   }
 
   .detail-page__info-item.regione .detail-page__info-label {
@@ -299,12 +291,12 @@ h3 {
   }
 
   .detail-page__info-item.regione .detail-page__info-value {
-    font-size: 3rem;
+    font-size: 2rem;
     text-align: left;
   }
 
-  .punteggio .detail-page__info-label {
-    font-size: 1.1rem;
+  .detail-page__info-item.punteggio {
+    gap: 0.35rem;
   }
 
   .detail-page__info-value--score-unavailable.detail-page__info-value{
@@ -341,6 +333,7 @@ h3 {
 
   .detail-page__info-item.cantina .detail-page__info-value {
     text-align: center;
+    font-size: 2rem;
   }
 }
 </style>
