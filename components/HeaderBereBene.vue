@@ -143,14 +143,20 @@ const cssVars = computed(() => ({
 
 const items = WINE_NAVIGATION_ITEMS
 
-const isWineDetailPage = computed(() => {
-  const path = route.path || ''
-  return path.startsWith('/classifica-vini-2026/vini/schede/')
+const slugParam = computed(() => {
+  const raw = route.params.slug
+  if (Array.isArray(raw)) {
+    return typeof raw[0] === 'string' ? raw[0] : null
+  }
+  return typeof raw === 'string' ? raw : null
 })
 
+const isWineDetailPage = computed(() => Boolean(slugParam.value))
+
 const currentWine = computed(() => {
-  if (!isWineDetailPage.value) return null
-  return bySlug(route.params.slug) ?? null
+  const slug = slugParam.value
+  if (!slug) return null
+  return bySlug(slug) ?? null
 })
 
 const macroCategoria = computed(() => {
@@ -178,13 +184,14 @@ function isHomePath(path: string) {
 
 const activeId = computed(() => {
   const path = route.path || ''
-  if (path.startsWith('/classifica-vini-2026/vini/') && !path.includes('/schede/')) {
+  const slug = slugParam.value
+  if (path.startsWith('/classifica-vini-2026/vini/') && !slug) {
     const typeParam = String(route.params.type ?? '').toLowerCase().trim()
     if (!typeParam) return isHomePath(path) ? 'home' : null
     return typeParam
   }
-  if (path.includes('/schede/')) {
-    const wine = bySlug(route.params.slug)
+  if (slug) {
+    const wine = bySlug(slug)
     const macroId = macroIdFromWineType(wine?.type ?? null)
     return macroId
   }

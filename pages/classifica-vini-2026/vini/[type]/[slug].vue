@@ -55,8 +55,30 @@ const { isMobile, isTablet } = useBreakpoints();
 
 const { bySlug } = useWines();
 
+const typeParam = computed(() => {
+  const raw = route.params.type;
+  if (Array.isArray(raw)) {
+    return typeof raw[0] === 'string' ? raw[0] : null;
+  }
+  return typeof raw === 'string' ? raw : null;
+});
+
+const slugParam = computed(() => {
+  const raw = route.params.slug;
+  if (Array.isArray(raw)) {
+    return typeof raw[0] === 'string' ? raw[0] : null;
+  }
+  return typeof raw === 'string' ? raw : null;
+});
+
 // primo step: potrebbe essere undefined
-const rawWine = computed(() => bySlug(route.params.slug));
+const rawWine = computed(() => {
+  const slug = slugParam.value;
+  if (!slug) {
+    return undefined;
+  }
+  return bySlug(slug);
+});
 
 // se non esiste, 404
 if (!rawWine.value) {
@@ -138,8 +160,15 @@ const grapesList = computed(() => {
   });
 });
 
+const normalizedRouteType = computed(() => typeParam.value?.toString().trim().toLowerCase() ?? '');
+
+const canonicalTypeSegment = computed(() => {
+  const primary = macroCategoria.value?.id ?? normalizedRouteType.value;
+  return primary || 'tutti';
+});
+
 const canonicalUrl = computed(() => {
-  return `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${wine.value.slug}`;
+  return `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${canonicalTypeSegment.value}/${wine.value.slug}`;
 });
 
 const productJsonLd = computed(() =>
