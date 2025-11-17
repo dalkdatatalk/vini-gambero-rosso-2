@@ -251,7 +251,7 @@ h3 {
 
   .region-price {
     gap: 1.5rem;
-    padding-bottom: 2rem;
+    padding-bottom: 4rem;
     align-items: flex-start;
   }
 
@@ -269,6 +269,7 @@ h3 {
 
   .punteggio .detail-page__info-value {
     font-size: 3.8rem;
+    line-height: 1rem;
   }
 
   .detail-page__info-label {
@@ -286,13 +287,8 @@ h3 {
     gap: 1.5rem;
   }
 
-  .region-price {
-    gap: 2rem;
-    align-items: flex-end;
-  }
-
   .cantina .detail-page__info-value {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
 
   .detail-page__info-item.regione .detail-page__info-label {

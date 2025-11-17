@@ -407,7 +407,7 @@ useHead(() => ({
   .wine-details-container {
     flex-direction: row;
     gap: 2rem;
-    align-items: flex-end;
+    align-items: center;
   }
 
   .wine-column.technical {
@@ -433,8 +433,8 @@ useHead(() => ({
   }
 
   .detail-page__header h1 {
-    font-size: 4rem;
-    line-height: 3.8rem;
+    font-size: 3.2rem;
+    line-height: 3.2rem;
   }
 }
 </style>
