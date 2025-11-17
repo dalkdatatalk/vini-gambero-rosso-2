@@ -100,7 +100,9 @@ const premioLabel = computed(() => {
 .wine-card:hover .wine-card__score-label,
 .wine-card:hover .wine-card__score-value,
 .wine-card:hover .wine-card__arrow,
-.wine-card:hover .wine-card__award{
+.wine-card:hover .wine-card__award,
+.wine-card:hover .wine-card__price
+{
   color: var(--bianco);
 }
 
