@@ -394,7 +394,7 @@ useHead(() => ({
 
 @media (min-width: 1280px) {
   .detail-page {
-    padding: 6rem 6rem;
+    padding: 3rem 6rem;
     gap: 32px;
   }
 
