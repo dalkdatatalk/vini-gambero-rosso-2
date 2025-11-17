@@ -149,4 +149,18 @@ const decodedPrimaryRegion = computed(() => primaryRegion.value ?? null);
   object-fit: contain;
   border-radius: 4px;
 }
+
+@media (min-width: 1280px) {
+  .detail-page__info {
+    gap: 3rem;
+  }
+
+  .detail-page__info-item {
+    gap: 1.5rem;
+  }
+
+  .box-newsletter {
+    padding: 2.5rem 0;
+  }
+}
 </style>

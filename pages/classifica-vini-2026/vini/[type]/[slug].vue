@@ -415,7 +415,7 @@ useHead(() => ({
   .wine-details-container {
     flex-direction: row;
     gap: 2rem;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .wine-column.technical {
@@ -427,7 +427,7 @@ useHead(() => ({
 
   .wine-column.description {
     padding-top: 0;
-    transform: translateY(-3rem);
+    transform: none;
   }
 
   .name-wine {

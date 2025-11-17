@@ -279,11 +279,26 @@ h3 {
 
 @media (min-width: 1280px) {
   .detail-page__info {
-    gap: 1.5rem;
+    gap: 2rem;
+    padding-top: 1.5rem;
+  }
+
+  .detail-page__info > .detail-page__info-item {
+    gap: 2.25rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rosso);
+  }
+
+  .detail-page__info > .detail-page__info-item:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   .cantina .detail-page__info-value {
     font-size: 1.5rem;
+    text-align: left;
   }
 
   .detail-page__info-item.regione .detail-page__info-label {
@@ -304,7 +319,40 @@ h3 {
   }
 
   .detail-page__info-value {
+    flex: 1 1 auto;
+    text-align: left;
+    line-height: 1.6;
+  }
+
+  .detail-page__info-label {
+    flex: 0 0 26.5rem;
+    width: 26.5rem;
+    padding-right: 1.5rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .region-price {
+    align-items: flex-end;
+    gap: 2.5rem;
+    padding-bottom: 2.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--rosso);
+  }
+
+  .detail-page__info-item.punteggio {
+    align-items: flex-end;
+  }
+
+  .punteggio .detail-page__info-label {
+    flex: unset;
+    width: auto;
+    padding-right: 0;
+  }
+
+  .punteggio .detail-page__info-value {
     text-align: right;
+    line-height: 1;
   }
 }
 
@@ -323,6 +371,10 @@ h3 {
 
   .detail-page__info-value--score-unavailable.detail-page__info-value{
     font-size: 1.1rem;
+  }
+
+  .detail-page__info > .detail-page__info-item {
+    gap: 2.75rem;
   }
 }
 
