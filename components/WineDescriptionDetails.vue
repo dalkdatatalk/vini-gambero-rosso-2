@@ -149,4 +149,47 @@ const decodedPrimaryRegion = computed(() => primaryRegion.value ?? null);
   object-fit: contain;
   border-radius: 4px;
 }
+
+@media (min-width: 1280px) {
+  .detail-page__info {
+    gap: 3rem;
+    padding-right: 1rem;
+  }
+
+  .detail-page__info-item {
+    gap: 1.5rem;
+    max-width: 640px;
+  }
+
+  .detail-page__info-label {
+    line-height: 1.4;
+  }
+
+  .detail-page__info-value,
+  .rich-content {
+    line-height: 1.6;
+  }
+
+  .detail-page__info-value--pairing {
+    line-height: 1.55;
+  }
+
+  .wine-image-placeholder {
+    margin: 0.5rem 0 2.75rem;
+  }
+
+  .box-newsletter {
+    padding: 2.75rem 0;
+    margin-top: 0.5rem;
+  }
+
+  .box-newsletter p {
+    margin-bottom: 1.25rem;
+    line-height: 1.6rem;
+  }
+
+  .box-newsletter a {
+    padding: 0.9rem 1.75rem;
+  }
+}
 </style>

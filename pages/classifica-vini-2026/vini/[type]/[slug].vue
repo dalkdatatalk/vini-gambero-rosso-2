@@ -392,8 +392,8 @@ useHead(() => ({
 
 @media (min-width: 1280px) {
   .detail-page {
-    padding: 6rem 6rem;
-    gap: 32px;
+    padding: 6rem 7rem;
+    gap: 3rem;
   }
 
   .detail-page__header h1 {
@@ -402,8 +402,17 @@ useHead(() => ({
     padding-bottom: 2rem;
   }
 
+  .detail-page__header {
+    gap: 1.25rem;
+  }
+
+  .detail-page__content {
+    gap: 3rem;
+  }
+
   .wine-info-page {
-    padding: 2.5rem 3rem;
+    padding: 2.75rem 3.5rem;
+    gap: 3rem;
   }
 
   .wine-back-button {
@@ -412,20 +421,20 @@ useHead(() => ({
 
   .wine-details-container {
     flex-direction: row;
-    gap: 2rem;
-    align-items: center;
+    gap: 3.5rem;
+    align-items: flex-start;
   }
 
   .wine-column.technical {
-    padding-right: 3rem;
+    padding-right: 3.5rem;
     padding-bottom: 0;
     border-right: 2px solid var(--rosso);
     border-bottom: none;
   }
 
   .wine-column.description {
-    padding-top: 0;
-    transform: translateY(-3rem);
+    padding-top: 0.5rem;
+    transform: translateY(-2rem);
   }
 
   .name-wine {
@@ -442,6 +451,15 @@ useHead(() => ({
   .detail-page__header h1 {
     font-size: 3.2rem;
     line-height: 3.2rem;
+  }
+
+  .wine-info-page {
+    padding: 3rem 4rem;
+    gap: 3.5rem;
+  }
+
+  .wine-details-container {
+    gap: 4rem;
   }
 }
 </style>
