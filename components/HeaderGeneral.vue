@@ -4,20 +4,28 @@
       <!-- no sponsor -->
       <div class="header-general--no-sponsor" v-if="!showSponsor">
         <div class="header-general__logo">
-          <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+          <a href="https://www.gamberorosso.it/">
+            <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+          </a>
         </div>
         <div class="header-general__logo">
-          <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+          <a :href="HOME_NAV_ITEM.href">
+            <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+          </a>
         </div>
       </div>
 
       <!-- sponsor -->
       <div class="header-general--sponsor" v-else>
         <div class="header-general__logo">
-          <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+          <a href="https://www.gamberorosso.it/">
+            <img src="/img/logo-gambero-rosso-sm.png" alt="Gambero Rosso" />
+          </a>
         </div>
         <div class="header-general__logo">
-          <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+          <a :href="HOME_NAV_ITEM.href">
+            <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
+          </a>
         </div>
         <div class="header-general__logo sponsor-area">
           <p>in collaborazione con</p>
@@ -62,7 +70,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from '#imports'
 import { useWines } from '~/composables/useWines'
-import { WINE_NAVIGATION_ITEMS, findWineMenuItemByType } from '~/lib/wineMenuItems'
+import { HOME_NAV_ITEM, WINE_NAVIGATION_ITEMS, findWineMenuItemByType } from '~/lib/wineMenuItems'
 
 const props = defineProps<{
   sponsor?: boolean | string | null
