@@ -268,11 +268,11 @@ useHead(() => ({
 }
 
 .detail-page__header h1 {
-  margin: 0;
-  font-size: 1.2rem;
-  line-height: 1.2rem;
   color: var(--rosso-scuro);
   font-family: var(--cormorant-garamond);
+  font-size: 2rem;
+  line-height: 2rem;
+  margin: 0;
   padding-bottom: 1.25rem;
   word-break: break-word;
 }
@@ -334,6 +334,12 @@ useHead(() => ({
     font-size: 2rem;
     line-height: 2rem;
     text-align: center;
+  }
+
+  .wine-single-sponsor {
+    justify-content: center;
+    text-align: center;
+    width: 100%;
   }
 }
 
