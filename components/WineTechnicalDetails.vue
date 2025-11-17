@@ -291,7 +291,7 @@ h3 {
   }
 
   .cantina .detail-page__info-value {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
   }
 
   .detail-page__info-item.regione .detail-page__info-label {
@@ -305,6 +305,16 @@ h3 {
 
   .punteggio .detail-page__info-label {
     font-size: 1.1rem;
+  }
+
+  .detail-page__info-item.punteggio {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .detail-page__info-item.punteggio .detail-page__info-label {
+    margin-right: 0;
   }
 
   .detail-page__info-value--score-unavailable.detail-page__info-value{

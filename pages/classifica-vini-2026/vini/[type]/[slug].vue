@@ -410,7 +410,7 @@ useHead(() => ({
   }
 
   .wine-column.technical {
-    padding-right: 2rem;
+    padding-right: 3rem;
     padding-bottom: 0;
     border-right: 2px solid var(--rosso);
     border-bottom: none;
@@ -422,6 +422,7 @@ useHead(() => ({
 
   .name-wine {
     text-align: left;
+    padding-bottom: 0;
   }
 }
 
