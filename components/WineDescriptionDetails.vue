@@ -13,7 +13,7 @@
       class="wine-image-placeholder"
     >
       <img
-        :src="wine.thumbnail.medium"
+        :src="wine.thumbnail.full"
         :alt="wine.name"
         class="wine-image"
         loading="lazy"
