@@ -250,7 +250,7 @@ h3 {
 
   .region-price {
     gap: 1.5rem;
-    padding-bottom: 4rem;
+    padding-bottom: 3rem;
     align-items: flex-start;
   }
 

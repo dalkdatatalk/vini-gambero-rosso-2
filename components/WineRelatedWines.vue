@@ -74,7 +74,7 @@ function getWineDetailLink(wine: Wine) {
 
 <style scoped>
 .related-wines {
-  margin-top: 2.5rem;
+  margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;

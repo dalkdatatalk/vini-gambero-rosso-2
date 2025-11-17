@@ -400,12 +400,12 @@ useHead(() => ({
 
   .detail-page__header h1 {
     font-size: 3.5rem;
-    line-height: 3.4rem;
-    padding-bottom: 2rem;
+    line-height: 3rem;
+    padding-bottom: 1rem;
   }
 
   .wine-info-page {
-    padding: 2.5rem 3rem;
+    padding: 2rem 3rem;
   }
 
   .wine-back-button {

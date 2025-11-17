@@ -143,7 +143,7 @@ const decodedPrimaryRegion = computed(() => primaryRegion.value ?? null);
 }
 
 .wine-image {
-  max-height: 20rem;
+  max-height: 15rem;
   width: 100%;
   height: auto;
   object-fit: contain;
