@@ -1,5 +1,6 @@
 import type { Wine } from '~/composables/useWines';
 import { useWines } from '~/composables/useWines';
+import { useHtmlEntities } from '~/composables/useHtmlEntities';
 
 type UseRelatedWineParams = {
   current: Wine;
@@ -117,6 +118,7 @@ export async function useRelatedWines({
   seed,
 }: UseRelatedWineParams): Promise<UseRelatedWineResult> {
   const { wines } = useWines();
+  const { decodeHtml } = useHtmlEntities();
   const pool = wines.value.filter((wine) => wine.slug !== current.slug);
 
   const grouped: Wine[] = [];
@@ -161,5 +163,13 @@ export async function useRelatedWines({
     addCandidates(shuffleUnique(remaining, seed));
   }
 
-  return { items: pickN(grouped, desiredCount) };
+  const sanitizedItems = pickN(grouped, desiredCount).map((wine) => {
+    const decodedWineryName = decodeHtml(wine.wineryName ?? null).trim();
+    return {
+      ...wine,
+      wineryName: decodedWineryName.length > 0 ? decodedWineryName : wine.wineryName,
+    } satisfies Wine;
+  });
+
+  return { items: sanitizedItems };
 }

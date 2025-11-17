@@ -22,7 +22,7 @@
           </h4>
         </NuxtLink>
         <p class="wine-card__winery">
-          {{ wine.wineryName ?? 'n/d' }}
+          {{ decodeWineryName(wine.wineryName) ?? 'n/d' }}
         </p>
         <NuxtLink
           class="wine-card__cta"
@@ -40,6 +40,7 @@ import { onMounted, ref } from 'vue';
 import type { Wine } from '~/composables/useWines';
 import { useRelatedWines } from '~/composables/useRelatedWines';
 import { findWineMenuItemByType } from '~/lib/wineMenuItems';
+import { useHtmlEntities } from '~/composables/useHtmlEntities';
 
 const props = defineProps<{
   currentWine: Wine;
@@ -49,6 +50,7 @@ const props = defineProps<{
 const items = ref<Wine[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
+const { decodeHtml } = useHtmlEntities();
 
 onMounted(async () => {
   try {
@@ -69,6 +71,12 @@ onMounted(async () => {
 function getWineDetailLink(wine: Wine) {
   const typeSegment = findWineMenuItemByType(wine.type ?? null)?.id ?? 'tutti';
   return `/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
+}
+
+function decodeWineryName(value?: string | null) {
+  const decoded = decodeHtml(value ?? null);
+  const normalized = decoded.trim();
+  return normalized.length > 0 ? normalized : null;
 }
 </script>
 
