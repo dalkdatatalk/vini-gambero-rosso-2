@@ -407,6 +407,7 @@ useHead(() => ({
   .wine-details-container {
     flex-direction: row;
     gap: 2rem;
+    align-items: flex-end;
   }
 
   .wine-column.technical {

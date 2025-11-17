@@ -206,6 +206,7 @@ h3 {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  gap: 0.35rem;
 }
 
 .punteggio .detail-page__info-label {
@@ -299,22 +300,8 @@ h3 {
   }
 
   .detail-page__info-item.regione .detail-page__info-value {
-    font-size: 3rem;
+    font-size: 2rem;
     text-align: left;
-  }
-
-  .punteggio .detail-page__info-label {
-    font-size: 1.1rem;
-  }
-
-  .detail-page__info-item.punteggio {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 0.5rem;
-  }
-
-  .detail-page__info-item.punteggio .detail-page__info-label {
-    margin-right: 0;
   }
 
   .detail-page__info-value--score-unavailable.detail-page__info-value{
