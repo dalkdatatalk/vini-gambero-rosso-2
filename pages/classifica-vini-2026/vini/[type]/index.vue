@@ -37,6 +37,7 @@ import type { Wine } from '~/composables/useWines';
 import {
   getWineMenuItemById,
   isWineMacroCategoryId,
+  findWineMenuItemByType,
   type WineMacroCategoryId,
 } from '~/lib/wineMenuItems';
 import { buildWineListJsonLd } from '~/utils/structuredData';
@@ -60,13 +61,19 @@ const currentMacro = computed(() => {
   return getWineMenuItemById(id) ?? null;
 });
 
+function getDetailTypeSegment(wine?: Wine | null) {
+  const macro = findWineMenuItemByType(wine?.type ?? null);
+  return macro?.id ?? 'tutti';
+}
+
 const redirectTarget = computed(() => {
   if (!typeParamRaw.value || currentMacro.value) {
     return null;
   }
   const wine = bySlug(typeParamRaw.value);
   if (wine) {
-    return `/classifica-vini-2026/vini/schede/${wine.slug}`;
+    const typeSegment = getDetailTypeSegment(wine);
+    return `/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
   }
   return null;
 });
@@ -230,7 +237,8 @@ const listTitle = computed(() => {
 
 const listItems = computed(() =>
   wines.value.map((wine) => {
-    const url = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${wine.slug}`;
+    const typeSegment = getDetailTypeSegment(wine);
+    const url = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
     return {
       name: wine.name,
       url,
