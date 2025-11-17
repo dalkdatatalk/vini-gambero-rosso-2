@@ -53,6 +53,16 @@ type RawWine = {
   vitigni?: RawGrape[] | null;
   vino_vitigni?: RawGrape[] | null;
   prodotti_vitigni?: RawGrape[] | null;
+  vine_stock1_name?: string | null;
+  vine_stock1_perc?: string | number | null;
+  vine_stock2_name?: string | null;
+  vine_stock2_perc?: string | number | null;
+  vine_stock3_name?: string | null;
+  vine_stock3_perc?: string | number | null;
+  vine_stock4_name?: string | null;
+  vine_stock4_perc?: string | number | null;
+  vine_stock5_name?: string | null;
+  vine_stock5_perc?: string | number | null;
   abbinamento?: string | null;
   vino_abbinamento?: string | null;
   content?: string | null;
@@ -175,7 +185,35 @@ export function normalizeWine(raw: RawWine): Wine {
   const name = safeText(raw.title) ?? 'Senza nome';
   const slug = safeText(raw.slug) ?? slugify(name);
 
-  const rawGrapes = raw.vitigni ?? raw.vino_vitigni ?? raw.prodotti_vitigni ?? null;
+  let rawGrapes = raw.vitigni ?? raw.vino_vitigni ?? raw.prodotti_vitigni ?? null;
+
+  if (!rawGrapes || rawGrapes.length === 0) {
+    const fromStocks: RawGrape[] = [];
+    const stockEntries: Array<{ name?: string | null; percentage?: string | number | null }> = [
+      { name: raw.vine_stock1_name, percentage: raw.vine_stock1_perc },
+      { name: raw.vine_stock2_name, percentage: raw.vine_stock2_perc },
+      { name: raw.vine_stock3_name, percentage: raw.vine_stock3_perc },
+      { name: raw.vine_stock4_name, percentage: raw.vine_stock4_perc },
+      { name: raw.vine_stock5_name, percentage: raw.vine_stock5_perc },
+    ];
+
+    for (const entry of stockEntries) {
+      const stockName = safeText(entry.name ?? null);
+      if (!stockName) {
+        continue;
+      }
+
+      fromStocks.push({
+        name: stockName,
+        percentage: entry.percentage ?? null,
+      });
+    }
+
+    if (fromStocks.length > 0) {
+      rawGrapes = fromStocks;
+    }
+  }
+
   const pairingText = safeText(raw.abbinamento ?? raw.vino_abbinamento ?? null);
   const pairingTags = parsePairingTags(raw.tag_abbinamento ?? null);
 
