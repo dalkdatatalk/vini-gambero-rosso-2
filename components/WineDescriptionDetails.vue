@@ -22,7 +22,7 @@
 
     <div class="detail-page__info-item detail-page__info-item--stacked">
       <span class="detail-page__info-label">Abbinamento</span>
-      <div class="detail-page__info-value">
+      <div class="detail-page__info-value detail-page__info-value--pairing">
         <span v-if="wine.pairing">{{ wine.pairing }}</span>
         <span v-else>Informazione non disponibile</span>
       </div>
@@ -95,6 +95,10 @@ const decodedPrimaryRegion = computed(() => primaryRegion.value ?? null);
 .detail-page__info-value, .rich-content{
   font-family: var(--cormorant-garamond);
   color: var(--rosso-scuro);
+}
+
+.detail-page__info-value--pairing {
+  font-size: 1.4rem;
 }
 
 .box-newsletter {
