@@ -15,7 +15,7 @@
         </p>
         <NuxtLink
           class="wine-card__cta"
-          :to="`/classifica-vini-2026/vini/schede/${wine.slug}`"
+          :to="getWineDetailLink(wine)"
         >
           <h4 class="wine-card__name">
             {{ wine.name ?? 'n/d' }}
@@ -26,7 +26,7 @@
         </p>
         <NuxtLink
           class="wine-card__cta"
-          :to="`/classifica-vini-2026/vini/schede/${wine.slug}`"
+          :to="getWineDetailLink(wine)"
         >
           Scopri di più
         </NuxtLink>
@@ -39,6 +39,7 @@
 import { onMounted, ref } from 'vue';
 import type { Wine } from '~/composables/useWines';
 import { useRelatedWines } from '~/composables/useRelatedWines';
+import { findWineMenuItemByType } from '~/lib/wineMenuItems';
 
 const props = defineProps<{
   currentWine: Wine;
@@ -64,6 +65,11 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+function getWineDetailLink(wine: Wine) {
+  const typeSegment = findWineMenuItemByType(wine.type ?? null)?.id ?? 'tutti';
+  return `/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
+}
 </script>
 
 <style scoped>

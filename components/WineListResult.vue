@@ -38,6 +38,7 @@ import { computed } from 'vue';
 import { usePremioCleaner } from '~/composables/usePremioCleaner';
 import rawWines from '~/data/wines.json';
 import type { Wine } from '~/composables/useWines';
+import { findWineMenuItemByType } from '~/lib/wineMenuItems';
 
 type Premio = { name?: string };
 type RawWineWithPremi = { slug?: string; premi?: Premio[] };
@@ -46,7 +47,13 @@ const props = defineProps<{
   wine: Wine;
 }>();
 
-const detailLink = computed(() => `/classifica-vini-2026/vini/schede/${props.wine.slug}`);
+const detailTypeSegment = computed(
+  () => findWineMenuItemByType(props.wine.type ?? null)?.id ?? 'tutti'
+);
+
+const detailLink = computed(
+  () => `/classifica-vini-2026/vini/${detailTypeSegment.value}/${props.wine.slug}`
+);
 
 const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile');
 
