@@ -1,5 +1,5 @@
 <template>
-  <article :class="['wine-card', { 'wine-card--featured': wine.score && wine.score >= 95 }]"><!-- featured style applied for high scores -->
+  <article class="wine-card">
     <NuxtLink :to="detailLink" class="wine-card__link">
       <div class="wine-card__content">
         <div class="wine-card__info">
@@ -106,14 +106,6 @@ const premioLabel = computed(() => {
 
 .wine-card:hover .wine-card__arrow svg {
   fill: var(--bianco);
-}
-
-.wine-card--featured {
-  background-color: #f6f6f6;
-}
-
-.wine-card--featured:hover {
-  background-color: #efefef;
 }
 
 .wine-card__link {
