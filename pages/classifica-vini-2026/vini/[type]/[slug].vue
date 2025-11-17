@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { createError, useHead, useRoute } from '#imports';
+import { createError, useHead, useRoute, useSeoMeta } from '#imports';
 import { useWines } from '~/composables/useWines';
 import { useBreakpoints } from '~/composables/useBreakpoints';
 import { findWineMenuItemByType } from '~/lib/wineMenuItems';
@@ -171,6 +171,17 @@ const canonicalUrl = computed(() => {
   return `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${canonicalTypeSegment.value}/${wine.value.slug}`;
 });
 
+const wineName = computed(() => {
+  const name = wine.value?.name?.trim();
+  return name && name.length > 0 ? name : 'Vino Berebene';
+});
+
+const metaTitle = computed(() => `${wineName.value} | Berebene 2026`);
+const metaDescription = computed(
+  () =>
+    `Scopri tutto quello che c'è da sapere sul ${wineName.value}, un vino selezionato da Gambero Rosso per Berebene 2026.`
+);
+
 const productJsonLd = computed(() =>
   buildWineProductJsonLd({
     wine: wine.value,
@@ -184,14 +195,14 @@ const productJsonLd = computed(() =>
   })
 );
 
+useSeoMeta({
+  title: () => metaTitle.value,
+  ogTitle: () => metaTitle.value,
+  description: () => metaDescription.value,
+  ogDescription: () => metaDescription.value,
+});
+
 useHead(() => ({
-  title: `${wine.value.name} | Berebene 2026`,
-  meta: [
-    {
-      name: 'description',
-      content: `Scopri tutto quello che c’è da sapere sul ${wine.value.name}, un vino selezionato da Gambero Rosso per Berebene 2026.`,
-    },
-  ],
   link: [
     {
       rel: 'canonical',
