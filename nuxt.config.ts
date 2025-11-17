@@ -1,3 +1,13 @@
+import wines from './data/wines.json';
+
+type WineEntry = {
+  type: string;
+  slug: string;
+  modified?: string;
+};
+
+const winesData = wines as WineEntry[];
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -7,7 +17,33 @@ export default defineNuxtConfig({
   ],
   modules: [
     '@vueuse/nuxt',
+    '@nuxtjs/sitemap',
   ],
+  sitemap: {
+    hostname: 'https://berebene.gamberorosso.it',
+    gzip: true,
+    urls: () => {
+      const staticUrls = ['/', '/classifica-vini-2026'].map((loc) => ({ loc }));
+
+      const typeSet = new Set<string>();
+      const wineUrls = winesData
+        .filter((wine): wine is WineEntry => Boolean(wine?.type && wine?.slug))
+        .map((wine) => {
+          typeSet.add(wine.type);
+          const url = {
+            loc: `/classifica-vini-2026/vini/${wine.type}/${wine.slug}`,
+            lastmod: wine.modified
+          };
+          return url;
+        });
+
+      const typeUrls = Array.from(typeSet).map((type) => ({
+        loc: `/classifica-vini-2026/vini/${type}`
+      }));
+
+      return [...staticUrls, ...typeUrls, ...wineUrls];
+    }
+  },
   app: {
     head: {
       script: [
