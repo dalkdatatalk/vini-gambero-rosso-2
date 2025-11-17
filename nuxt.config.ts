@@ -1,49 +1,92 @@
 import wines from './data/wines.json';
 
 type WineEntry = {
-  type: string;
   slug: string;
   modified?: string;
+  vino_categoria?: { name: string }[];
 };
 
 const winesData = wines as WineEntry[];
+
+// Mappa categorie → macro-type usato dalle tue pagine
+const CATEGORY_TO_TYPE: Record<string, string> = {
+  'bianco': 'bianchi',
+  'bianco macerato/orange wine': 'bianchi',
+  'bianco liquoroso': 'bianchi',
+
+  'rosso': 'rossi',
+
+  'spumante bianco': 'bollicine',
+  'spumante rosato': 'bollicine',
+  'spumante rosso': 'bollicine',
+  'spumante dolce bianco': 'bollicine',
+
+  'rose': 'rosati',
+
+  'dolce bianco': 'vini-dolci',
+  'dolce rosso': 'vini-dolci',
+};
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  css: [
-    '@/assets/main.css'
-  ],
+  css: ['@/assets/main.css'],
+
   modules: [
     '@vueuse/nuxt',
     '@nuxtjs/sitemap',
   ],
+
+  // Dominio canonico del progetto (non il .vercel.app)
+  site: {
+    url: 'https://berebene.gamberorosso.it',
+    name: 'Berebene – Classifica Vini 2026',
+  },
+
   sitemap: {
     hostname: 'https://berebene.gamberorosso.it',
-    gzip: true,
+    // gzip: true, // opzionale, puoi tenerlo o toglierlo
+
     urls: () => {
-      const staticUrls = ['/', '/classifica-vini-2026'].map((loc) => ({ loc }));
+      const urls: { loc: string; lastmod?: string }[] = [];
+
+      // 1) Pagine statiche della piattaforma vini
+      urls.push(
+        { loc: '/classifica-vini-2026/vini' },        // index.vue
+        { loc: '/classifica-vini-2026/vini/tutti' },  // vista "tutti" se è la canonical
+      );
 
       const typeSet = new Set<string>();
-      const wineUrls = winesData
-        .filter((wine): wine is WineEntry => Boolean(wine?.type && wine?.slug))
-        .map((wine) => {
-          typeSet.add(wine.type);
-          const url = {
-            loc: `/classifica-vini-2026/vini/${wine.type}/${wine.slug}`,
-            lastmod: wine.modified
-          };
-          return url;
+
+      // 2) Pagine di dettaglio vino /classifica-vini-2026/vini/[type]/[slug]
+      for (const wine of winesData) {
+        if (!wine?.slug) continue;
+
+        // Deriviamo il type dalla categoria del vino
+        const categoryName = wine.vino_categoria?.[0]?.name;
+        if (!categoryName) continue;
+
+        const derivedType = CATEGORY_TO_TYPE[categoryName];
+        if (!derivedType) continue;
+
+        typeSet.add(derivedType);
+
+        urls.push({
+          loc: `/classifica-vini-2026/vini/${derivedType}/${wine.slug}`,
+          lastmod: wine.modified,
         });
+      }
 
-      const typeUrls = Array.from(typeSet).map((type) => ({
-        loc: `/classifica-vini-2026/vini/${type}`
-      }));
+      // 3) Pagine lista per type /classifica-vini-2026/vini/[type]
+      for (const type of typeSet) {
+        urls.push({ loc: `/classifica-vini-2026/vini/${type}` });
+      }
 
-      return [...staticUrls, ...typeUrls, ...wineUrls];
-    }
+      return urls;
+    },
   },
+
   app: {
     head: {
       script: [
