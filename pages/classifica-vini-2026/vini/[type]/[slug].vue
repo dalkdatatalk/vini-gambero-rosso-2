@@ -32,6 +32,7 @@
       </section>
     </div>
   </main>
+  <Footer />
 </template>
 
 <script setup lang="ts">
@@ -44,6 +45,7 @@ import { buildWineProductJsonLd } from '~/utils/structuredData';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import WineSingleSponsor from '~/components/WineSingleSponsor.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
+import Footer from '~/components/Footer.vue';
 import rawWines from '~/data/wines.json';
 
 type RawPremio = { name?: string | null };

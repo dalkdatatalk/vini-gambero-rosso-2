@@ -17,6 +17,7 @@
   </main>
 
   <ScrollToTopButton />
+  <Footer />
 </template>
 
 <script setup lang="ts">
@@ -24,6 +25,7 @@ import { computed, reactive, ref, watch } from 'vue';
 import { useHead } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
+import Footer from '~/components/Footer.vue';
 import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
