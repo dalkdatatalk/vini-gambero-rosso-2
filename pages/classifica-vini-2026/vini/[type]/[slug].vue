@@ -7,10 +7,10 @@
         <div class="wine-details-container">
           <div class="wine-column technical">
             <header class="detail-page__header">
-              <WineSingleSponsor v-if="premioName" :premio-name="premioName" />
               <NuxtLink :to="backToCategoryHref" class="wine-back-button" aria-label="Torna alla lista dei vini">
                 <Icon name="ph:arrow-left" class="wine-back-button__icon" />
               </NuxtLink>
+              <WineSingleSponsor v-if="premioName" :premio-name="premioName" />
               <h1 class="name-wine">{{ wine.name }}</h1>
             </header>
             <WineTechnicalDetails
