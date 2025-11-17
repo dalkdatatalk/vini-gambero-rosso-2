@@ -333,6 +333,7 @@ h3 {
 
   .detail-page__info-item.cantina .detail-page__info-value {
     text-align: center;
+    font-size: 2rem;
   }
 }
 </style>
