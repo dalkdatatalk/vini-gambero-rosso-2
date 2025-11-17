@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
-import { navigateTo, useHead, useRoute, useRouter } from '#imports';
+import { navigateTo, useHead, useRoute, useRouter, useSeoMeta } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
 import { useBreakpoints } from '~/composables/useBreakpoints';
@@ -41,6 +41,10 @@ import {
   type WineMacroCategoryId,
 } from '~/lib/wineMenuItems';
 import { buildWineListJsonLd } from '~/utils/structuredData';
+import rawWines from '~/data/wines.json';
+
+type RawGuideEntry = { name?: string | null };
+type RawWineGuideInfo = { guide?: (RawGuideEntry | null | undefined)[] | null | undefined };
 
 const route = useRoute();
 const router = useRouter();
@@ -235,6 +239,26 @@ const listTitle = computed(() => {
   return `${label} | Berebene 2026`;
 });
 
+const berebeneYear = computed(() => {
+  const winesSource = rawWines as RawWineGuideInfo[] | undefined;
+  const guideName = winesSource?.[0]?.guide?.[0]?.name;
+  if (typeof guideName !== 'string') {
+    return null;
+  }
+  const normalized = guideName.replace(/^Berebene\s+/i, '').trim();
+  return normalized || null;
+});
+
+const metaTitle = computed(() => {
+  const suffix = 'Filtra e scopri i migliori vini qualità-prezzo';
+  const base = 'Classifica Berebene';
+  const year = berebeneYear.value;
+  if (!year) {
+    return `${base} – ${suffix}`;
+  }
+  return `${base} ${year} – ${suffix}`;
+});
+
 const listItems = computed(() =>
   wines.value.map((wine) => {
     const typeSegment = getDetailTypeSegment(wine);
@@ -255,14 +279,14 @@ const listJsonLd = computed(() =>
   })
 );
 
+useSeoMeta({
+  title: () => metaTitle.value,
+  ogTitle: () => metaTitle.value,
+  description: () => metaDescription.value,
+  ogDescription: () => metaDescription.value,
+});
+
 useHead(() => ({
-  title: listTitle.value,
-  meta: [
-    {
-      name: 'description',
-      content: metaDescription.value,
-    },
-  ],
   link: [
     {
       rel: 'canonical',
