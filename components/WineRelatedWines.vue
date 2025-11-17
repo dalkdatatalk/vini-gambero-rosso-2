@@ -22,7 +22,7 @@
           </h4>
         </NuxtLink>
         <p class="wine-card__winery">
-          {{ wine.wineryName ?? wine.winery ?? 'n/d' }}
+          {{ wine.wineryName ?? 'n/d' }}
         </p>
         <NuxtLink
           class="wine-card__cta"

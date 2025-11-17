@@ -85,6 +85,8 @@ export interface Wine {
   name: string;
   type: string | null;
   region: string | null;
+  wineryName: string | null;
+  wineryLink: string | null;
   year: number | null;
   score: number | null;
   denominazione: string | null;
@@ -184,6 +186,9 @@ function parseThumbnail(
 export function normalizeWine(raw: RawWine): Wine {
   const name = safeText(raw.title) ?? 'Senza nome';
   const slug = safeText(raw.slug) ?? slugify(name);
+  const relatedLocale = raw.related_locale ?? null;
+  const wineryName = safeText(relatedLocale?.title ?? null);
+  const wineryLink = safeText(relatedLocale?.website ?? relatedLocale?.link ?? null);
 
   let rawGrapes = raw.vitigni ?? raw.vino_vitigni ?? raw.prodotti_vitigni ?? null;
 
@@ -223,6 +228,8 @@ export function normalizeWine(raw: RawWine): Wine {
     name,
     type: firstName(raw.vino_categoria),
     region: firstName(raw.regioni),
+    wineryName,
+    wineryLink,
     year: toNumber(raw.anno),
     score: toNumber(raw.vino_centesimi),
     denominazione: firstName(raw.prodotti_denominazione_vino),
@@ -233,7 +240,7 @@ export function normalizeWine(raw: RawWine): Wine {
     grapes: parseGrapes(rawGrapes),
     pairing: pairingText,
     pairingTags,
-    relatedLocale: raw.related_locale ?? null,
+    relatedLocale,
     thumbnail: parseThumbnail(raw.thumbnail),
   };
 }

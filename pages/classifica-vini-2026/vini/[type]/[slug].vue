@@ -111,8 +111,8 @@ const premioName = computed(() => {
   return firstValid?.name ?? undefined;
 });
 
-const wineryName = computed(() => wine.value.relatedLocale?.title ?? null);
-const wineryLink = computed(() => wine.value.relatedLocale?.website ?? null);
+const wineryName = computed(() => wine.value.wineryName ?? wine.value.relatedLocale?.title ?? null);
+const wineryLink = computed(() => wine.value.wineryLink ?? wine.value.relatedLocale?.website ?? null);
 const relatedRegion = computed(() => wine.value.relatedLocale?.regioni?.[0]?.name ?? null);
 const primaryRegion = computed(() => wine.value.region ?? relatedRegion.value ?? null);
 
