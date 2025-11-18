@@ -87,7 +87,6 @@
             />
           </div>
           <span class="range-max">{{ computedMaxScore }}</span>
-          <span class="range-value">{{ scoreModel }}</span>
         </div>
       </div>
 
@@ -1090,19 +1089,6 @@ onBeforeUnmount(() => {
   transform: translateY(-50%);
 }
 
-.range-value {
-  font-family: 'Funnel Sans', sans-serif;
-  font-weight: 600;
-  font-size: 18px;
-  color: #290005;
-  letter-spacing: -0.54px;
-  min-width: 60px;
-  text-align: center;
-  grid-column: 1 / -1;
-  grid-row: 2;
-  justify-self: center;
-}
-
 .range-slider input[type='range'] {
   width: 100%;
   height: 2px;
@@ -1135,32 +1121,24 @@ onBeforeUnmount(() => {
 .range-bubble {
   position: absolute;
   left: var(--range-progress);
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 4px);
   transform: translate(-50%, 0);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   background-color: #ca1f1e;
   color: #fff;
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 600;
-  font-size: 14px;
-  letter-spacing: -0.42px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  white-space: nowrap;
+  font-size: 16px;
+  letter-spacing: -0.48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
   z-index: 3;
   transition: left 0.12s ease;
-}
-
-.range-bubble::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: -4px;
-  transform: translateX(-50%);
-  width: 8px;
-  height: 8px;
-  background-color: #ca1f1e;
-  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  box-shadow: 0 2px 8px rgba(41, 0, 5, 0.15);
 }
 
 .range-slider input[type='range']::-moz-range-thumb {
@@ -1220,10 +1198,6 @@ onBeforeUnmount(() => {
   .filter-item,
   .filter-item--search {
     flex: 0 0 100%;
-  }
-
-  .range-value {
-    justify-self: flex-end;
   }
 
   .filter-input {
