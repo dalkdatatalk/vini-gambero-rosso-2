@@ -129,6 +129,12 @@ function isActive(rawId: string) {
   text-align: left;
 }
 
+@media (max-width: 375px) {
+  .title {
+    padding-right: 2rem;
+  }
+}
+
 @media (min-width: 768px) {
   .title {
     font-size: 2.5rem;
