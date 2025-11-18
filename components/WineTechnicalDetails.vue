@@ -1,26 +1,23 @@
 <template>
   <section class="detail-page__info">
-    <div class="detail-page__info-item cantina">
+    <div v-if="decodedWineryName" class="detail-page__info-item cantina">
       <span class="detail-page__info-value">
-        <template v-if="decodedWineryName">
-          <template v-if="wineryLink">
-            <!-- <a :href="wineryLink" target="_blank" rel="noopener noreferrer">{{ decodedWineryName }}</a> -->
-            {{ decodedWineryName }}
-          </template>
-          <template v-else>{{ decodedWineryName }}</template>
+        <template v-if="wineryLink">
+          <!-- <a :href="wineryLink" target="_blank" rel="noopener noreferrer">{{ decodedWineryName }}</a> -->
+          {{ decodedWineryName }}
         </template>
-        <template v-else>Informazione non disponibile</template>
+        <template v-else>{{ decodedWineryName }}</template>
       </span>
     </div>
 
     <div class="region-price">
-      <div class="detail-page__info-item regione">
+      <div v-if="decodedPrimaryRegion" class="detail-page__info-item regione">
         <span class="detail-page__info-value">
-          {{ decodedPrimaryRegion ?? 'Informazione non disponibile' }}
+          {{ decodedPrimaryRegion }}
         </span>
       </div>
 
-      <div class="detail-page__info-item punteggio">
+      <div v-if="scoreDisplayValue" class="detail-page__info-item punteggio">
         <span class="detail-page__info-label">Punteggio</span>
         <span
           class="detail-page__info-value"
@@ -31,50 +28,47 @@
       </div>
     </div>
 
-    <div class="detail-page__info-item">
+    <div v-if="decodedWineType" class="detail-page__info-item">
       <span class="detail-page__info-label">Tipologia</span>
       <span class="detail-page__info-value">
-        {{ decodedWineType ?? 'Informazione non disponibile' }}
+        {{ decodedWineType }}
       </span>
     </div>
 
-    <div class="detail-page__info-item">
+    <div v-if="decodedGrapesList?.length" class="detail-page__info-item">
       <span class="detail-page__info-label">Vitigni</span>
       <span class="detail-page__info-value">
-        <template v-if="decodedGrapesList?.length">
-          <span v-for="(grape, index) in decodedGrapesList" :key="`${grape}-${index}`">
-            {{ grape }}<span v-if="index < decodedGrapesList.length - 1">, </span>
-          </span>
-        </template>
-        <template v-else>Informazioni non disponibili</template>
+        <span v-for="(grape, index) in decodedGrapesList" :key="`${grape}-${index}`">
+          {{ grape }}<span v-if="index < decodedGrapesList.length - 1">, </span>
+        </span>
       </span>
     </div>
 
-    <div class="detail-page__info-item">
+    <div v-if="wineYear" class="detail-page__info-item">
       <span class="detail-page__info-label">Annata</span>
       <span class="detail-page__info-value">
-        {{ wine.year ?? 'Informazione non disponibile' }}
+        {{ wineYear }}
       </span>
     </div>
 
-    <div class="detail-page__info-item">
+    <div v-if="decodedDenominazione" class="detail-page__info-item">
       <span class="detail-page__info-label">Denominazione</span>
       <span class="detail-page__info-value">
-        {{ decodedDenominazione ?? 'Informazione non disponibile' }}
+        {{ decodedDenominazione }}
       </span>
     </div>
 
-    <div class="detail-page__info-item">
+    <div v-if="decodedFormattedBottles" class="detail-page__info-item">
       <span class="detail-page__info-label">Bottiglie prodotte</span>
       <span class="detail-page__info-value">
-        {{ decodedFormattedBottles ?? 'Informazione non disponibile' }}
+        {{ decodedFormattedBottles }}
       </span>
     </div>
 
-    <div class="detail-page__info-item">
+    <div v-if="decodedFormattedPrice" class="detail-page__info-item">
       <span class="detail-page__info-label">Prezzo</span>
       <span class="detail-page__info-value">
-        {{ decodedFormattedPrice ?? 'Informazione non disponibile' }}
+        {{ decodedFormattedPrice }}
       </span>
     </div>
 
@@ -82,7 +76,7 @@
     <WineRelatedWines
       v-if="isDesktop"
       :current-wine="wine"
-      :primary-region="decodedPrimaryRegion"
+      :primary-region="decodedPrimaryRegion ?? null"
       class="related-wines-section"
     />
   </section>
@@ -112,10 +106,22 @@ const { decodeHtml } = useHtmlEntities();
 
 const isDesktop = useMediaQuery('(min-width: 1280px)');
 
-const decodeOptional = (value?: string | null) => {
+const decodeOptional = (value?: string | null): string | undefined => {
   const decoded = decodeHtml(value ?? null);
   const normalized = decoded.trim();
-  return normalized.length > 0 ? normalized : null;
+  if (normalized.length === 0) {
+    return undefined;
+  }
+
+  const normalizedLower = normalized.toLowerCase();
+  if (
+    normalizedLower === 'informazione non disponibile' ||
+    normalizedLower === 'informazioni non disponibili'
+  ) {
+    return undefined;
+  }
+
+  return normalized;
 };
 
 const decodedWineryName = computed(() => decodeOptional(props.wineryName));
@@ -124,20 +130,26 @@ const decodedScore = computed(() => decodeOptional(props.formattedScore));
 const decodedWineType = computed(() => decodeOptional(props.wine.type));
 const decodedGrapesList = computed(() => {
   if (!props.grapesList || props.grapesList.length === 0) {
-    return null;
+    return undefined;
   }
 
   const decoded = props.grapesList
     .map((grape) => decodeOptional(grape))
     .filter((value): value is string => Boolean(value));
 
-  return decoded.length > 0 ? decoded : null;
+  return decoded.length > 0 ? decoded : undefined;
 });
 const decodedDenominazione = computed(() => decodeOptional(props.wine.denominazione));
 const decodedFormattedBottles = computed(() => decodeOptional(props.formattedBottles));
 const decodedFormattedPrice = computed(() => decodeOptional(props.formattedPrice));
-const scoreDisplayValue = computed(() => decodedScore.value ?? 'Informazione non disponibile');
-const isScoreInfoUnavailable = computed(() => scoreDisplayValue.value === 'Informazione non disponibile');
+const scoreDisplayValue = computed(() => decodedScore.value);
+const isScoreInfoUnavailable = computed(() => !scoreDisplayValue.value);
+const wineYear = computed(() => {
+  if (props.wine.year === null || props.wine.year === undefined) {
+    return undefined;
+  }
+  return String(props.wine.year);
+});
 </script>
 
 <style scoped>
