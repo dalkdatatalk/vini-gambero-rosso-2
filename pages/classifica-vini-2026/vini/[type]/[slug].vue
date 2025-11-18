@@ -426,7 +426,6 @@ useHead(() => ({
 
   .wine-column.description {
     padding-top: 0;
-    transform: translateY(-1.3rem);
   }
 
   .name-wine {
