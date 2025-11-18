@@ -1,5 +1,5 @@
 <template>
-  <section class="detail-page__info">
+  <section ref="descriptionColumnRef" class="detail-page__info">
     <div class="detail-page__info-item detail-page__info-item--stacked">
       <span class="detail-page__info-label">Descrizione</span>
       <div class="detail-page__info-value detail-page__info-value--rich">
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, toRefs, watchEffect } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
 import type { Wine } from '~/composables/useWines';
 import SocialMediaShareButtons from '~/components/SocialMediaShareButtons.vue';
@@ -70,6 +70,30 @@ const { wine, primaryRegion, premioName } = toRefs(props);
 const isMobileOrTablet = useMediaQuery('(max-width: 1279px)');
 
 const decodedPrimaryRegion = computed(() => primaryRegion.value ?? null);
+
+const hasImage = computed(() => Boolean(wine.value.thumbnail?.medium));
+
+const descriptionColumnRef = ref<HTMLElement | null>(null);
+
+let stopColumnClassWatcher: (() => void) | null = null;
+
+onMounted(() => {
+  stopColumnClassWatcher = watchEffect(() => {
+    const columnElement = descriptionColumnRef.value?.closest('.wine-column.description');
+    if (!columnElement) {
+      return;
+    }
+
+    columnElement.classList.toggle('with-image', hasImage.value);
+    columnElement.classList.toggle('without-image', !hasImage.value);
+  });
+});
+
+onBeforeUnmount(() => {
+  stopColumnClassWatcher?.();
+  const columnElement = descriptionColumnRef.value?.closest('.wine-column.description');
+  columnElement?.classList.remove('with-image', 'without-image');
+});
 </script>
 
 <style scoped>
@@ -148,5 +172,15 @@ const decodedPrimaryRegion = computed(() => primaryRegion.value ?? null);
   height: auto;
   object-fit: contain;
   border-radius: 4px;
+}
+
+@media (min-width: 1280px) {
+  :global(.wine-column.description.without-image) {
+    transform: translateY(-1.3rem);
+  }
+
+  :global(.wine-column.description.with-image) {
+    transform: translateY(0rem);
+  }
 }
 </style>
