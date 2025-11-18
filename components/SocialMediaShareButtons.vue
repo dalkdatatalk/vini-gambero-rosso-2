@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useRoute, useRuntimeConfig } from '#imports';
+import { useRoute, useRuntimeConfig, useHtmlEntities } from '#imports';
 import type { Wine } from '~/composables/useWines';
 
 type ShareNetwork = 'facebook' | 'x' | 'whatsapp';
@@ -41,6 +41,7 @@ const props = defineProps<{ wine: Wine }>();
 
 const route = useRoute();
 const runtimeConfig = useRuntimeConfig();
+const { normalizeEntityString } = useHtmlEntities();
 
 const fullUrl = computed(() => {
   const siteUrl = runtimeConfig.public?.siteUrl ?? '';
@@ -49,16 +50,14 @@ const fullUrl = computed(() => {
 });
 
 const wineTitle = computed(() => {
-  const title = props.wine.name?.trim();
-  return title && title.length > 0 ? title : 'Vino Berebene';
+  const decodedTitle = normalizeEntityString(props.wine.name);
+  return decodedTitle.length > 0 ? decodedTitle : 'Vino Berebene';
 });
 
 const cantinaName = computed(() => {
   const rawCantina = props.wine.wineryName ?? props.wine.relatedLocale?.title ?? '';
-  const trimmedCantina = rawCantina?.trim();
-  return trimmedCantina && trimmedCantina.length > 0
-    ? trimmedCantina
-    : 'Cantina Berebene';
+  const decodedCantina = normalizeEntityString(rawCantina);
+  return decodedCantina.length > 0 ? decodedCantina : 'Cantina Berebene';
 });
 
 const shareMessage = computed(
