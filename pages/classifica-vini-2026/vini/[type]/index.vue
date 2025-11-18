@@ -92,6 +92,30 @@ if (redirectTarget.value) {
   await navigateTo(redirectTarget.value, { replace: true });
 }
 
+function resolveLatestModifiedDate(list: Wine[]): string | null {
+  let latestValue: string | null = null;
+  let latestTimestamp = Number.NEGATIVE_INFINITY;
+
+  for (const wine of list) {
+    const modified = wine.modified;
+    if (typeof modified !== 'string' || modified.trim().length === 0) {
+      continue;
+    }
+
+    const timestamp = Date.parse(modified);
+    if (Number.isNaN(timestamp)) {
+      continue;
+    }
+
+    if (timestamp > latestTimestamp) {
+      latestTimestamp = timestamp;
+      latestValue = modified;
+    }
+  }
+
+  return latestValue;
+}
+
 const winesBySelection = computed(() => {
   if (!currentType.value) {
     return [];
@@ -157,6 +181,10 @@ const filteredWines = computed(() => {
 });
 
 const wines = filteredWines;
+
+const lastModifiedForCategory = computed(() =>
+  resolveLatestModifiedDate(winesBySelection.value)
+);
 
 function onFilterResults(list: Wine[]) {
   detailFiltersApplied.value = true;
@@ -320,6 +348,7 @@ const metaTitle = computed(() => {
 });
 
 const collectionPageJsonLd = computed(() => {
+  const modifiedDate = lastModifiedForCategory.value;
   const itemListElement = wines.value.map((wine, index) => {
     const typeSegment = wine?.type?.trim() ? wine.type : getDetailTypeSegment(wine);
     const canonicalItemId = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
@@ -336,6 +365,9 @@ const collectionPageJsonLd = computed(() => {
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
+    ...(modifiedDate
+      ? { datePublished: modifiedDate, dateModified: modifiedDate, lastReviewed: modifiedDate }
+      : {}),
     mainEntity: {
       '@type': 'ItemList',
       itemListElement,

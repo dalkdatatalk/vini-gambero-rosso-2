@@ -29,6 +29,7 @@ import Footer from '~/components/Footer.vue';
 import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
+import { findWineMenuItemByType } from '~/lib/wineMenuItems';
 import { slugify } from '~/utils/slugify';
 
 const { isMobile, isTablet } = useBreakpoints();
@@ -62,6 +63,35 @@ const filterStateBinding = computed({
 
 const detailFiltersApplied = ref(false);
 const detailResults = ref<Wine[]>([]);
+
+function getDetailTypeSegment(wine?: Wine | null) {
+  const macro = findWineMenuItemByType(wine?.type ?? null);
+  return macro?.id ?? 'tutti';
+}
+
+function resolveLatestModifiedDate(list: Wine[]): string | null {
+  let latestValue: string | null = null;
+  let latestTimestamp = Number.NEGATIVE_INFINITY;
+
+  for (const wine of list) {
+    const modified = wine.modified;
+    if (typeof modified !== 'string' || modified.trim().length === 0) {
+      continue;
+    }
+
+    const timestamp = Date.parse(modified);
+    if (Number.isNaN(timestamp)) {
+      continue;
+    }
+
+    if (timestamp > latestTimestamp) {
+      latestTimestamp = timestamp;
+      latestValue = modified;
+    }
+  }
+
+  return latestValue;
+}
 
 const normalizedTypeSelection = computed(() => {
   const value = typeSelection.value;
@@ -122,7 +152,40 @@ function onFilterResults(list: Wine[]) {
   detailResults.value = [...list];
 }
 
-useHead({
+const lastModifiedForAll = computed(() => resolveLatestModifiedDate(wines.value));
+
+const canonicalUrl = 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/';
+
+const collectionPageJsonLd = computed(() => {
+  const modifiedDate = lastModifiedForAll.value;
+  const itemListElement = filteredWines.value.map((wine, index) => {
+    const typeSegment = wine?.type?.trim() ? getDetailTypeSegment(wine) : 'tutti';
+    const canonicalItemId = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
+
+    return {
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@id': canonicalItemId,
+      },
+    };
+  });
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': canonicalUrl,
+    ...(modifiedDate
+      ? { datePublished: modifiedDate, dateModified: modifiedDate, lastReviewed: modifiedDate }
+      : {}),
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement,
+    },
+  };
+});
+
+useHead(() => ({
   title: 'Berebene 2026 | Classifica migliori vini economici',
   meta: [
     {
@@ -134,10 +197,16 @@ useHead({
   link: [
     {
       rel: 'canonical',
-      href: 'https://berebene.gamberorosso.it/classifica-vini-2026/vini/',
+      href: canonicalUrl,
     },
   ],
-});
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(collectionPageJsonLd.value),
+    },
+  ],
+}));
 
 </script>
 
