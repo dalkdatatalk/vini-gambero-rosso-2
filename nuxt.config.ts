@@ -98,11 +98,11 @@ export default defineNuxtConfig({
       meta: [
         {
           property: 'og:image',
-          content: './public/og-image.png'
+          content: 'https://vini-gambero-rosso-2.vercel.app/og-image.png'
         },
         {
           name: 'twitter:image',
-          content: './public/og-image.png'
+          content: 'https://vini-gambero-rosso-2.vercel.app/og-image.png'
         }
       ],
       script: [
