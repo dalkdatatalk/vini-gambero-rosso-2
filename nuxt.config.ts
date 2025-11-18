@@ -33,6 +33,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['@/assets/main.css'],
 
+  runtimeConfig: {
+    public: {
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://berebene.gamberorosso.it',
+    },
+  },
+
   modules: [
     '@vueuse/nuxt',
     '@nuxtjs/sitemap',
