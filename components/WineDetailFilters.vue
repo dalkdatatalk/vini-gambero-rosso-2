@@ -1121,7 +1121,7 @@ onBeforeUnmount(() => {
 .range-bubble {
   position: absolute;
   left: var(--range-progress);
-  bottom: calc(100% + 6px);
+  bottom: calc(50% + 2px);
   transform: translate(-50%, 0);
   width: 32px;
   height: 32px;
