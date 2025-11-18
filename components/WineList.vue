@@ -1,18 +1,25 @@
 <template>
-  <section v-if="hasResults" :class="['wine-list__grid', gridClass]" v-bind="$attrs">
-    <WineListResult
-      v-for="wine in wines"
-      :key="wine.id ?? wine.slug ?? wine.name"
-      :wine="wine"
-    />
+  <section
+    ref="containerRef"
+    :class="containerClass"
+    :style="containerStyle"
+    v-bind="$attrs"
+  >
+    <template v-if="hasResults">
+      <WineListResult
+        v-for="wine in wines"
+        :key="wine.id ?? wine.slug ?? wine.name"
+        :wine="wine"
+      />
+    </template>
+    <p v-else :class="['wine-list__empty', emptyClass, emptyVariantClass]">
+      {{ emptyMessage }}
+    </p>
   </section>
-  <p v-else :class="['wine-list__empty', emptyClass, emptyVariantClass]" v-bind="$attrs">
-    {{ emptyMessage }}
-  </p>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { Wine } from '~/composables/useWines';
 
 defineOptions({ inheritAttrs: false });
@@ -36,12 +43,55 @@ const props = withDefaults(
 
 const hasResults = computed(() => props.wines.length > 0);
 
+const containerRef = ref<HTMLElement | null>(null);
+const placeholderHeight = ref(0);
+
+const containerStyle = computed(() =>
+  placeholderHeight.value > 0 ? { minHeight: `${placeholderHeight.value}px` } : {}
+);
+
+const containerClass = computed(() => {
+  const classes: Array<string | Record<string, boolean>> = ['wine-list'];
+
+  if (hasResults.value) {
+    classes.push('wine-list__grid');
+    const extra = props.gridClass;
+    if (typeof extra === 'string') {
+      classes.push(extra);
+    } else if (Array.isArray(extra)) {
+      classes.push(...extra);
+    } else if (extra && typeof extra === 'object') {
+      classes.push(extra);
+    }
+  } else {
+    classes.push('wine-list__empty-wrapper');
+  }
+
+  return classes;
+});
+
+watch(
+  hasResults,
+  (value, oldValue) => {
+    if (!value && oldValue && containerRef.value) {
+      placeholderHeight.value = containerRef.value.offsetHeight;
+    } else if (value) {
+      placeholderHeight.value = 0;
+    }
+  },
+  { flush: 'pre' }
+);
+
 const emptyVariantClass = computed(() =>
   props.emptyVariant === 'simple' ? 'wine-list__empty--simple' : 'wine-list__empty--detailed'
 );
 </script>
 
 <style scoped>
+.wine-list {
+  width: 100%;
+}
+
 .wine-list__grid {
   display: flex;
   flex-direction: column;
@@ -51,6 +101,16 @@ const emptyVariantClass = computed(() =>
 
 .wine-list__grid > :deep(*) {
   width: 100%;
+}
+
+.wine-list__empty-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  padding: 48px 0;
 }
 
 .wine-list__empty {
