@@ -228,7 +228,21 @@ const metaDescription = computed(() => {
   if (isTuttiPage.value) {
     return 'Scopri quali vini sotto ai 20 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, tipologia e altro.';
   }
-  return `Scopri quali vini ${typeLabel.value} sotto ai 20 euro sono stati selezionati da Gambero Rosso come migliori per il 2026.`;
+
+  const descriptionMap: Record<string, string> = {
+    rossi:
+      'Scopri quali vini rossi sotto ai 20 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, abbinamento e altro.',
+    bianchi:
+      'Scopri quali vini bianchi sotto ai 20 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, abbinamento e altro.',
+    bollicine:
+      'Scopri quali bollicine sotto ai 20 euro sono state selezionate da Gambero Rosso come migliori per il 2026. Esplora per regione, abbinamento e altro.',
+    rosati:
+      'Scopri quali vini rosati sotto ai 20 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, abbinamento e altro.',
+    'vini-dolci':
+      'Scopri quali vini dolci sotto ai 20 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, abbinamento e altro.',
+  };
+
+  return descriptionMap[currentType.value] ?? `Scopri quali vini ${typeLabel.value} sotto ai 20 euro sono stati selezionati da Gambero Rosso come migliori per il 2026.`;
 });
 
 const canonicalUrl = computed(() => {
@@ -251,14 +265,31 @@ const berebeneYear = computed(() => {
   return normalized || null;
 });
 
+const defaultBerebeneYear = '2026';
+const resolvedBerebeneYear = computed(() => berebeneYear.value ?? defaultBerebeneYear);
+
 const metaTitle = computed(() => {
   const suffix = 'Filtra e scopri i migliori vini qualità-prezzo'; //TODO type dinamico - Togli "Filtra"
   const base = 'Classifica Berebene';
   const year = berebeneYear.value;
-  if (!year) {
-    return `${base} – ${suffix}`;
+  if (isTuttiPage.value) {
+    if (!year) {
+      return `${base} – ${suffix}`;
+    }
+    return `${base} ${year} – ${suffix}`;
   }
-  return `${base} ${year} – ${suffix}`;
+
+  const yearLabel = resolvedBerebeneYear.value;
+
+  const titleMap: Record<string, string> = {
+    rossi: `Classifica Berebene ${yearLabel} – Scopri i migliori vini rossi qualità-prezzo`,
+    bianchi: `Classifica Berebene ${yearLabel} – Scopri i migliori vini bianchi qualità-prezzo`,
+    bollicine: `Classifica Berebene ${yearLabel} – Scopri le migliori bollicine qualità-prezzo`,
+    rosati: `Classifica Berebene ${yearLabel} – Scopri i migliori vini rosati qualità-prezzo`,
+    'vini-dolci': `Classifica Berebene ${yearLabel} – Scopri i migliori vini dolci qualità-prezzo`,
+  };
+
+  return titleMap[currentType.value] ?? `${base} ${yearLabel} – ${suffix}`;
 });
 
 const listItems = computed(() =>
