@@ -7,6 +7,7 @@ type WineEntry = {
 };
 
 const winesData = wines as WineEntry[];
+const buildTimestamp = new Date().toISOString();
 
 // Mappa categorie → macro-type usato dalle tue pagine
 const CATEGORY_TO_TYPE: Record<string, string> = {
@@ -86,7 +87,10 @@ export default defineNuxtConfig({
 
       // 3) Pagine lista per type /classifica-vini-2026/vini/[type]
       for (const type of typeSet) {
-        urls.push({ loc: `/classifica-vini-2026/vini/${type}` });
+        urls.push({
+          loc: `/classifica-vini-2026/vini/${type}`,
+          lastmod: buildTimestamp,
+        });
       }
 
       return urls;
