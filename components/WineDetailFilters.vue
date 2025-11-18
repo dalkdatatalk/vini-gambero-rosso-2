@@ -70,7 +70,11 @@
         <div class="filter-range" role="group" aria-label="Filtra per punteggio minimo">
           <span class="range-min">{{ computedMinScore }}</span>
           <div class="range-slider" :style="{ '--range-progress': scoreProgress + '%' }">
-            <div class="range-bubble" aria-hidden="true">
+            <div
+              class="range-bubble"
+              :class="{ 'range-bubble--visible': scoreBubbleVisible }"
+              aria-hidden="true"
+            >
               {{ scoreModel }}
             </div>
             <input
@@ -84,6 +88,7 @@
               :aria-valuemax="computedMaxScore"
               :aria-valuenow="scoreModel"
               aria-label="Punteggio minimo"
+              @input="handleScoreInput"
             />
           </div>
           <span class="range-max">{{ computedMaxScore }}</span>
@@ -343,6 +348,20 @@ const scoreModel = computed({
   },
 });
 
+const scoreBubbleVisible = ref(false);
+let scoreBubbleTimeout: ReturnType<typeof setTimeout> | null = null;
+
+const handleScoreInput = () => {
+  scoreBubbleVisible.value = true;
+  if (scoreBubbleTimeout) {
+    clearTimeout(scoreBubbleTimeout);
+  }
+  scoreBubbleTimeout = setTimeout(() => {
+    scoreBubbleVisible.value = false;
+    scoreBubbleTimeout = null;
+  }, 1200);
+};
+
 const scoreProgress = computed(() => {
   const min = computedMinScore.value;
   const max = computedMaxScore.value;
@@ -370,6 +389,13 @@ const queryModel = computed({
     internalState.query = value ?? '';
     triggerUpdate(false);
   },
+});
+
+onBeforeUnmount(() => {
+  if (scoreBubbleTimeout) {
+    clearTimeout(scoreBubbleTimeout);
+    scoreBubbleTimeout = null;
+  }
 });
 
 const regionOptions = computed(() => ['Tutte', ...regions.value]);
@@ -1122,23 +1148,29 @@ onBeforeUnmount(() => {
   position: absolute;
   left: var(--range-progress);
   bottom: calc(50% + 2px);
-  transform: translate(-50%, 0);
-  width: 32px;
-  height: 32px;
+  transform: translate(-50%, 0) scale(0.75);
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background-color: #ca1f1e;
   color: #fff;
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 600;
-  font-size: 14px;
-  letter-spacing: -0.28px;
+  font-size: 12px;
+  letter-spacing: -0.24px;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
   z-index: 3;
-  transition: left 0.12s ease;
+  opacity: 0;
+  transition: left 0.12s ease, opacity 0.15s ease, transform 0.15s ease;
   box-shadow: 0 2px 8px rgba(41, 0, 5, 0.15);
+}
+
+.range-bubble--visible {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
 }
 
 .range-slider input[type='range']::-moz-range-thumb {
