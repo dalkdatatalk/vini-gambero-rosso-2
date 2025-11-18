@@ -83,6 +83,7 @@ export interface Wine {
   id: number;
   slug: string;
   name: string;
+  modified: string | null;
   type: string | null;
   region: string | null;
   wineryName: string | null;
@@ -221,11 +222,13 @@ export function normalizeWine(raw: RawWine): Wine {
 
   const pairingText = safeText(raw.abbinamento ?? raw.vino_abbinamento ?? null);
   const pairingTags = parsePairingTags(raw.tag_abbinamento ?? null);
+  const modified = typeof raw.modified === 'string' ? raw.modified : null;
 
   return {
     id: raw.id,
     slug,
     name,
+    modified,
     type: firstName(raw.vino_categoria),
     region: firstName(raw.regioni),
     wineryName,

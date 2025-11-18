@@ -61,6 +61,9 @@ export interface WineProductJsonLd {
   name: string;
   description: string;
   url: string;
+  datePublished?: string;
+  dateModified?: string;
+  lastReviewed?: string;
   brand?: JsonLdOrganization;
   category?: string;
   productionDate?: string;
@@ -183,6 +186,9 @@ export function buildWineProductJsonLd(
     name: wine.name,
     description,
     url: canonicalUrl,
+    ...(wine.modified
+      ? { datePublished: wine.modified, dateModified: wine.modified, lastReviewed: wine.modified }
+      : {}),
     ...(brand ? { brand } : {}),
     ...(macroCategoryLabel || wine.type
       ? { category: macroCategoryLabel ?? wine.type ?? undefined }
