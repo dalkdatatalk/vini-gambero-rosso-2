@@ -69,7 +69,14 @@
         <p class="filter-label">Punteggio</p>
         <div class="filter-range" role="group" aria-label="Filtra per punteggio minimo">
           <span class="range-min">{{ computedMinScore }}</span>
-          <div class="range-slider">
+          <div class="range-slider" :style="{ '--range-progress': scoreProgress + '%' }">
+            <div
+              class="range-bubble"
+              :class="{ 'range-bubble--visible': scoreBubbleVisible }"
+              aria-hidden="true"
+            >
+              {{ scoreModel }}
+            </div>
             <input
               :id="scoreInputId"
               v-model.number="scoreModel"
@@ -81,9 +88,10 @@
               :aria-valuemax="computedMaxScore"
               :aria-valuenow="scoreModel"
               aria-label="Punteggio minimo"
+              @input="handleScoreInput"
             />
           </div>
-          <span class="range-value">{{ scoreModel }}</span>
+          <span class="range-max">{{ computedMaxScore }}</span>
         </div>
       </div>
 
@@ -340,6 +348,30 @@ const scoreModel = computed({
   },
 });
 
+const scoreBubbleVisible = ref(false);
+let scoreBubbleTimeout: ReturnType<typeof setTimeout> | null = null;
+
+const handleScoreInput = () => {
+  scoreBubbleVisible.value = true;
+  if (scoreBubbleTimeout) {
+    clearTimeout(scoreBubbleTimeout);
+  }
+  scoreBubbleTimeout = setTimeout(() => {
+    scoreBubbleVisible.value = false;
+    scoreBubbleTimeout = null;
+  }, 1200);
+};
+
+const scoreProgress = computed(() => {
+  const min = computedMinScore.value;
+  const max = computedMaxScore.value;
+  if (max <= min) {
+    return 0;
+  }
+  const ratio = (scoreModel.value - min) / (max - min);
+  return Math.min(100, Math.max(0, ratio * 100));
+});
+
 const priceModel = computed({
   get: () => internalState.price,
   set: (value: number) => {
@@ -357,6 +389,13 @@ const queryModel = computed({
     internalState.query = value ?? '';
     triggerUpdate(false);
   },
+});
+
+onBeforeUnmount(() => {
+  if (scoreBubbleTimeout) {
+    clearTimeout(scoreBubbleTimeout);
+    scoreBubbleTimeout = null;
+  }
 });
 
 const regionOptions = computed(() => ['Tutte', ...regions.value]);
@@ -1032,39 +1071,36 @@ onBeforeUnmount(() => {
   outline: none;
 }
 
+
 .filter-range {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  column-gap: 12px;
+  row-gap: 12px;
   align-items: center;
-  gap: 10px;
 }
 
 .range-min,
-.range-value {
+.range-max {
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 600;
   font-size: 16px;
   color: #290005;
   letter-spacing: -0.48px;
-}
-
-.range-min {
   opacity: 0.4;
-}
-
-.range-value {
-  font-size: 20px;
-  letter-spacing: -0.6px;
-  min-width: 60px;
-  text-align: center;
+  white-space: nowrap;
 }
 
 .range-slider {
-  flex: 1;
   position: relative;
-  height: 20px;
+  height: 36px;
   display: flex;
   align-items: center;
+  width: 100%;
+  grid-column: 2 / 3;
+  grid-row: 1;
+  --range-progress: 0%;
 }
 
 .range-slider::before {
@@ -1072,9 +1108,11 @@ onBeforeUnmount(() => {
   position: absolute;
   left: 0;
   right: 0;
-  height: 1px;
+  top: 50%;
+  height: 2px;
   background-color: #290005;
-  opacity: 0.5;
+  opacity: 0.4;
+  transform: translateY(-50%);
 }
 
 .range-slider input[type='range'] {
@@ -1089,6 +1127,12 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 
+.range-slider input[type='range']:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 6px rgba(202, 31, 30, 0.15);
+  border-radius: 999px;
+}
+
 .range-slider input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -1098,6 +1142,35 @@ onBeforeUnmount(() => {
   background: #ca1f1e;
   cursor: pointer;
   border: 2px solid #290005;
+}
+
+.range-bubble {
+  position: absolute;
+  left: var(--range-progress);
+  bottom: calc(50% + 2px);
+  transform: translate(-50%, 0) scale(0.75);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: #ca1f1e;
+  color: #fff;
+  font-family: 'Funnel Sans', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: -0.24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: left 0.12s ease, opacity 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 2px 8px rgba(41, 0, 5, 0.15);
+}
+
+.range-bubble--visible {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
 }
 
 .range-slider input[type='range']::-moz-range-thumb {
