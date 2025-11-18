@@ -95,6 +95,16 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      meta: [
+        {
+          property: 'og:image',
+          content: './public/og-image.png'
+        },
+        {
+          name: 'twitter:image',
+          content: './public/og-image.png'
+        }
+      ],
       script: [
         // --- CMP: configurazione del Default Consent Mode ---
         {
