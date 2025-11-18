@@ -118,13 +118,20 @@ function isActive(rawId: string) {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 3rem;
+  font-size: 2rem;
   color: #ca1f1e;
   letter-spacing: 0;
   line-height: normal;
-  white-space: nowrap;
+  white-space: normal;
   margin-bottom: 1rem;
   text-align: left;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 3rem;
+    white-space: nowrap;
+  }
 }
 
 .category-buttons {
