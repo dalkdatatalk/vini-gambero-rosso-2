@@ -40,7 +40,7 @@
         aggiornamenti e suggerimenti selezionati.
       </p>
       <a
-        href="https://www.gamberorosso.it/"
+        href="https://www.gamberorosso.it/newsletter/"
         target="_blank"
         rel="noopener"
       >
