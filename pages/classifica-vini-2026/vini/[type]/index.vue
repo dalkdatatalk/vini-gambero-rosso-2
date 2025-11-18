@@ -2,13 +2,11 @@
   <HeaderMobile v-if="isMobile || isTablet" />
   <HeaderGeneral v-else />
   <main class="type-page">
-    <header class="type-page__header">
-      <h1>
-        {{ headingText }}
-      </h1>
-    </header>
-
-    <WineTypeFilters v-model="typeSelection" class="type-page__filters page__filters" />
+    <WineTypeFilters
+      v-model="typeSelection"
+      class="type-page__filters page__filters"
+      :heading="headingText"
+    />
 
     <WineDetailFilters
       :wines="winesBySelection"
@@ -352,21 +350,6 @@ useHead(() => ({
 @media (max-width: 1279px) {
   .type-page {
   }
-}
-
-.type-page__header {
-  text-align: center;
-}
-
-.type-page__header h1 {
-  font-size: 2.25rem;
-  margin: 0;
-  color: #1f2937;
-}
-
-.type-page__header p {
-  margin: 12px 0 0;
-  color: #4b5563;
 }
 
 </style>

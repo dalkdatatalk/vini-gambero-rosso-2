@@ -1,6 +1,6 @@
 <template>
   <section class="wine-type-filters" aria-label="Filtra per tipologia di vino">
-    <h1 class="title">Cerca il tuo vino</h1>
+    <h1 class="title">{{ titleText }}</h1>
 
     <div class="category-buttons" role="group">
       <button
@@ -22,10 +22,18 @@
 import { computed } from 'vue';
 import { WINE_MENU_ITEMS } from '~/lib/wineMenuItems';
 
-const props = defineProps<{ modelValue?: string | string[] }>();
+const props = defineProps<{ modelValue?: string | string[]; heading?: string | null }>();
 const emit = defineEmits<{ (e: 'update:modelValue', value: string | string[]): void }>();
 
 const macroTypes = WINE_MENU_ITEMS;
+
+const titleText = computed(() => {
+  const heading = (props.heading ?? '').toString().trim();
+  if (heading.length > 0) {
+    return heading;
+  }
+  return 'Cerca il tuo vino';
+});
 
 const isMultiple = computed(() => Array.isArray(props.modelValue));
 
