@@ -20,7 +20,7 @@ interface JsonLdOffer {
 }
 
 interface JsonLdRating {
-  '@type': 'Rating';
+  '@type': 'AggregateRating';
   ratingValue: number;
   bestRating: 100;
 }
@@ -160,7 +160,7 @@ export function buildWineProductJsonLd(
   const aggregateRating: JsonLdRating | undefined =
     typeof wine.score === 'number'
       ? {
-          '@type': 'Rating',
+          '@type': 'AggregateRating',
           ratingValue: wine.score,
           bestRating: 100,
         }
