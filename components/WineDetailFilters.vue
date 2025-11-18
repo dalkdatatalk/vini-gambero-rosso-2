@@ -69,7 +69,10 @@
         <p class="filter-label">Punteggio</p>
         <div class="filter-range" role="group" aria-label="Filtra per punteggio minimo">
           <span class="range-min">{{ computedMinScore }}</span>
-          <div class="range-slider">
+          <div class="range-slider" :style="{ '--range-progress': scoreProgress + '%' }">
+            <div class="range-bubble" aria-hidden="true">
+              {{ scoreModel }}
+            </div>
             <input
               :id="scoreInputId"
               v-model.number="scoreModel"
@@ -83,6 +86,7 @@
               aria-label="Punteggio minimo"
             />
           </div>
+          <span class="range-max">{{ computedMaxScore }}</span>
           <span class="range-value">{{ scoreModel }}</span>
         </div>
       </div>
@@ -338,6 +342,16 @@ const scoreModel = computed({
     }
     triggerUpdate(true);
   },
+});
+
+const scoreProgress = computed(() => {
+  const min = computedMinScore.value;
+  const max = computedMaxScore.value;
+  if (max <= min) {
+    return 0;
+  }
+  const ratio = (scoreModel.value - min) / (max - min);
+  return Math.min(100, Math.max(0, ratio * 100));
 });
 
 const priceModel = computed({
@@ -1032,39 +1046,36 @@ onBeforeUnmount(() => {
   outline: none;
 }
 
+
 .filter-range {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  column-gap: 12px;
+  row-gap: 12px;
   align-items: center;
-  gap: 10px;
 }
 
 .range-min,
-.range-value {
+.range-max {
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 600;
   font-size: 16px;
   color: #290005;
   letter-spacing: -0.48px;
-}
-
-.range-min {
   opacity: 0.4;
-}
-
-.range-value {
-  font-size: 20px;
-  letter-spacing: -0.6px;
-  min-width: 60px;
-  text-align: center;
+  white-space: nowrap;
 }
 
 .range-slider {
-  flex: 1;
   position: relative;
-  height: 20px;
+  height: 36px;
   display: flex;
   align-items: center;
+  width: 100%;
+  grid-column: 2 / 3;
+  grid-row: 1;
+  --range-progress: 0%;
 }
 
 .range-slider::before {
@@ -1072,9 +1083,24 @@ onBeforeUnmount(() => {
   position: absolute;
   left: 0;
   right: 0;
-  height: 1px;
+  top: 50%;
+  height: 2px;
   background-color: #290005;
-  opacity: 0.5;
+  opacity: 0.4;
+  transform: translateY(-50%);
+}
+
+.range-value {
+  font-family: 'Funnel Sans', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: #290005;
+  letter-spacing: -0.54px;
+  min-width: 60px;
+  text-align: center;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-self: center;
 }
 
 .range-slider input[type='range'] {
@@ -1089,6 +1115,12 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 
+.range-slider input[type='range']:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 6px rgba(202, 31, 30, 0.15);
+  border-radius: 999px;
+}
+
 .range-slider input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -1098,6 +1130,37 @@ onBeforeUnmount(() => {
   background: #ca1f1e;
   cursor: pointer;
   border: 2px solid #290005;
+}
+
+.range-bubble {
+  position: absolute;
+  left: var(--range-progress);
+  bottom: calc(100% + 8px);
+  transform: translate(-50%, 0);
+  background-color: #ca1f1e;
+  color: #fff;
+  font-family: 'Funnel Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.42px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 3;
+  transition: left 0.12s ease;
+}
+
+.range-bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #ca1f1e;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
 }
 
 .range-slider input[type='range']::-moz-range-thumb {
@@ -1157,6 +1220,10 @@ onBeforeUnmount(() => {
   .filter-item,
   .filter-item--search {
     flex: 0 0 100%;
+  }
+
+  .range-value {
+    justify-self: flex-end;
   }
 
   .filter-input {
