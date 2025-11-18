@@ -45,7 +45,6 @@ import {
   findWineMenuItemByType,
   type WineMacroCategoryId,
 } from '~/lib/wineMenuItems';
-import { buildWineListJsonLd } from '~/utils/structuredData';
 import rawWines from '~/data/wines.json';
 
 const BEREBENE_YEAR = 2026 as const;
@@ -283,11 +282,6 @@ const canonicalUrl = computed(() => {
   return `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${type}`;
 });
 
-const listTitle = computed(() => {
-  const label = isTuttiPage.value ? 'Tutti i vini' : typeLabel.value || 'Tutti i vini';
-  return `${label} | Berebene 2026`;
-});
-
 const berebeneYear = computed(() => {
   const winesSource = rawWines as RawWineGuideInfo[] | undefined;
   const guideName = winesSource?.[0]?.guide?.[0]?.name;
@@ -325,25 +319,29 @@ const metaTitle = computed(() => {
   return titleMap[currentType.value] ?? `${base} ${yearLabel} – ${suffix}`;
 });
 
-const listItems = computed(() =>
-  wines.value.map((wine) => {
-    const typeSegment = getDetailTypeSegment(wine);
-    const url = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
-    return {
-      name: wine.name,
-      url,
-      category: wine.type ?? null,
-    };
-  })
-);
+const collectionPageJsonLd = computed(() => {
+  const itemListElement = wines.value.map((wine, index) => {
+    const typeSegment = wine?.type?.trim() ? wine.type : getDetailTypeSegment(wine);
+    const canonicalItemId = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
 
-const listJsonLd = computed(() =>
-  buildWineListJsonLd({
-    canonicalUrl: canonicalUrl.value,
-    title: listTitle.value,
-    items: listItems.value,
-  })
-);
+    return {
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@id': canonicalItemId,
+      },
+    };
+  });
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement,
+    },
+  };
+});
 
 useSeoMeta({
   title: () => metaTitle.value,
@@ -362,7 +360,7 @@ useHead(() => ({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify(listJsonLd.value),
+      children: JSON.stringify(collectionPageJsonLd.value),
     },
   ],
 }));
