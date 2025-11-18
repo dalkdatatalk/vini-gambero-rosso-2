@@ -218,7 +218,7 @@ const premioLabel = computed(() => {
 
 .wine-card__arrow {
   display: inline-flex;
-  width: 46px;
+  width: 20px;
   height: 18px;
   transition: transform 0.3s ease;
 }

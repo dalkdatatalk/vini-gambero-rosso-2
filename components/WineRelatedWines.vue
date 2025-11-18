@@ -1,6 +1,6 @@
 <template>
   <section class="related-wines">
-    <h3 class="related-wines__title">Vini simili che ti suggeriamo</h3>
+    <h3 class="related-wines__title">Vini simili suggeriti</h3>
     <div v-if="loading" class="related-wines__state">Caricamento suggerimenti…</div>
     <div v-else-if="error" class="related-wines__state">{{ error }}</div>
     <div v-else-if="items.length === 0" class="related-wines__state">Nessun vino correlato disponibile.</div>

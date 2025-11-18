@@ -283,7 +283,7 @@ h3 {
   }
 
   .cantina .detail-page__info-value {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
 
   .detail-page__info-item.regione .detail-page__info-label {
@@ -291,7 +291,7 @@ h3 {
   }
 
   .detail-page__info-item.regione .detail-page__info-value {
-    font-size: 2rem;
+    font-size: 1.5rem;
     text-align: left;
   }
 
