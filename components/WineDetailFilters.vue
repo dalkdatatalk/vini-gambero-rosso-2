@@ -1121,17 +1121,17 @@ onBeforeUnmount(() => {
 .range-bubble {
   position: absolute;
   left: var(--range-progress);
-  bottom: calc(100% + 4px);
+  bottom: calc(100% + 6px);
   transform: translate(-50%, 0);
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background-color: #ca1f1e;
   color: #fff;
   font-family: 'Funnel Sans', sans-serif;
   font-weight: 600;
-  font-size: 16px;
-  letter-spacing: -0.48px;
+  font-size: 14px;
+  letter-spacing: -0.28px;
   display: flex;
   align-items: center;
   justify-content: center;
