@@ -47,7 +47,7 @@
         Iscriviti alla newsletter
       </a>
     </div>
-    <SocialMediaShareButtons :title="wine.name" />
+    <SocialMediaShareButtons :wine="wine" />
   </section>
 </template>
 
