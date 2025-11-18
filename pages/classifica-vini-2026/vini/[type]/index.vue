@@ -2,6 +2,11 @@
   <HeaderMobile v-if="isMobile || isTablet" />
   <HeaderGeneral v-else />
   <main class="type-page">
+    <header class="type-page__header">
+      <h1>
+        {{ headingText }}
+      </h1>
+    </header>
 
     <WineTypeFilters v-model="typeSelection" class="type-page__filters page__filters" />
 
@@ -44,6 +49,8 @@ import {
 } from '~/lib/wineMenuItems';
 import { buildWineListJsonLd } from '~/utils/structuredData';
 import rawWines from '~/data/wines.json';
+
+const BEREBENE_YEAR = 2026 as const;
 
 type RawGuideEntry = { name?: string | null };
 type RawWineGuideInfo = { guide?: (RawGuideEntry | null | undefined)[] | null | undefined };
@@ -221,6 +228,34 @@ const fallbackLabel = computed(() => {
 });
 
 const typeLabel = computed(() => currentMacro.value?.label ?? fallbackLabel.value);
+
+const normalizedTypeLabel = computed(() => {
+  const label = typeLabel.value;
+  if (!label) {
+    return '';
+  }
+  return label.trim().toLowerCase();
+});
+
+const headingText = computed(() => {
+  const year = BEREBENE_YEAR;
+  const type = currentType.value;
+
+  if (type === 'tutti') {
+    return `Tutti i vini selezionati da Berebene ${year}`;
+  }
+
+  if (type === 'bollicine') {
+    return `Le bollicine selezionate da Berebene ${year}`;
+  }
+
+  const label = normalizedTypeLabel.value;
+  if (label) {
+    return `I vini ${label} selezionati da Berebene ${year}`;
+  }
+
+  return `I vini selezionati da Berebene ${year}`;
+});
 
 const isTuttiPage = computed(() => currentType.value === 'tutti');
 
