@@ -7,7 +7,6 @@ type WineEntry = {
 };
 
 const winesData = wines as WineEntry[];
-const buildTimestamp = new Date().toISOString();
 
 // Mappa categorie → macro-type usato dalle tue pagine
 const CATEGORY_TO_TYPE: Record<string, string> = {
@@ -58,13 +57,23 @@ export default defineNuxtConfig({
     urls: () => {
       const urls: { loc: string; lastmod?: string }[] = [];
 
+      const allModifiedDates = winesData
+        .map((wine) => wine.modified)
+        .filter((date): date is string => Boolean(date))
+        .sort();
+
+      const lastmodForAll = allModifiedDates.length
+        ? allModifiedDates.at(-1)
+        : undefined;
+
       // 1) Pagine statiche della piattaforma vini
       urls.push(
-        { loc: '/classifica-vini-2026/vini' },        // index.vue
-        { loc: '/classifica-vini-2026/vini/tutti' },  // vista "tutti" se è la canonical
+        { loc: '/classifica-vini-2026/vini', lastmod: lastmodForAll },        // index.vue
+        { loc: '/classifica-vini-2026/vini/tutti', lastmod: lastmodForAll },  // vista "tutti" se è la canonical
       );
 
       const typeSet = new Set<string>();
+      const typeModifiedMap = new Map<string, string[]>();
 
       // 2) Pagine di dettaglio vino /classifica-vini-2026/vini/[type]/[slug]
       for (const wine of winesData) {
@@ -79,6 +88,12 @@ export default defineNuxtConfig({
 
         typeSet.add(derivedType);
 
+        if (wine.modified) {
+          const arr = typeModifiedMap.get(derivedType) ?? [];
+          arr.push(wine.modified);
+          typeModifiedMap.set(derivedType, arr);
+        }
+
         urls.push({
           loc: `/classifica-vini-2026/vini/${derivedType}/${wine.slug}`,
           lastmod: wine.modified,
@@ -87,9 +102,14 @@ export default defineNuxtConfig({
 
       // 3) Pagine lista per type /classifica-vini-2026/vini/[type]
       for (const type of typeSet) {
+        const modifiedDatesForType = typeModifiedMap.get(type)?.sort();
+        const lastmodForType = modifiedDatesForType?.length
+          ? modifiedDatesForType.at(-1)
+          : undefined;
+
         urls.push({
           loc: `/classifica-vini-2026/vini/${type}`,
-          lastmod: buildTimestamp,
+          lastmod: lastmodForType,
         });
       }
 
