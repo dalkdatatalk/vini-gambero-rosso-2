@@ -123,17 +123,25 @@ function isActive(rawId: string) {
   letter-spacing: 0;
   line-height: 1.15;
   white-space: normal;
-  padding-right: 2rem;
+  padding-right: 4rem;
+  padding-top: 2rem;
   margin-bottom: 1rem;
   text-align: left;
 }
 
 @media (min-width: 768px) {
   .title {
-    font-size: 3rem;
+    font-size: 2.5rem;
     line-height: normal;
     white-space: nowrap;
     padding-right: 0;
+    padding-top: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 3rem;
   }
 }
 
