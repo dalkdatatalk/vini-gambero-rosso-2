@@ -62,7 +62,7 @@ const cantinaName = computed(() => {
 });
 
 const shareMessage = computed(
-  () => `${wineTitle.value} | ${cantinaName.value} | Berebene 2026\n${fullUrl.value}`,
+  () => `${wineTitle.value} | ${cantinaName.value} | Berebene 2026\n${fullUrl.value}`, //TODO check encoding
 );
 
 const encodedShareMessage = computed(() => encodeURIComponent(shareMessage.value));
