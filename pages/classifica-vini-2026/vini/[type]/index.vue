@@ -226,9 +226,9 @@ const isTuttiPage = computed(() => currentType.value === 'tutti');
 
 const metaDescription = computed(() => {
   if (isTuttiPage.value) {
-    return 'Scopri quali vini sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, tipologia e altro.';
+    return 'Scopri quali vini sotto ai 20 euro sono stati selezionati da Gambero Rosso come migliori per il 2026. Esplora per regione, tipologia e altro.';
   }
-  return `Scopri quali vini ${typeLabel.value} sotto ai 30 euro sono stati selezionati da Gambero Rosso come migliori per il 2026.`;
+  return `Scopri quali vini ${typeLabel.value} sotto ai 20 euro sono stati selezionati da Gambero Rosso come migliori per il 2026.`;
 });
 
 const canonicalUrl = computed(() => {
@@ -252,7 +252,7 @@ const berebeneYear = computed(() => {
 });
 
 const metaTitle = computed(() => {
-  const suffix = 'Filtra e scopri i migliori vini qualità-prezzo';
+  const suffix = 'Filtra e scopri i migliori vini qualità-prezzo'; //TODO type dinamico - Togli "Filtra"
   const base = 'Classifica Berebene';
   const year = berebeneYear.value;
   if (!year) {

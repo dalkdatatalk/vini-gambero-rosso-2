@@ -1,6 +1,6 @@
 <template>
   <section class="wine-type-filters" aria-label="Filtra per tipologia di vino">
-    <p class="title">Cerca il tuo vino</p>
+    <h1 class="title">Cerca il tuo vino</h1>
 
     <div class="category-buttons" role="group">
       <button
