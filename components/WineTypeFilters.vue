@@ -121,8 +121,9 @@ function isActive(rawId: string) {
   font-size: 2rem;
   color: #ca1f1e;
   letter-spacing: 0;
-  line-height: normal;
+  line-height: 1.15;
   white-space: normal;
+  padding-right: 2rem;
   margin-bottom: 1rem;
   text-align: left;
 }
@@ -130,7 +131,9 @@ function isActive(rawId: string) {
 @media (min-width: 768px) {
   .title {
     font-size: 3rem;
+    line-height: normal;
     white-space: nowrap;
+    padding-right: 0;
   }
 }
 
