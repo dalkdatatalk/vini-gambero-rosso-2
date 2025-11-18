@@ -25,8 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRef } from 'vue';
-import { useShareLinks } from '~/composables/useShareLinks';
+import { computed } from 'vue';
+import { useRoute, useRuntimeConfig } from '#imports';
+import type { Wine } from '~/composables/useWines';
 
 type ShareNetwork = 'facebook' | 'x' | 'whatsapp';
 
@@ -36,13 +37,42 @@ interface SocialButtonConfig {
   ariaLabel: string;
 }
 
-const props = defineProps<{
-  title?: string;
-}>();
+const props = defineProps<{ wine: Wine }>();
 
-const title = toRef(props, 'title');
+const route = useRoute();
+const runtimeConfig = useRuntimeConfig();
 
-const { links } = useShareLinks({ title });
+const fullUrl = computed(() => {
+  const siteUrl = runtimeConfig.public?.siteUrl ?? '';
+  const normalizedSiteUrl = siteUrl.endsWith('/') ? siteUrl.slice(0, -1) : siteUrl;
+  return `${normalizedSiteUrl}${route.fullPath}`;
+});
+
+const wineTitle = computed(() => {
+  const title = props.wine.name?.trim();
+  return title && title.length > 0 ? title : 'Vino Berebene';
+});
+
+const cantinaName = computed(() => {
+  const rawCantina = props.wine.wineryName ?? props.wine.relatedLocale?.title ?? '';
+  const trimmedCantina = rawCantina?.trim();
+  return trimmedCantina && trimmedCantina.length > 0
+    ? trimmedCantina
+    : 'Cantina Berebene';
+});
+
+const shareMessage = computed(
+  () => `${wineTitle.value} | ${cantinaName.value} | Berebene 2026\n${fullUrl.value}`,
+);
+
+const encodedShareMessage = computed(() => encodeURIComponent(shareMessage.value));
+const encodedFullUrl = computed(() => encodeURIComponent(fullUrl.value));
+
+const shareLinks = computed<Record<ShareNetwork, string>>(() => ({
+  facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedFullUrl.value}&quote=${encodedShareMessage.value}`,
+  x: `https://twitter.com/intent/tweet?text=${encodedShareMessage.value}`,
+  whatsapp: `https://api.whatsapp.com/send?text=${encodedShareMessage.value}`,
+}));
 
 const buttonConfigs: SocialButtonConfig[] = [
   {
@@ -65,7 +95,7 @@ const buttonConfigs: SocialButtonConfig[] = [
 const socialButtons = computed(() =>
   buttonConfigs.map((button) => ({
     ...button,
-    href: links.value[button.id],
+    href: shareLinks.value[button.id],
   })),
 );
 </script>
