@@ -35,32 +35,32 @@ const ALL_WINE_TYPES = [
 
 export const WINE_MENU_ITEMS: WineMenuItem[] = [
   {
-    id: 'bianchi',
-    label: 'Bianchi',
-    routePath: '/classifica-vini-2026/vini/bianchi',
-    order: 1,
-    types: WHITE_TYPES,
-  },
-  {
-    id: 'rossi',
-    label: 'Rossi',
-    routePath: '/classifica-vini-2026/vini/rossi',
-    order: 2,
-    types: RED_TYPES,
-  },
-  {
     id: 'bollicine',
     label: 'Bollicine',
     routePath: '/classifica-vini-2026/vini/bollicine',
-    order: 3,
+    order: 1,
     types: BUBBLES_TYPES,
+  },
+  {
+    id: 'bianchi',
+    label: 'Bianchi',
+    routePath: '/classifica-vini-2026/vini/bianchi',
+    order: 2,
+    types: WHITE_TYPES,
   },
   {
     id: 'rosati',
     label: 'Rosati',
     routePath: '/classifica-vini-2026/vini/rosati',
-    order: 4,
+    order: 3,
     types: ROSATI_TYPES,
+  },
+  {
+    id: 'rossi',
+    label: 'Rossi',
+    routePath: '/classifica-vini-2026/vini/rossi',
+    order: 4,
+    types: RED_TYPES,
   },
   {
     id: 'vini-dolci',

@@ -79,23 +79,11 @@ const { bySlug } = useWines();
 
 type MobileMenuItem = WineNavigationItem & { displayLabel: string };
 
-const mobileMenuOrder: WineNavigationItem['id'][] = [
-  'home',
-  'rossi',
-  'bianchi',
-  'bollicine',
-  'vini-dolci',
-  'rosati',
-];
-
 const mobileMenuItems = computed<MobileMenuItem[]>(() =>
-  mobileMenuOrder
-    .map((id) => WINE_NAVIGATION_ITEMS.find((item) => item.id === id))
-    .filter((item): item is WineNavigationItem => Boolean(item))
-    .map((item) => ({
-      ...item,
-      displayLabel: item.id === 'vini-dolci' ? 'Dolci' : item.label,
-    })),
+  WINE_NAVIGATION_ITEMS.filter((item) => item.id !== 'tutti').map((item) => ({
+    ...item,
+    displayLabel: item.id === 'vini-dolci' ? 'Dolci' : item.label,
+  })),
 );
 
 const slugParam = computed(() => {
