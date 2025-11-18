@@ -106,15 +106,16 @@ const emptyVariantClass = computed(() =>
 .wine-list__empty-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
   width: 100%;
-  padding: 48px 0;
+  padding: 16px 0;
+  gap: 0.75rem;
 }
 
 .wine-list__empty {
-  text-align: center;
+  text-align: left;
   color: #6b7280;
   font-size: 0.95rem;
 }
