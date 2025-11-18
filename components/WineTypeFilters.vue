@@ -131,6 +131,7 @@ function isActive(rawId: string) {
 
 @media (max-width: 375px) {
   .title {
+    /* Tighter spacing for iPhone SE and similarly narrow screens */
     padding-right: 2rem;
   }
 }
