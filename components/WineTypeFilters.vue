@@ -1,6 +1,6 @@
 <template>
   <section class="wine-type-filters" aria-label="Filtra per tipologia di vino">
-    <h1 class="title">Cerca il tuo vino</h1>
+    <h1 class="title">{{ titleText }}</h1>
 
     <div class="category-buttons" role="group">
       <button
@@ -22,10 +22,18 @@
 import { computed } from 'vue';
 import { WINE_MENU_ITEMS } from '~/lib/wineMenuItems';
 
-const props = defineProps<{ modelValue?: string | string[] }>();
+const props = defineProps<{ modelValue?: string | string[]; heading?: string | null }>();
 const emit = defineEmits<{ (e: 'update:modelValue', value: string | string[]): void }>();
 
 const macroTypes = WINE_MENU_ITEMS;
+
+const titleText = computed(() => {
+  const heading = (props.heading ?? '').toString().trim();
+  if (heading.length > 0) {
+    return heading;
+  }
+  return 'Cerca il tuo vino';
+});
 
 const isMultiple = computed(() => Array.isArray(props.modelValue));
 
@@ -110,13 +118,38 @@ function isActive(rawId: string) {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 3rem;
+  font-size: 2rem;
   color: #ca1f1e;
   letter-spacing: 0;
-  line-height: normal;
-  white-space: nowrap;
+  line-height: 1.15;
+  white-space: normal;
+  padding-right: 4rem;
+  padding-top: 2rem;
   margin-bottom: 1rem;
   text-align: left;
+}
+
+@media (max-width: 375px) {
+  .title {
+    /* Tighter spacing for iPhone SE and similarly narrow screens */
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+    line-height: normal;
+    white-space: nowrap;
+    padding-right: 0;
+    padding-top: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 3rem;
+  }
 }
 
 .category-buttons {
