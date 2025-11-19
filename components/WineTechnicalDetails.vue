@@ -308,7 +308,7 @@ h3 {
   }
 
   .detail-page__info-item.punteggio {
-    gap: 0.35rem;
+    gap: 1rem;
   }
 
   .detail-page__info-value--score-unavailable.detail-page__info-value{
