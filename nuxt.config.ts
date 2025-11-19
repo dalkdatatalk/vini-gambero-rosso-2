@@ -8,6 +8,17 @@ type WineEntry = {
 
 const winesData = wines as WineEntry[];
 
+function formatDateTimeForSitemap(input?: string): string | undefined {
+  if (!input) return undefined;
+
+  const date = new Date(input);
+  if (Number.isNaN(date.getTime())) {
+    return undefined;
+  }
+
+  return date.toISOString();
+}
+
 // Mappa categorie → macro-type usato dalle tue pagine
 const CATEGORY_TO_TYPE: Record<string, string> = {
   'bianco': 'bianchi',
@@ -56,6 +67,7 @@ export default defineNuxtConfig({
 
     urls: () => {
       const urls: { loc: string; lastmod?: string }[] = [];
+      const allowedTypes = new Set(['bollicine', 'bianchi', 'rosati', 'rossi', 'vini-dolci']);
 
       const allModifiedDates = winesData
         .map((wine) => wine.modified)
@@ -66,15 +78,16 @@ export default defineNuxtConfig({
         ? allModifiedDates.at(-1)
         : undefined;
 
+      const formattedLastmodForAll = formatDateTimeForSitemap(lastmodForAll);
+
       // 👉 Pagina statica principale: /classifica-vini-2026.html
       urls.push({
         loc: '/classifica-vini-2026.html',
-        lastmod: '2025-11-20T12:46:17Z',
+        lastmod: formattedLastmodForAll ?? '2025-11-20T12:46:17Z',
       });
 
       // 1) Pagine statiche della piattaforma vini
       urls.push(
-        { loc: '/classifica-vini-2026/vini', lastmod: lastmodForAll },        // index.vue
         { loc: '/classifica-vini-2026/vini/tutti', lastmod: lastmodForAll },  // vista "tutti"
       );
 
@@ -90,6 +103,7 @@ export default defineNuxtConfig({
 
         const derivedType = CATEGORY_TO_TYPE[categoryName];
         if (!derivedType) continue;
+        if (!allowedTypes.has(derivedType)) continue;
 
         typeSet.add(derivedType);
 
@@ -101,12 +115,14 @@ export default defineNuxtConfig({
 
         urls.push({
           loc: `/classifica-vini-2026/vini/${derivedType}/${wine.slug}`,
-          lastmod: wine.modified,
+          lastmod: formatDateTimeForSitemap(wine.modified),
         });
       }
 
       // 3) Pagine lista per type /classifica-vini-2026/vini/[type]
       for (const type of typeSet) {
+        if (!type || !allowedTypes.has(type)) continue;
+
         const modifiedDatesForType = typeModifiedMap.get(type)?.sort();
         const lastmodForType = modifiedDatesForType?.length
           ? modifiedDatesForType.at(-1)
@@ -114,7 +130,7 @@ export default defineNuxtConfig({
 
         urls.push({
           loc: `/classifica-vini-2026/vini/${type}`,
-          lastmod: lastmodForType,
+          lastmod: formatDateTimeForSitemap(lastmodForType),
         });
       }
 

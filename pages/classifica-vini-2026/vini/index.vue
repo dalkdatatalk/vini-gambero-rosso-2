@@ -31,6 +31,7 @@ import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
 import { findWineMenuItemByType } from '~/lib/wineMenuItems';
 import { slugify } from '~/utils/slugify';
+import { buildWineProductJsonLdNode } from '~/utils/structuredData';
 
 const { isMobile, isTablet } = useBreakpoints();
 
@@ -69,6 +70,24 @@ function getDetailTypeSegment(wine?: Wine | null) {
   return macro?.id ?? 'tutti';
 }
 
+function buildWineProductForList(wine: Wine) {
+  const macro = findWineMenuItemByType(wine.type ?? null);
+  const typeSegment = getDetailTypeSegment(wine);
+  const canonicalItemId = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
+  const wineryName = wine.wineryName ?? wine.relatedLocale?.title ?? null;
+  const wineryLink = wine.wineryLink ?? wine.relatedLocale?.website ?? null;
+  const primaryRegion = wine.region ?? wine.relatedLocale?.regioni?.[0]?.name ?? null;
+
+  return buildWineProductJsonLdNode({
+    wine,
+    canonicalUrl: canonicalItemId,
+    wineryName,
+    wineryLink,
+    primaryRegion,
+    macroCategoryLabel: macro?.label ?? null,
+  });
+}
+
 function resolveLatestModifiedDate(list: Wine[]): string | null {
   let latestValue: string | null = null;
   let latestTimestamp = Number.NEGATIVE_INFINITY;
@@ -79,14 +98,15 @@ function resolveLatestModifiedDate(list: Wine[]): string | null {
       continue;
     }
 
-    const timestamp = Date.parse(modified);
-    if (Number.isNaN(timestamp)) {
+    const date = new Date(modified);
+    if (Number.isNaN(date.getTime())) {
       continue;
     }
 
+    const timestamp = date.getTime();
     if (timestamp > latestTimestamp) {
       latestTimestamp = timestamp;
-      latestValue = modified;
+      latestValue = date.toISOString();
     }
   }
 
@@ -158,18 +178,11 @@ const canonicalUrl = 'https://berebene.gamberorosso.it/classifica-vini-2026/vini
 
 const collectionPageJsonLd = computed(() => {
   const modifiedDate = lastModifiedForAll.value;
-  const itemListElement = filteredWines.value.map((wine, index) => {
-    const typeSegment = wine?.type?.trim() ? getDetailTypeSegment(wine) : 'tutti';
-    const canonicalItemId = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
-
-    return {
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@id': canonicalItemId,
-      },
-    };
-  });
+  const itemListElement = filteredWines.value.map((wine, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: buildWineProductForList(wine),
+  }));
 
   return {
     '@context': 'https://schema.org',
@@ -180,6 +193,7 @@ const collectionPageJsonLd = computed(() => {
       : {}),
     mainEntity: {
       '@type': 'ItemList',
+      numberOfItems: filteredWines.value.length,
       itemListElement,
     },
   };

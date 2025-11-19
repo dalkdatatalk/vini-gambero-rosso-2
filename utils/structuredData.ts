@@ -61,9 +61,6 @@ export interface WineProductJsonLd {
   name: string;
   description: string;
   url: string;
-  datePublished?: string;
-  dateModified?: string;
-  lastReviewed?: string;
   brand?: JsonLdOrganization;
   category?: string;
   productionDate?: string;
@@ -72,6 +69,8 @@ export interface WineProductJsonLd {
   award?: string;
   additionalProperty?: JsonLdPropertyValue[];
 }
+
+export type WineProductJsonLdNode = Omit<WineProductJsonLd, '@context'>;
 
 function buildAdditionalProperties(
   wine: Wine,
@@ -186,9 +185,6 @@ export function buildWineProductJsonLd(
     name: wine.name,
     description,
     url: canonicalUrl,
-    ...(wine.modified
-      ? { datePublished: wine.modified, dateModified: wine.modified, lastReviewed: wine.modified }
-      : {}),
     ...(brand ? { brand } : {}),
     ...(macroCategoryLabel || wine.type
       ? { category: macroCategoryLabel ?? wine.type ?? undefined }
@@ -199,6 +195,13 @@ export function buildWineProductJsonLd(
     ...(premioName ? { award: premioName } : {}),
     ...(additionalProperty.length > 0 ? { additionalProperty } : {}),
   } satisfies WineProductJsonLd;
+}
+
+export function buildWineProductJsonLdNode(
+  options: BuildWineProductJsonLdOptions
+): WineProductJsonLdNode {
+  const { ['@context']: _context, ...product } = buildWineProductJsonLd(options);
+  return product;
 }
 
 export interface WineListItemInput {
