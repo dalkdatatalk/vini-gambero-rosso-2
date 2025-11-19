@@ -70,20 +70,6 @@ function getDetailTypeSegment(wine?: Wine | null) {
   return macro?.id ?? 'tutti';
 }
 
-function resolveWineModifiedDate(wine: Wine): string | null {
-  const modified = wine.modified;
-  if (typeof modified !== 'string' || modified.trim().length === 0) {
-    return null;
-  }
-
-  const date = new Date(modified);
-  if (Number.isNaN(date.getTime())) {
-    return null;
-  }
-
-  return date.toISOString();
-}
-
 function buildWineProductForList(wine: Wine) {
   const macro = findWineMenuItemByType(wine.type ?? null);
   const typeSegment = getDetailTypeSegment(wine);
@@ -99,7 +85,6 @@ function buildWineProductForList(wine: Wine) {
     wineryLink,
     primaryRegion,
     macroCategoryLabel: macro?.label ?? null,
-    modifiedAt: resolveWineModifiedDate(wine),
   });
 }
 

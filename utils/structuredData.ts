@@ -9,7 +9,6 @@ export interface BuildWineProductJsonLdOptions {
   macroCategoryLabel?: string | null;
   premioName?: string | undefined;
   formattedBottles?: string | null;
-  modifiedAt?: string | null;
 }
 
 interface JsonLdOffer {
@@ -62,7 +61,6 @@ export interface WineProductJsonLd {
   name: string;
   description: string;
   url: string;
-  dateModified?: string;
   brand?: JsonLdOrganization;
   category?: string;
   productionDate?: string;
@@ -140,7 +138,6 @@ export function buildWineProductJsonLd(
     macroCategoryLabel,
     premioName,
     formattedBottles,
-    modifiedAt,
   } = options;
 
   const brand: JsonLdOrganization | undefined = wineryName
@@ -188,7 +185,6 @@ export function buildWineProductJsonLd(
     name: wine.name,
     description,
     url: canonicalUrl,
-    ...(modifiedAt ? { dateModified: modifiedAt } : {}),
     ...(brand ? { brand } : {}),
     ...(macroCategoryLabel || wine.type
       ? { category: macroCategoryLabel ?? wine.type ?? undefined }
