@@ -74,6 +74,8 @@ export interface WineProductJsonLd {
   additionalProperty?: JsonLdPropertyValue[];
 }
 
+export type WineProductJsonLdNode = Omit<WineProductJsonLd, '@context'>;
+
 function buildAdditionalProperties(
   wine: Wine,
   primaryRegion?: string | null,
@@ -201,6 +203,13 @@ export function buildWineProductJsonLd(
     ...(premioName ? { award: premioName } : {}),
     ...(additionalProperty.length > 0 ? { additionalProperty } : {}),
   } satisfies WineProductJsonLd;
+}
+
+export function buildWineProductJsonLdNode(
+  options: BuildWineProductJsonLdOptions
+): WineProductJsonLdNode {
+  const { ['@context']: _context, ...product } = buildWineProductJsonLd(options);
+  return product;
 }
 
 export interface WineListItemInput {
