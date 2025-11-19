@@ -74,7 +74,6 @@ export default defineNuxtConfig({
 
       // 1) Pagine statiche della piattaforma vini
       urls.push(
-        { loc: '/classifica-vini-2026/vini', lastmod: lastmodForAll },        // index.vue
         { loc: '/classifica-vini-2026/vini/tutti', lastmod: lastmodForAll },  // vista "tutti"
       );
 
