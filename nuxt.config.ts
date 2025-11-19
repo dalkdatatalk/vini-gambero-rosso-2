@@ -8,6 +8,17 @@ type WineEntry = {
 
 const winesData = wines as WineEntry[];
 
+function formatDateTimeForSitemap(input?: string): string | undefined {
+  if (!input) return undefined;
+
+  const date = new Date(input);
+  if (Number.isNaN(date.getTime())) {
+    return undefined;
+  }
+
+  return date.toISOString();
+}
+
 // Mappa categorie → macro-type usato dalle tue pagine
 const CATEGORY_TO_TYPE: Record<string, string> = {
   'bianco': 'bianchi',
@@ -66,16 +77,18 @@ export default defineNuxtConfig({
         ? allModifiedDates.at(-1)
         : undefined;
 
+      const formattedLastmodForAll = formatDateTimeForSitemap(lastmodForAll);
+
       // 👉 Pagina statica principale: /classifica-vini-2026.html
       urls.push({
         loc: '/classifica-vini-2026.html',
-        lastmod: '2025-11-20T12:46:17Z',
+        lastmod: formattedLastmodForAll ?? '2025-11-20T12:46:17Z',
       });
 
       // 1) Pagine statiche della piattaforma vini
       urls.push(
-        { loc: '/classifica-vini-2026/vini', lastmod: lastmodForAll },        // index.vue
-        { loc: '/classifica-vini-2026/vini/tutti', lastmod: lastmodForAll },  // vista "tutti"
+        { loc: '/classifica-vini-2026/vini', lastmod: formattedLastmodForAll },        // index.vue
+        { loc: '/classifica-vini-2026/vini/tutti', lastmod: formattedLastmodForAll },  // vista "tutti"
       );
 
       const typeSet = new Set<string>();
@@ -101,7 +114,7 @@ export default defineNuxtConfig({
 
         urls.push({
           loc: `/classifica-vini-2026/vini/${derivedType}/${wine.slug}`,
-          lastmod: wine.modified,
+          lastmod: formatDateTimeForSitemap(wine.modified),
         });
       }
 
@@ -114,7 +127,7 @@ export default defineNuxtConfig({
 
         urls.push({
           loc: `/classifica-vini-2026/vini/${type}`,
-          lastmod: lastmodForType,
+          lastmod: formatDateTimeForSitemap(lastmodForType),
         });
       }
 
