@@ -79,14 +79,15 @@ function resolveLatestModifiedDate(list: Wine[]): string | null {
       continue;
     }
 
-    const timestamp = Date.parse(modified);
-    if (Number.isNaN(timestamp)) {
+    const date = new Date(modified);
+    if (Number.isNaN(date.getTime())) {
       continue;
     }
 
+    const timestamp = date.getTime();
     if (timestamp > latestTimestamp) {
       latestTimestamp = timestamp;
-      latestValue = modified;
+      latestValue = date.toISOString();
     }
   }
 
