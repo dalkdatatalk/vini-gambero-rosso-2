@@ -1,4 +1,6 @@
-# Nuxt Minimal Starter
+# Berebene Gambero Rosso 2026
+
+[Sito online](berebene.gamberorosso.it/classifica-vini-2026/vini/tutti)
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
