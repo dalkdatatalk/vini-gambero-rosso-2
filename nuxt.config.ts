@@ -124,7 +124,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      link: [ {rel: 'icon', type: "image/x-icon", href: '/favicon.ico'} ],
+      link: [ {rel: 'icon', type: "image/x-icon", href: 'https://vini-gambero-rosso-2.vercel.app/favicon.ico'} ],
       meta: [
         {
           property: 'og:image',
