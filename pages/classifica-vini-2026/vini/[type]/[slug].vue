@@ -271,10 +271,10 @@ useHead(() => ({
 .detail-page__header h1 {
   color: var(--rosso-scuro);
   font-family: var(--cormorant-garamond);
-  font-size: 2rem;
-  line-height: 2rem;
+  font-size: 1.5rem;
+  line-height: 1.7rem;
   margin: 0;
-  padding-bottom: 1.25rem;
+  padding-bottom: 0.4rem;
   word-break: break-word;
 }
 
