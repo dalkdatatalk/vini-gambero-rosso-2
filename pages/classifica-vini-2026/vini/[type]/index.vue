@@ -2,20 +2,22 @@
   <HeaderMobile v-if="isMobile || isTablet" />
   <HeaderGeneral v-else />
   <main class="type-page">
-    <WineTypeFilters
-      v-model="typeSelection"
-      class="type-page__filters page__filters"
-      :heading="headingText"
-    />
+    <div class="mobile-filter-wrapper">
+      <WineTypeFilters
+        v-model="typeSelection"
+        class="type-page__filters page__filters"
+        :heading="headingText"
+      />
 
-    <WineDetailFilters
-      :wines="winesBySelection"
-      v-model="filterStateBinding"
-      :min-score="0"
-      :max-score="100"
-      @update:results="onFilterResults"
-      class="page__filters"
-    />
+      <WineDetailFilters
+        :wines="winesBySelection"
+        v-model="filterStateBinding"
+        :min-score="0"
+        :max-score="100"
+        @update:results="onFilterResults"
+        class="page__filters"
+      />
+    </div>
 
     <WineList
       :wines="filteredWines"
@@ -400,6 +402,8 @@ useHead(() => ({
 
 <style scoped>
 .type-page {
+  --type-page-vertical-padding: 96px;
+  --type-page-gap-size: 32px;
   margin: 0 auto;
   max-width: 1080px;
   padding: 48px 24px;
@@ -408,8 +412,30 @@ useHead(() => ({
   gap: 32px;
 }
 
+.mobile-filter-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
 @media (max-width: 1279px) {
   .type-page {
+  }
+}
+
+@media (max-width: 767px) {
+  .mobile-filter-wrapper {
+    --header-mobile-height: 64px;
+    height: calc(
+      100vh - var(--header-mobile-height, 64px) - var(--type-page-vertical-padding, 96px) - var(--type-page-gap-size, 32px)
+    );
+    max-height: calc(
+      100vh - var(--header-mobile-height, 64px) - var(--type-page-vertical-padding, 96px) - var(--type-page-gap-size, 32px)
+    );
+    overflow-y: auto;
+    padding-bottom: 16px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
