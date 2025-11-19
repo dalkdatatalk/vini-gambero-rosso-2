@@ -69,7 +69,7 @@ export default defineNuxtConfig({
       // 👉 Pagina statica principale: /classifica-vini-2026.html
       urls.push({
         loc: '/classifica-vini-2026.html',
-        lastmod: '2025-11-20 12:46 Z',
+        lastmod: '2025-11-20T12:46:17Z',
       });
 
       // 1) Pagine statiche della piattaforma vini
