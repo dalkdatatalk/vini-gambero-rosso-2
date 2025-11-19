@@ -22,7 +22,7 @@ const BUBBLES_TYPES = [
   'spumante rosso',
   'spumante dolce bianco',
 ]
-const ROSATI_TYPES = ['rose']
+const ROSATI_TYPES = ['rosato']
 const SWEET_TYPES = ['dolce bianco', 'dolce rosso']
 
 const ALL_WINE_TYPES = [
