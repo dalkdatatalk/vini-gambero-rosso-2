@@ -46,6 +46,7 @@ import {
   type WineMacroCategoryId,
 } from '~/lib/wineMenuItems';
 import rawWines from '~/data/wines.json';
+import { buildWineProductJsonLdNode } from '~/utils/structuredData';
 
 const BEREBENE_YEAR = 2026 as const;
 
@@ -74,6 +75,39 @@ const currentMacro = computed(() => {
 function getDetailTypeSegment(wine?: Wine | null) {
   const macro = findWineMenuItemByType(wine?.type ?? null);
   return macro?.id ?? 'tutti';
+}
+
+function resolveWineModifiedDate(wine: Wine): string | null {
+  const modified = wine.modified;
+  if (typeof modified !== 'string' || modified.trim().length === 0) {
+    return null;
+  }
+
+  const date = new Date(modified);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return date.toISOString();
+}
+
+function buildWineProductForList(wine: Wine) {
+  const macro = findWineMenuItemByType(wine.type ?? null);
+  const typeSegment = wine?.type?.trim() ? wine.type : getDetailTypeSegment(wine);
+  const canonicalItemId = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
+  const wineryName = wine.wineryName ?? wine.relatedLocale?.title ?? null;
+  const wineryLink = wine.wineryLink ?? wine.relatedLocale?.website ?? null;
+  const primaryRegion = wine.region ?? wine.relatedLocale?.regioni?.[0]?.name ?? null;
+
+  return buildWineProductJsonLdNode({
+    wine,
+    canonicalUrl: canonicalItemId,
+    wineryName,
+    wineryLink,
+    primaryRegion,
+    macroCategoryLabel: macro?.label ?? null,
+    modifiedAt: resolveWineModifiedDate(wine),
+  });
 }
 
 const redirectTarget = computed(() => {
@@ -350,27 +384,22 @@ const metaTitle = computed(() => {
 
 const collectionPageJsonLd = computed(() => {
   const modifiedDate = lastModifiedForCategory.value;
-  const itemListElement = wines.value.map((wine, index) => {
-    const typeSegment = wine?.type?.trim() ? wine.type : getDetailTypeSegment(wine);
-    const canonicalItemId = `https://berebene.gamberorosso.it/classifica-vini-2026/vini/${typeSegment}/${wine.slug}`;
-
-    return {
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@id': canonicalItemId,
-      },
-    };
-  });
+  const itemListElement = wines.value.map((wine, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: buildWineProductForList(wine),
+  }));
 
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
+    '@id': canonicalUrl.value,
     ...(modifiedDate
       ? { datePublished: modifiedDate, dateModified: modifiedDate, lastReviewed: modifiedDate }
       : {}),
     mainEntity: {
       '@type': 'ItemList',
+      numberOfItems: wines.value.length,
       itemListElement,
     },
   };
