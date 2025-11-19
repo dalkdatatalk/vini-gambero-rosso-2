@@ -52,7 +52,7 @@ export default defineNuxtConfig({
 
   sitemap: {
     hostname: 'https://berebene.gamberorosso.it',
-    // gzip: true, // opzionale, puoi tenerlo o toglierlo
+    // gzip: true,
 
     urls: () => {
       const urls: { loc: string; lastmod?: string }[] = [];
@@ -66,10 +66,16 @@ export default defineNuxtConfig({
         ? allModifiedDates.at(-1)
         : undefined;
 
+      // 👉 Pagina statica principale: /classifica-vini-2026.html
+      urls.push({
+        loc: '/classifica-vini-2026.html',
+        lastmod: '2025-11-20 12:46 Z',
+      });
+
       // 1) Pagine statiche della piattaforma vini
       urls.push(
         { loc: '/classifica-vini-2026/vini', lastmod: lastmodForAll },        // index.vue
-        { loc: '/classifica-vini-2026/vini/tutti', lastmod: lastmodForAll },  // vista "tutti" se è la canonical
+        { loc: '/classifica-vini-2026/vini/tutti', lastmod: lastmodForAll },  // vista "tutti"
       );
 
       const typeSet = new Set<string>();
@@ -79,7 +85,6 @@ export default defineNuxtConfig({
       for (const wine of winesData) {
         if (!wine?.slug) continue;
 
-        // Deriviamo il type dalla categoria del vino
         const categoryName = wine.vino_categoria?.[0]?.name;
         if (!categoryName) continue;
 
