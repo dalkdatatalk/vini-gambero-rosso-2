@@ -330,8 +330,12 @@ h3 {
     gap: 1.75rem;
   }
 
-  .detail-page__info-item.regione .detail-page__info-value {
+  .cantina .detail-page__info-value {
     font-size: 3.2rem;
+  }
+
+  .detail-page__info-item.regione .detail-page__info-value {
+    font-size: 2rem;
   }
 
   .punteggio .detail-page__info-value {
