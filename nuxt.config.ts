@@ -8,6 +8,27 @@ type WineEntry = {
 
 const winesData = wines as WineEntry[];
 
+function formatDateTimeForSitemap(input?: string): string | undefined {
+  if (!input) return undefined;
+
+  const date = new Date(input);
+  if (Number.isNaN(date.getTime())) {
+    return undefined;
+  }
+
+  const pad = (n: number) => n.toString().padStart(2, '0');
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  const seconds = pad(date.getSeconds());
+
+  // Formato desiderato: 2025-11-17T16:57:44 (senza Z)
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+}
+
 // Mappa categorie → macro-type usato dalle tue pagine
 const CATEGORY_TO_TYPE: Record<string, string> = {
   'bianco': 'bianchi',
@@ -69,13 +90,19 @@ export default defineNuxtConfig({
       // 👉 Pagina statica principale: /classifica-vini-2026.html
       urls.push({
         loc: '/classifica-vini-2026.html',
-        lastmod: '2025-11-20T12:46:17Z',
+        lastmod: formatDateTimeForSitemap(lastmodForAll) ?? '2025-11-20T12:46:17',
       });
 
       // 1) Pagine statiche della piattaforma vini
       urls.push(
-        { loc: '/classifica-vini-2026/vini', lastmod: lastmodForAll },        // index.vue
-        { loc: '/classifica-vini-2026/vini/tutti', lastmod: lastmodForAll },  // vista "tutti"
+        {
+          loc: '/classifica-vini-2026/vini',
+          lastmod: formatDateTimeForSitemap(lastmodForAll),
+        },
+        {
+          loc: '/classifica-vini-2026/vini/tutti',
+          lastmod: formatDateTimeForSitemap(lastmodForAll),
+        },
       );
 
       const typeSet = new Set<string>();
@@ -101,7 +128,7 @@ export default defineNuxtConfig({
 
         urls.push({
           loc: `/classifica-vini-2026/vini/${derivedType}/${wine.slug}`,
-          lastmod: wine.modified,
+          lastmod: formatDateTimeForSitemap(wine.modified),
         });
       }
 
@@ -112,9 +139,11 @@ export default defineNuxtConfig({
           ? modifiedDatesForType.at(-1)
           : undefined;
 
+        const lastRaw = lastmodForType;
+
         urls.push({
           loc: `/classifica-vini-2026/vini/${type}`,
-          lastmod: lastmodForType,
+          lastmod: formatDateTimeForSitemap(lastRaw),
         });
       }
 

@@ -184,6 +184,26 @@ const metaDescription = computed(
     `Scopri tutto quello che c'è da sapere sul ${wineName.value}, un vino selezionato da Gambero Rosso per Berebene 2026.`
 );
 
+const formattedModifiedDate = computed(() => {
+  const raw = wine.value?.modified ?? null;
+  if (!raw) return null;
+
+  const date = new Date(raw);
+  if (Number.isNaN(date.getTime())) return null;
+
+  const pad = (n: number) => n.toString().padStart(2, '0');
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  const seconds = pad(date.getSeconds());
+
+  // 2025-11-17T16:57:44
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+});
+
 const productJsonLd = computed(() =>
   buildWineProductJsonLd({
     wine: wine.value,
@@ -194,6 +214,7 @@ const productJsonLd = computed(() =>
     macroCategoryLabel: macroCategoria.value?.label ?? null,
     premioName: premioName.value,
     formattedBottles: formattedBottles.value,
+    modifiedAt: formattedModifiedDate.value,
   })
 );
 
