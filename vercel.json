@@ -1,6 +1,6 @@
 {
     "redirects": [
-      { "source": "/", "destination": "/classifica-vini-2026/vini/tutti", "permanent": false },
+      { "source": "/", "destination": "/classifica-vini-2026/premi", "permanent": false },
       { "source": "/classifica-vini-2026/vini/", "destination": "/classifica-vini-2026/vini/tutti", "permanent": false }
     ]
   }
