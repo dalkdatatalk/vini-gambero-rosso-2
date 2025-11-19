@@ -67,6 +67,7 @@ export default defineNuxtConfig({
 
     urls: () => {
       const urls: { loc: string; lastmod?: string }[] = [];
+      const allowedTypes = new Set(['bollicine', 'bianchi', 'rosati', 'rossi', 'vini-dolci']);
 
       const allModifiedDates = winesData
         .map((wine) => wine.modified)
@@ -102,6 +103,7 @@ export default defineNuxtConfig({
 
         const derivedType = CATEGORY_TO_TYPE[categoryName];
         if (!derivedType) continue;
+        if (!allowedTypes.has(derivedType)) continue;
 
         typeSet.add(derivedType);
 
@@ -119,6 +121,8 @@ export default defineNuxtConfig({
 
       // 3) Pagine lista per type /classifica-vini-2026/vini/[type]
       for (const type of typeSet) {
+        if (!type || !allowedTypes.has(type)) continue;
+
         const modifiedDatesForType = typeModifiedMap.get(type)?.sort();
         const lastmodForType = modifiedDatesForType?.length
           ? modifiedDatesForType.at(-1)
