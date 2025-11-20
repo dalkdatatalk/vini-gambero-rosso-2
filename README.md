@@ -7,7 +7,7 @@
 - [🌐 Hosting e Reverse Proxy](#-hosting-e-reverse-proxy)
 - [📄 Configurazione Nuxt](#-configurazione-nuxt)
 - [📦 Configurazione dei file di progetto](#-configurazione-dei-file-di-progetto)
-- [🗺️ Sitemap XML](#️-sitemap-xml)
+- [🗺️ Sitemap xML](#️-sitemap-xml)
 - [▶️ Avvio del progetto](#️-avvio-del-progetto)
 - [🔧 Scripts disponibili](#-scripts-disponibili)
 - [🧠 SEO & Struttura Dati](#-seo--struttura-dati)
