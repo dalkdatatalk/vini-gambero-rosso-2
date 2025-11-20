@@ -3,7 +3,7 @@
     <NuxtLink :to="detailLink" class="wine-card__link">
       <div class="wine-card__content">
         <div
-          v-if="wine.thumbnail && wine.thumbnail.full"
+          v-if="hasPremio && wine.thumbnail && wine.thumbnail.full"
           class="wine-card__thumbnail"
         >
           <img :src="wine.thumbnail.full" :alt="wine.name" loading="lazy" />
@@ -78,6 +78,8 @@ const premioLabel = computed(() => {
   const { label } = parsePremio(premioNameRaw.value);
   return label;
 });
+
+const hasPremio = computed(() => Boolean(premioLabel.value));
 </script>
 
 <style scoped>
@@ -129,6 +131,15 @@ const premioLabel = computed(() => {
   align-items: stretch;
   flex-direction: column;
   justify-content: flex-start;
+}
+
+.wine-card__thumbnail {
+  display: flex;
+  justify-content: center;
+}
+
+.wine-card__thumbnail img {
+  max-width: 10rem;
 }
 
 .wine-card__info {
