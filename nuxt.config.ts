@@ -32,7 +32,7 @@ const CATEGORY_TO_TYPE: Record<string, string> = {
   'spumante rosso': 'bollicine',
   'spumante dolce bianco': 'bollicine',
 
-  'rose': 'rosati',
+  'rosato': 'rosati',
 
   'dolce bianco': 'vini-dolci',
   'dolce rosso': 'vini-dolci',
