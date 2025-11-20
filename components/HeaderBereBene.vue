@@ -179,33 +179,54 @@ function macroIdFromWineType(wineType?: string | null): string | null {
 }
 
 function normalizePath(path: string) {
-  const withoutQuery = path.split('?')[0]
-  const normalized = withoutQuery.replace(/\/$/, '')
-  return normalized || '/'
+  return (path || '').split('?')[0].replace(/\/$/, '') || '/'
 }
 
 function isHomePath(path: string) {
   const normalized = normalizePath(path)
-  return normalized === '/classifica-vini-2026/vini'
+  return (
+    normalized === '/classifica-vini-2026/vini' ||
+    normalized === '/classifica-vini-2026/vini/tutti'
+  )
+}
+
+function isAwardsPath(path: string) {
+  const normalized = normalizePath(path)
+  return (
+    normalized === '/classifica-vini-2026/premi' ||
+    normalized.startsWith('/classifica-vini-2026/premi/')
+  )
 }
 
 const activeId = computed(() => {
-  const path = normalizePath(route.path || '')
+  const path = normalizePath(route.path)
   const slug = slugParam.value
 
+  // 1. tutte le pagine premi -> "vini-premiati"
+  if (isAwardsPath(path)) {
+    return 'vini-premiati'
+  }
+
+  // 2. liste vini per type (no slug)
+  if (path.startsWith('/classifica-vini-2026/vini/') && !slug) {
+    const typeParam = String(route.params.type ?? '').toLowerCase().trim()
+    if (!typeParam) {
+      return isHomePath(path) ? 'home' : null
+    }
+    return typeParam
+  }
+
+  // 3. pagina dettaglio vino
   if (slug) {
     const wine = bySlug(slug)
     const macroId = macroIdFromWineType(wine?.type ?? null)
     return macroId
   }
 
-  if (path.startsWith('/classifica-vini-2026/vini/')) {
-    const typeParam = String(route.params.type ?? '').toLowerCase().trim()
-    if (!typeParam) return isHomePath(path) ? 'home' : null
-    return typeParam
+  // 4. home classifica
+  if (isHomePath(path)) {
+    return 'home'
   }
-
-  if (isHomePath(path)) return 'home'
 
   return null
 })
