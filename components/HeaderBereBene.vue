@@ -70,17 +70,7 @@
           <nav class="bbb-header__nav" aria-label="Sezioni vini">
             <ul class="bbb-header__menu">
               <li v-for="item in items" :key="item.id">
-                <a
-                  v-if="item.href"
-                  :href="item.href"
-                  class="bbb-header__link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {{ item.label }}
-                </a>
                 <NuxtLink
-                  v-else
                   :to="item.to"
                   class="bbb-header__link"
                   :class="{ active: isActive(item.id) }"
@@ -115,7 +105,8 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from '#imports'
 import { useWines } from '~/composables/useWines'
-import { WINE_NAVIGATION_ITEMS, findWineMenuItemByType } from '~/lib/wineMenuItems'
+import { NAV_ITEMS } from '~/lib/navigation'
+import { findWineMenuItemByType } from '~/lib/wineMenuItems'
 
 const props = withDefaults(
   defineProps<{
@@ -141,7 +132,7 @@ const cssVars = computed(() => ({
   '--logo-max-height': props.logoMaxHeight,
 }))
 
-const items = WINE_NAVIGATION_ITEMS
+const items = NAV_ITEMS
 
 const slugParam = computed(() => {
   const raw = route.params.slug
@@ -172,41 +163,13 @@ const macroCategoriaLink = computed(() => {
   return macroCategoria.value.routePath
 })
 
-const homeLink = computed(() => items.find((item) => item.id === 'home')?.href ?? '/')
-
-function macroIdFromWineType(wineType?: string | null): string | null {
-  return findWineMenuItemByType(wineType)?.id ?? null
-}
-
-function normalizePath(path: string) {
-  const withoutQuery = path.split('?')[0]
-  const normalized = withoutQuery.replace(/\/$/, '')
-  return normalized || '/'
-}
-
-function isHomePath(path: string) {
-  const normalized = normalizePath(path)
-  return normalized === '/classifica-vini-2026/vini'
-}
+const homeLink = computed(() => items.find((item) => item.id === 'home')?.to ?? '/')
 
 const activeId = computed(() => {
-  const path = normalizePath(route.path || '')
-  const slug = slugParam.value
-
-  if (slug) {
-    const wine = bySlug(slug)
-    const macroId = macroIdFromWineType(wine?.type ?? null)
-    return macroId
+  const metaNavId = route.meta?.navId
+  if (typeof metaNavId === 'string' && metaNavId.trim().length > 0) {
+    return metaNavId
   }
-
-  if (path.startsWith('/classifica-vini-2026/vini/')) {
-    const typeParam = String(route.params.type ?? '').toLowerCase().trim()
-    if (!typeParam) return isHomePath(path) ? 'home' : null
-    return typeParam
-  }
-
-  if (isHomePath(path)) return 'home'
-
   return null
 })
 
