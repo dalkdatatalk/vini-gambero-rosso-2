@@ -178,24 +178,35 @@ function macroIdFromWineType(wineType?: string | null): string | null {
   return findWineMenuItemByType(wineType)?.id ?? null
 }
 
+function normalizePath(path: string) {
+  const withoutQuery = path.split('?')[0]
+  const normalized = withoutQuery.replace(/\/$/, '')
+  return normalized || '/'
+}
+
 function isHomePath(path: string) {
-  return path === '/classifica-vini-2026/vini' || path === '/classifica-vini-2026/vini/'
+  const normalized = normalizePath(path)
+  return normalized === '/classifica-vini-2026/vini'
 }
 
 const activeId = computed(() => {
-  const path = route.path || ''
+  const path = normalizePath(route.path || '')
   const slug = slugParam.value
-  if (path.startsWith('/classifica-vini-2026/vini/') && !slug) {
-    const typeParam = String(route.params.type ?? '').toLowerCase().trim()
-    if (!typeParam) return isHomePath(path) ? 'home' : null
-    return typeParam
-  }
+
   if (slug) {
     const wine = bySlug(slug)
     const macroId = macroIdFromWineType(wine?.type ?? null)
     return macroId
   }
+
+  if (path.startsWith('/classifica-vini-2026/vini/')) {
+    const typeParam = String(route.params.type ?? '').toLowerCase().trim()
+    if (!typeParam) return isHomePath(path) ? 'home' : null
+    return typeParam
+  }
+
   if (isHomePath(path)) return 'home'
+
   return null
 })
 
