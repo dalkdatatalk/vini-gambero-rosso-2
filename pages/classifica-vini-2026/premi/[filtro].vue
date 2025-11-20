@@ -4,9 +4,9 @@
 
   <main class="page">
     <WineAwardsFilters
-      :main-heading-text="awardsPageTitle"
       :activeFilter="activeFilter"
       :onFilter="onFilterClick"
+      :title="awardsPageTitle"
     />
 
     <WineList :wines="filteredWines" empty-message="Non sono presenti vini premiati." />
@@ -36,21 +36,6 @@ const { awardedWines, getAwardForSlug, isNationalAward, isRegionalAward } = useA
 const route = useRoute();
 const router = useRouter();
 
-const filtro = computed(() => (route.params.filtro as string) || 'tutti');
-
-const awardsPageTitle = computed(() => {
-  if (filtro.value === 'nazionale') {
-    return 'I vini premiati selezionati da Berebene 2026 a livello nazionale';
-  }
-
-  if (filtro.value === 'regionale') {
-    return 'I vini premiati selezionati da Berebene 2026 a livello regionale';
-  }
-
-  // caso "tutti" o qualsiasi altro valore
-  return 'I vini premiati selezionati da Berebene 2026';
-});
-
 const normalizeFilter = (value: string | string[] | undefined): FilterValue => {
   const candidate = Array.isArray(value) ? value[0] : value;
   if (candidate === 'nazionali' || candidate === 'regionali') {
@@ -60,6 +45,18 @@ const normalizeFilter = (value: string | string[] | undefined): FilterValue => {
 };
 
 const activeFilter = ref<FilterValue>(normalizeFilter(route.params.filtro));
+
+const awardsPageTitle = computed(() => {
+  if (activeFilter.value === 'nazionali') {
+    return 'I vini premiati selezionati da Berebene 2026 a livello nazionale';
+  }
+
+  if (activeFilter.value === 'regionali') {
+    return 'I vini premiati selezionati da Berebene 2026 a livello regionale';
+  }
+
+  return 'I vini premiati selezionati da Berebene 2026';
+});
 
 watch(
   () => route.params.filtro,
