@@ -57,6 +57,16 @@ const route = useRoute();
 const router = useRouter();
 const { byType, bySlug, filterByMacroType, getMacroWineTypes } = useWines();
 
+definePageMeta(() => {
+  const rawType = String(route.params.type ?? '').trim().toLowerCase();
+
+  if (!rawType || rawType === 'tutti') {
+    return { navId: 'home' };
+  }
+
+  return { navId: rawType };
+});
+
 const { isMobile, isTablet } = useBreakpoints();
 
 const macroTypes = getMacroWineTypes();

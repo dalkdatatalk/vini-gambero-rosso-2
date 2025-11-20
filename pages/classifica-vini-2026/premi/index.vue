@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  navId: 'vini-premiati',
+});
+
 import { navigateTo } from '#imports';
 
 await navigateTo('/classifica-vini-2026/premi/tutti', { redirectCode: 301 });

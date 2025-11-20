@@ -27,24 +27,13 @@
       <nav class="mobile-menu-nav" aria-label="Menu principale">
         <ul class="mobile-menu-list">
           <li v-for="item in mobileMenuItems" :key="item.id" class="mobile-menu-item">
-            <a
-              v-if="item.href"
-              :href="item.href"
-              :class="['mobile-menu-link', { active: isActive(item.id) }]"
-              target="_blank"
-              rel="noopener noreferrer"
-              @click="closeMenu"
-            >
-              {{ item.displayLabel }}
-            </a>
             <NuxtLink
-              v-else
               :to="item.to"
               :class="['mobile-menu-link', { active: isActive(item.id) }]"
               :aria-current="isActive(item.id) ? 'page' : undefined"
               @click="closeMenu"
             >
-              {{ item.displayLabel }}
+              {{ item.label }}
             </NuxtLink>
           </li>
         </ul>
@@ -64,60 +53,16 @@
 import { computed, ref, watch } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
 import { useRoute } from '#imports';
-import { useWines } from '~/composables/useWines';
-import {
-  WINE_NAVIGATION_ITEMS,
-  findWineMenuItemByType,
-  type WineNavigationItem,
-} from '~/lib/wineMenuItems';
+import { NAV_ITEMS } from '~/lib/navigation';
 
 const isMobile = useMediaQuery('(max-width: 767px)');
 const isMenuOpen = ref(false);
 
 const route = useRoute();
-const { bySlug } = useWines();
 
-type MobileMenuItem = WineNavigationItem & { displayLabel: string };
+const mobileMenuItems = computed(() => [...NAV_ITEMS].sort((a, b) => a.order - b.order));
 
-const mobileMenuItems = computed<MobileMenuItem[]>(() =>
-  WINE_NAVIGATION_ITEMS.filter((item) => item.id !== 'tutti').map((item) => ({
-    ...item,
-    displayLabel: item.id === 'vini-dolci' ? 'Dolci' : item.label,
-  })),
-);
-
-const slugParam = computed(() => {
-  const raw = route.params.slug;
-  if (Array.isArray(raw)) {
-    return typeof raw[0] === 'string' ? raw[0] : null;
-  }
-  return typeof raw === 'string' ? raw : null;
-});
-
-const activeId = computed(() => {
-  const path = route.path || '';
-  const slug = slugParam.value;
-  if (path.startsWith('/classifica-vini-2026/vini/') && !slug) {
-    const typeParam = String(route.params.type ?? '').toLowerCase().trim();
-    if (!typeParam) return isHomePath(path) ? 'home' : null;
-    return typeParam;
-  }
-  if (slug) {
-    const wine = bySlug(slug);
-    const macroId = macroIdFromWineType(wine?.type ?? null);
-    return macroId;
-  }
-  if (isHomePath(path)) return 'home';
-  return null;
-});
-
-function macroIdFromWineType(wineType?: string | null): string | null {
-  return findWineMenuItemByType(wineType)?.id ?? null;
-}
-
-function isHomePath(path: string) {
-  return path === '/classifica-vini-2026/vini' || path === '/classifica-vini-2026/vini/';
-}
+const activeId = computed(() => route.meta.navId as string | undefined);
 
 function isActive(id: string) {
   return activeId.value === id;

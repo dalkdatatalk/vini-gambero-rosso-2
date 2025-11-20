@@ -13,6 +13,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  navId: 'vini-premiati',
+})
+
 import { computed, ref, watch } from 'vue';
 import { useHead, useRoute, useRouter } from '#imports';
 import Footer from '~/components/Footer.vue';

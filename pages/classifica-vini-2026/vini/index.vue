@@ -21,6 +21,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  navId: 'home',
+})
+
 import { computed, reactive, ref, watch } from 'vue';
 import { useHead } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';

@@ -9,9 +9,9 @@
           </a>
         </div>
         <div class="header-general__logo">
-          <a :href="HOME_NAV_ITEM.href">
+          <NuxtLink :to="homeItem?.to ?? '/'">
             <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
-          </a>
+          </NuxtLink>
         </div>
       </div>
 
@@ -23,9 +23,9 @@
           </a>
         </div>
         <div class="header-general__logo">
-          <a :href="HOME_NAV_ITEM.href">
+          <NuxtLink :to="homeItem?.to ?? '/'">
             <img src="/img/logo-bere-bene-sm.png" alt="Berebene" />
-          </a>
+          </NuxtLink>
         </div>
         <div class="header-general__logo sponsor-area">
           <p>in collaborazione con</p>
@@ -38,17 +38,7 @@
           <nav class="bbb-header__nav" aria-label="Sezioni vini">
             <ul class="bbb-header__menu">
               <li v-for="item in items" :key="item.id">
-                <a
-                  v-if="item.href"
-                  :href="item.href"
-                  class="bbb-header__link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {{ item.label }}
-                </a>
                 <NuxtLink
-                  v-else
                   :to="item.to"
                   class="bbb-header__link"
                   :class="{ active: isActive(item.id) }"
@@ -69,8 +59,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from '#imports'
-import { useWines } from '~/composables/useWines'
-import { HOME_NAV_ITEM, WINE_NAVIGATION_ITEMS, findWineMenuItemByType } from '~/lib/wineMenuItems'
+import { NAV_ITEMS } from '~/lib/navigation'
 
 const props = defineProps<{
   sponsor?: boolean | string | null
@@ -79,9 +68,8 @@ const props = defineProps<{
 const showSponsor = computed(() => props.sponsor !== false)
 
 const route = useRoute()
-const { bySlug } = useWines()
-
-const items = WINE_NAVIGATION_ITEMS
+const items = computed(() => [...NAV_ITEMS].sort((a, b) => a.order - b.order))
+const homeItem = computed(() => items.value.find((item) => item.id === 'home'))
 
 const headerRef = ref<HTMLElement | null>(null)
 const headerHeight = ref(0)
@@ -113,38 +101,7 @@ onBeforeUnmount(() => {
   }
 })
 
-const slugParam = computed(() => {
-  const raw = route.params.slug
-  if (Array.isArray(raw)) {
-    return typeof raw[0] === 'string' ? raw[0] : null
-  }
-  return typeof raw === 'string' ? raw : null
-})
-
-function macroIdFromWineType(wineType?: string | null): string | null {
-  return findWineMenuItemByType(wineType)?.id ?? null
-}
-
-function isHomePath(path: string) {
-  return path === '/classifica-vini-2026/vini' || path === '/classifica-vini-2026/vini/'
-}
-
-const activeId = computed(() => {
-  const path = route.path || ''
-  const slug = slugParam.value
-  if (path.startsWith('/classifica-vini-2026/vini/') && !slug) {
-    const typeParam = String(route.params.type ?? '').toLowerCase().trim()
-    if (!typeParam) return isHomePath(path) ? 'home' : null
-    return typeParam
-  }
-  if (slug) {
-    const wine = bySlug(slug)
-    const macroId = macroIdFromWineType(wine?.type ?? null)
-    return macroId
-  }
-  if (isHomePath(path)) return 'home'
-  return null
-})
+const activeId = computed(() => route.meta.navId as string | undefined)
 
 function isActive(id: string) {
   return activeId.value === id

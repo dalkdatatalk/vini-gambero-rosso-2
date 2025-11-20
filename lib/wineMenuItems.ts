@@ -6,6 +6,8 @@ export type WineMacroCategoryId =
   | 'vini-dolci'
   | 'tutti'
 
+export { type NavItem, NAV_ITEMS } from './navigation'
+
 export interface WineMenuItem {
   id: WineMacroCategoryId
   label: string

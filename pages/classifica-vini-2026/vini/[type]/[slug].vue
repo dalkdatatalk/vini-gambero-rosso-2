@@ -164,6 +164,20 @@ const grapesList = computed(() => {
 
 const normalizedRouteType = computed(() => typeParam.value?.toString().trim().toLowerCase() ?? '');
 
+definePageMeta(() => {
+  const macroId = macroCategoria.value?.id;
+  if (macroId && macroId !== 'tutti') {
+    return { navId: macroId };
+  }
+
+  const normalized = normalizedRouteType.value;
+  if (normalized && normalized !== 'tutti') {
+    return { navId: normalized };
+  }
+
+  return { navId: 'home' };
+});
+
 const canonicalTypeSegment = computed(() => {
   const primary = macroCategoria.value?.id ?? normalizedRouteType.value;
   return primary || 'tutti';
