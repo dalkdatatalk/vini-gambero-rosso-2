@@ -11,7 +11,34 @@
       </p>
     </section>
 
-    <WineList :wines="awardedWines" empty-message="Non sono presenti vini premiati." />
+    <div class="filters" role="group" aria-label="Filtra vini premiati">
+      <button
+        type="button"
+        class="filters__button"
+        :class="{ 'filters__button--active': activeFilter === 'tutti' }"
+        @click="onFilterClick('tutti')"
+      >
+        Tutti
+      </button>
+      <button
+        type="button"
+        class="filters__button"
+        :class="{ 'filters__button--active': activeFilter === 'nazionali' }"
+        @click="onFilterClick('nazionali')"
+      >
+        Nazionali
+      </button>
+      <button
+        type="button"
+        class="filters__button"
+        :class="{ 'filters__button--active': activeFilter === 'regionali' }"
+        @click="onFilterClick('regionali')"
+      >
+        Regionali
+      </button>
+    </div>
+
+    <WineList :wines="filteredWines" empty-message="Non sono presenti vini premiati." />
   </main>
 
   <ScrollToTopButton />
@@ -19,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useHead } from '#imports';
+import { computed, ref, watch } from 'vue';
+import { useHead, useRoute, useRouter } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
 import Footer from '~/components/Footer.vue';
@@ -78,7 +105,61 @@ const awardedWines = computed<Wine[]>(() => {
   });
 });
 
-const canonicalUrl = 'https://berebene.gamberorosso.it/classifica-vini-2026/premi/';
+type FilterValue = 'tutti' | 'nazionali' | 'regionali';
+
+const route = useRoute();
+const router = useRouter();
+
+const resolveFilterFromPath = (path: string): FilterValue => {
+  const segment = path.split('/').filter(Boolean).pop();
+
+  if (segment === 'nazionali' || segment === 'regionali') {
+    return segment;
+  }
+
+  return 'tutti';
+};
+
+const activeFilter = ref<FilterValue>(resolveFilterFromPath(route.path));
+
+watch(
+  () => route.path,
+  (newPath) => {
+    activeFilter.value = resolveFilterFromPath(newPath);
+  }
+);
+
+const filteredWines = computed<Wine[]>(() => {
+  if (activeFilter.value === 'tutti') {
+    return awardedWines.value;
+  }
+
+  return awardedWines.value.filter((wine) => {
+    const slug = (wine.slug ?? '').toLowerCase();
+    const premioLabel = slug ? awardSlugMap.value.get(slug) : undefined;
+
+    if (!premioLabel) return false;
+
+    if (activeFilter.value === 'regionali') {
+      return premioLabel === 'Premio Qualità/Prezzo Regionale';
+    }
+
+    return premioLabel.startsWith('Miglior');
+  });
+});
+
+const onFilterClick = async (filter: FilterValue) => {
+  activeFilter.value = filter;
+  const targetPath = `/classifica-vini-2026/premi/${filter}`;
+
+  if (route.path !== targetPath) {
+    await router.push(targetPath);
+  }
+};
+
+const canonicalUrl = computed(
+  () => `https://berebene.gamberorosso.it/classifica-vini-2026/premi/${activeFilter.value}`
+);
 
 useHead(() => ({
   title: 'Berebene 2026 | Vini premiati',
@@ -92,7 +173,7 @@ useHead(() => ({
   link: [
     {
       rel: 'canonical',
-      href: canonicalUrl,
+      href: canonicalUrl.value,
     },
   ],
 }));
@@ -130,5 +211,34 @@ useHead(() => ({
 .page__header p {
   margin: 0;
   color: #4b5563;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filters__button {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #1f2937;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.filters__button:hover {
+  border-color: #c4c7cf;
+  background: #f3f4f6;
+}
+
+.filters__button--active {
+  background: #1f2937;
+  color: #ffffff;
+  border-color: #1f2937;
 }
 </style>
