@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: /
+Allow: /
 
-Sitemap: https://vini-gambero-rosso-2.vercel.app/sitemap.xml
+Sitemap: https://berebene.gamberorosso.it/sitemap.xml
