@@ -179,7 +179,9 @@ function macroIdFromWineType(wineType?: string | null): string | null {
 }
 
 function normalizePath(path: string) {
-  return path.replace(/\/$/, '') || '/'
+  const withoutQuery = path.split('?')[0]
+  const normalized = withoutQuery.replace(/\/$/, '')
+  return normalized || '/'
 }
 
 function isHomePath(path: string) {
@@ -199,20 +201,34 @@ const activeId = computed(() => {
   const path = normalizePath(route.path || '')
   const slug = slugParam.value
 
-  // 👉 tutte le pagine /classifica-vini-2026/premi(...)
-  if (isAwardPath(path)) return 'vini-premiati'
-
-  if (path.startsWith('/classifica-vini-2026/vini/') && !slug) {
-    const typeParam = String(route.params.type ?? '').toLowerCase().trim()
-    if (!typeParam) return isHomePath(path) ? 'home' : null
-    return typeParam
-  }
   if (slug) {
     const wine = bySlug(slug)
     const macroId = macroIdFromWineType(wine?.type ?? null)
     return macroId
   }
+
+  if (isAwardPath(path)) return 'vini-premiati'
+
+  if (path.startsWith('/classifica-vini-2026/vini/')) {
+    const typeParam = String(route.params.type ?? '').toLowerCase().trim()
+    if (!typeParam) return isHomePath(path) ? 'home' : null
+    return typeParam
+  }
+
+  for (const item of items) {
+    if (item.id === 'home' && item.href && isHomePath(path)) {
+      return item.id
+    }
+    if (item.to) {
+      const target = normalizePath(item.to)
+      if (path === target || path.startsWith(`${target}/`)) {
+        return item.id
+      }
+    }
+  }
+
   if (isHomePath(path)) return 'home'
+
   return null
 })
 
