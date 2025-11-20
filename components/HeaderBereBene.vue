@@ -83,7 +83,11 @@
                   v-else
                   :to="item.to"
                   class="bbb-header__link"
-                  :class="{ active: isActive(item.id) }"
+                  :class="{
+                    'router-link-active': isActive(item.id),
+                    'router-link-exact-active': isActive(item.id),
+                    active: isActive(item.id),
+                  }"
                   :aria-current="isActive(item.id) ? 'page' : undefined"
                 >
                   {{ item.label }}
