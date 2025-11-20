@@ -138,12 +138,7 @@ Questo database viene fornito da Gambero tramite endpoint fornito e concordato c
 
 ## 📤 Deploy su Vercel
 
-Pipeline: 1. Push su GitHub\
+Pipeline:
+1. Push su GitHub\
 2. Build automatica\
 3. Proxy verso dominio principale
-
-------------------------------------------------------------------------
-
-## 📄 License
-
-Proprietà di **Gambero Rosso**.
