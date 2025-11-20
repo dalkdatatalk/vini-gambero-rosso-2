@@ -1,7 +1,7 @@
 <template>
   <section class="wine-type-filters" aria-label="Filtra per tipologia di vino">
     <h1 class="title">
-      {{ title || 'I vini premiati selezionati da Berebene 2026' }}
+      {{ mainHeadingText || 'I vini premiati selezionati da Berebene 2026' }}
     </h1>
 
     <div class="category-buttons" role="group">
@@ -24,7 +24,7 @@
 type FilterValue = 'tutti' | 'nazionali' | 'regionali';
 
 const props = defineProps<{
-  title?: string;
+  mainHeadingText?: string;
   activeFilter: FilterValue;
   onFilter: (filter: FilterValue) => void;
 }>();

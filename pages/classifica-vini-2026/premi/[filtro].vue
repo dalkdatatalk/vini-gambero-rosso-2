@@ -3,7 +3,11 @@
   <HeaderGeneral v-else />
 
   <main class="page">
-    <WineAwardsFilters :title="awardsPageTitle" :activeFilter="activeFilter" :onFilter="onFilterClick" />
+    <WineAwardsFilters
+      :main-heading-text="awardsPageTitle"
+      :activeFilter="activeFilter"
+      :onFilter="onFilterClick"
+    />
 
     <WineList :wines="filteredWines" empty-message="Non sono presenti vini premiati." />
   </main>
