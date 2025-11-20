@@ -182,19 +182,23 @@ function macroIdFromWineType(wineType?: string | null): string | null {
   return findWineMenuItemByType(wineType)?.id ?? null
 }
 
+function normalizePath(path: string) {
+  return path.replace(/\/$/, '') || '/'
+}
+
 function isHomePath(path: string) {
-  return path === '/classifica-vini-2026/vini' || path === '/classifica-vini-2026/vini/'
+  const normalized = normalizePath(path)
+  return normalized === '/classifica-vini-2026/vini'
 }
 
 function isAwardPath(path: string) {
-  return (
-    path === '/classifica-vini-2026/premi' ||
-    path.startsWith('/classifica-vini-2026/premi/')
-  )
+  const normalized = normalizePath(path)
+  return normalized === '/classifica-vini-2026/premi' ||
+    normalized.startsWith('/classifica-vini-2026/premi/')
 }
 
 const activeId = computed(() => {
-  const path = route.path || ''
+  const path = normalizePath(route.path || '')
   const slug = slugParam.value
   if (isAwardPath(path)) return 'vini-premiati'
   if (path.startsWith('/classifica-vini-2026/vini/') && !slug) {
