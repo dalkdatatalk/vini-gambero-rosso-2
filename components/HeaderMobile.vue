@@ -97,16 +97,27 @@ const slugParam = computed(() => {
 const activeId = computed(() => {
   const path = route.path || '';
   const slug = slugParam.value;
+
+  // 1. Gestione VINI PREMIATI (separata dalla logica dei [type])
+  if (path.startsWith('/classifica-vini-2026/premi')) {
+    return 'vini-premiati';
+  }
+
+  // 2. LISTA PER TIPO (macro categorie)
   if (path.startsWith('/classifica-vini-2026/vini/') && !slug) {
     const typeParam = String(route.params.type ?? '').toLowerCase().trim();
     if (!typeParam) return isHomePath(path) ? 'home' : null;
     return typeParam;
   }
+
+  // 3. DETTAGLIO VINO → macro categoria
   if (slug) {
     const wine = bySlug(slug);
     const macroId = macroIdFromWineType(wine?.type ?? null);
     return macroId;
   }
+
+  // 4. HOME LISTA VINI
   if (isHomePath(path)) return 'home';
   return null;
 });
