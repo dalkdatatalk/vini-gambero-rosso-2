@@ -1,10 +1,6 @@
 <template>
   <section class="wine-type-filters" aria-label="Filtra per tipologia di vino">
     <h1 class="title">I vini premiati selezionati da Berebene 2026</h1>
-    <p>
-      Una selezione dedicata alle etichette che hanno ricevuto almeno un riconoscimento all'interno
-      della guida Berebene 2026.
-    </p>
 
     <div class="category-buttons" role="group">
       <button
@@ -28,9 +24,9 @@ type FilterValue = 'tutti' | 'nazionali' | 'regionali';
 const props = defineProps<{ activeFilter: FilterValue; onFilter: (filter: FilterValue) => void }>();
 
 const filters: Array<{ id: FilterValue; label: string }> = [
-  { id: 'tutti', label: 'Tutti' },
   { id: 'nazionali', label: 'Nazionali' },
   { id: 'regionali', label: 'Regionali' },
+  { id: 'tutti', label: 'Tutti' },
 ];
 
 function isActive(id: FilterValue) {
