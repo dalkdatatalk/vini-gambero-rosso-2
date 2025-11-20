@@ -2,6 +2,12 @@
   <article class="wine-card">
     <NuxtLink :to="detailLink" class="wine-card__link">
       <div class="wine-card__content">
+        <div
+          v-if="wine.thumbnail && wine.thumbnail.full"
+          class="wine-card__thumbnail"
+        >
+          <img :src="wine.thumbnail.full" :alt="wine.name" loading="lazy" />
+        </div>
         <div class="wine-card__info">
 
           <div v-if="premioLabel" class="wine-card__award">
