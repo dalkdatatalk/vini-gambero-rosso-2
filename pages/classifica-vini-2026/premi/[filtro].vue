@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useHead, useRoute, useRouter } from '#imports';
+import { definePageMeta, useHead, useRoute, useRouter } from '#imports';
 import Footer from '~/components/Footer.vue';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
@@ -24,6 +24,10 @@ import { useBreakpoints } from '~/composables/useBreakpoints';
 import type { Wine } from '~/composables/useWines';
 
 type FilterValue = 'tutti' | 'nazionali' | 'regionali';
+
+definePageMeta({
+  navId: 'vini-premiati',
+});
 
 const { isMobile, isTablet } = useBreakpoints();
 const { awardedWines, getAwardForSlug, isNationalAward, isRegionalAward } = useAwardedWines();
