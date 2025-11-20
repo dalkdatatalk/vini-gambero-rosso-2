@@ -19,7 +19,7 @@ function formatDateTimeForSitemap(input?: string): string | undefined {
   return date.toISOString();
 }
 
-// Mappa categorie → macro-type usato dalle tue pagine
+// Mappa categorie normalizzate → macro-type usato dalle tue pagine
 const CATEGORY_TO_TYPE: Record<string, string> = {
   'bianco': 'bianchi',
   'bianco macerato/orange wine': 'bianchi',
@@ -32,7 +32,10 @@ const CATEGORY_TO_TYPE: Record<string, string> = {
   'spumante rosso': 'bollicine',
   'spumante dolce bianco': 'bollicine',
 
+  // Varianti "Rosato" normalizzate a rosati
   'rosato': 'rosati',
+  'rosato fermo': 'rosati',
+  'vino rosato': 'rosati',
 
   'dolce bianco': 'vini-dolci',
   'dolce rosso': 'vini-dolci',
@@ -101,7 +104,9 @@ export default defineNuxtConfig({
         const categoryName = wine.vino_categoria?.[0]?.name;
         if (!categoryName) continue;
 
-        const derivedType = CATEGORY_TO_TYPE[categoryName];
+        const normalizedCategory = categoryName.toLowerCase().trim();
+        const derivedType = CATEGORY_TO_TYPE[normalizedCategory];
+        // console.log('[sitemap] category', categoryName, 'normalized to', normalizedCategory, '→', derivedType);
         if (!derivedType) continue;
         if (!allowedTypes.has(derivedType)) continue;
 
