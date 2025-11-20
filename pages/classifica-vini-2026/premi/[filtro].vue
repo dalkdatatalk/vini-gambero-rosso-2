@@ -3,7 +3,7 @@
   <HeaderGeneral v-else />
 
   <main class="page">
-    <WineAwardsFilters :activeFilter="activeFilter" :onFilter="onFilterClick" />
+    <WineAwardsFilters :title="awardsPageTitle" :activeFilter="activeFilter" :onFilter="onFilterClick" />
 
     <WineList :wines="filteredWines" empty-message="Non sono presenti vini premiati." />
   </main>
@@ -14,7 +14,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useHead, useRoute, useRouter } from '#imports';
+import { useRoute } from 'vue-router';
+import { useHead, useRouter } from '#imports';
 import Footer from '~/components/Footer.vue';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
@@ -30,6 +31,21 @@ const { awardedWines, getAwardForSlug, isNationalAward, isRegionalAward } = useA
 
 const route = useRoute();
 const router = useRouter();
+
+const filtro = computed(() => (route.params.filtro as string) || 'tutti');
+
+const awardsPageTitle = computed(() => {
+  if (filtro.value === 'nazionale') {
+    return 'I vini premiati selezionati da Berebene 2026 a livello nazionale';
+  }
+
+  if (filtro.value === 'regionale') {
+    return 'I vini premiati selezionati da Berebene 2026 a livello regionale';
+  }
+
+  // caso "tutti" o qualsiasi altro valore
+  return 'I vini premiati selezionati da Berebene 2026';
+});
 
 const normalizeFilter = (value: string | string[] | undefined): FilterValue => {
   const candidate = Array.isArray(value) ? value[0] : value;
