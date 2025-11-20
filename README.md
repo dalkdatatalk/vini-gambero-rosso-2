@@ -322,8 +322,6 @@ Componente responsabile del **rendering effettivo dei risultati**.
 
 ---
 
----
-
 ## 🍷 Componenti pagina dettaglio vino
 
 Questi componenti sono utilizzati esclusivamente nella pagina: `pages/classifica-vini-2026/vini/[type]/[slug].vue`
@@ -397,7 +395,6 @@ Definisce le **macro‑categorie dei vini** per il menu:
 - rosati
 - rossi
 - dolci
-- passiti
 
 ---
 
