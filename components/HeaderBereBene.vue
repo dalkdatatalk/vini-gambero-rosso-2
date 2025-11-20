@@ -82,8 +82,7 @@
                 <NuxtLink
                   v-else
                   :to="item.to"
-                  class="bbb-header__link"
-                  :class="{ active: isActive(item.id) }"
+                  :class="linkClasses(item)"
                   :aria-current="isActive(item.id) ? 'page' : undefined"
                 >
                   {{ item.label }}
@@ -199,7 +198,7 @@ function isAwardsPath(path: string) {
 }
 
 const activeId = computed(() => {
-  const path = normalizePath(route.path)
+  const path = normalizePath(route.path || '')
   const slug = slugParam.value
 
   // 1. tutte le pagine premi -> "vini-premiati"
@@ -233,6 +232,17 @@ const activeId = computed(() => {
 
 function isActive(id: string) {
   return activeId.value === id
+}
+
+function linkClasses(item: { id: string }) {
+  const base = ['bbb-header__link']
+  if (isActive(item.id)) {
+    base.push('active')
+    if (item.id === 'vini-premiati') {
+      base.push('router-link-active', 'router-link-exact-active')
+    }
+  }
+  return base
 }
 
 let ticking = false
