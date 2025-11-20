@@ -51,25 +51,14 @@ import { useHead, useRoute, useRouter } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
 import Footer from '~/components/Footer.vue';
+import { useAwardedWines } from '~/composables/useAwardedWines';
 import { useBreakpoints } from '~/composables/useBreakpoints';
-import { usePremioCleaner } from '~/composables/usePremioCleaner';
-import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
-import rawWines from '~/data/wines.json';
-
-const { isMobile, isTablet } = useBreakpoints();
-
-const wineTools = useWines();
-const { wines } = wineTools;
-
-const { parsePremio } = usePremioCleaner();
-
-type RawWineWithPremi = {
-  slug?: string;
-  premi?: Array<{ name?: string }>;
-};
 
 type FilterValue = 'tutti' | 'nazionali' | 'regionali';
+
+const { isMobile, isTablet } = useBreakpoints();
+const { awardedWines, getAwardForSlug, isNationalAward, isRegionalAward } = useAwardedWines();
 
 const route = useRoute();
 const router = useRouter();
@@ -99,58 +88,22 @@ watch(
   { immediate: true }
 );
 
-const awardSlugMap = computed(() => {
-  const map = new Map<string, string>();
-
-  (rawWines as RawWineWithPremi[]).forEach((wine) => {
-    const slug = (wine.slug ?? '').toLowerCase();
-    if (!slug) return;
-
-    const premioName = wine.premi?.[0]?.name ?? '';
-    const { label } = parsePremio(premioName);
-
-    if (label) {
-      map.set(slug, label);
-    }
-  });
-
-  return map;
-});
-
-const awardedWines = computed<Wine[]>(() => {
-  const filtered = wines.value.filter((wine) => {
-    const slug = (wine.slug ?? '').toLowerCase();
-    return slug && awardSlugMap.value.has(slug);
-  });
-
-  return [...filtered].sort((a, b) => {
-    const scoreA = a.score ?? 0;
-    const scoreB = b.score ?? 0;
-
-    if (scoreA !== scoreB) {
-      return scoreB - scoreA;
-    }
-
-    return a.name.localeCompare(b.name);
-  });
-});
-
 const filteredWines = computed<Wine[]>(() => {
   if (activeFilter.value === 'tutti') {
     return awardedWines.value;
   }
 
   return awardedWines.value.filter((wine) => {
-    const slug = (wine.slug ?? '').toLowerCase();
-    const premioLabel = slug ? awardSlugMap.value.get(slug) : undefined;
+    const award = getAwardForSlug(wine.slug);
+    const label = award?.label || award?.rawName || '';
 
-    if (!premioLabel) return false;
+    if (!label) return false;
 
     if (activeFilter.value === 'regionali') {
-      return premioLabel === 'Premio Qualità/Prezzo Regionale';
+      return isRegionalAward(label);
     }
 
-    return premioLabel.startsWith('Miglior');
+    return isNationalAward(label);
   });
 });
 
