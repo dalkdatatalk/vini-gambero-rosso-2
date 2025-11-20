@@ -182,9 +182,14 @@ function isHomePath(path: string) {
   return path === '/classifica-vini-2026/vini' || path === '/classifica-vini-2026/vini/'
 }
 
+function isAwardPath(path: string) {
+  return path === '/classifica-vini-2026/premi' || path === '/classifica-vini-2026/premi/'
+}
+
 const activeId = computed(() => {
   const path = route.path || ''
   const slug = slugParam.value
+  if (isAwardPath(path)) return 'vini-premiati'
   if (path.startsWith('/classifica-vini-2026/vini/') && !slug) {
     const typeParam = String(route.params.type ?? '').toLowerCase().trim()
     if (!typeParam) return isHomePath(path) ? 'home' : null

@@ -6,6 +6,8 @@ export type WineMacroCategoryId =
   | 'vini-dolci'
   | 'tutti'
 
+type WineSpecialNavigationId = 'vini-premiati'
+
 export interface WineMenuItem {
   id: WineMacroCategoryId
   label: string
@@ -79,7 +81,7 @@ export const WINE_MENU_ITEMS: WineMenuItem[] = [
 ]
 
 export interface WineNavigationItem {
-  id: 'home' | WineMacroCategoryId
+  id: 'home' | WineMacroCategoryId | WineSpecialNavigationId
   label: string
   href?: string
   to?: string
@@ -93,8 +95,16 @@ export const HOME_NAV_ITEM: WineNavigationItem = {
   order: 0,
 }
 
+export const AWARD_NAV_ITEM: WineNavigationItem = {
+  id: 'vini-premiati',
+  label: 'Vini premiati',
+  to: '/classifica-vini-2026/premi/',
+  order: 0.5,
+}
+
 const navigationItems: WineNavigationItem[] = [
   HOME_NAV_ITEM,
+  AWARD_NAV_ITEM,
   ...WINE_MENU_ITEMS.map<WineNavigationItem>((item) => ({
     id: item.id,
     label: item.label,
