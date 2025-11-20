@@ -98,7 +98,7 @@ export const HOME_NAV_ITEM: WineNavigationItem = {
 export const AWARD_NAV_ITEM: WineNavigationItem = {
   id: 'vini-premiati',
   label: 'Vini premiati',
-  to: '/classifica-vini-2026/premi/',
+  to: '/classifica-vini-2026/premi/tutti',
   order: 0.5,
 }
 

@@ -83,11 +83,7 @@
                   v-else
                   :to="item.to"
                   class="bbb-header__link"
-                  :class="{
-                    'router-link-active': isActive(item.id),
-                    'router-link-exact-active': isActive(item.id),
-                    active: isActive(item.id),
-                  }"
+                  :class="{ active: isActive(item.id) }"
                   :aria-current="isActive(item.id) ? 'page' : undefined"
                 >
                   {{ item.label }}
@@ -193,14 +189,19 @@ function isHomePath(path: string) {
 
 function isAwardPath(path: string) {
   const normalized = normalizePath(path)
-  return normalized === '/classifica-vini-2026/premi' ||
+  return (
+    normalized === '/classifica-vini-2026/premi' ||
     normalized.startsWith('/classifica-vini-2026/premi/')
+  )
 }
 
 const activeId = computed(() => {
   const path = normalizePath(route.path || '')
   const slug = slugParam.value
+
+  // 👉 tutte le pagine /classifica-vini-2026/premi(...)
   if (isAwardPath(path)) return 'vini-premiati'
+
   if (path.startsWith('/classifica-vini-2026/vini/') && !slug) {
     const typeParam = String(route.params.type ?? '').toLowerCase().trim()
     if (!typeParam) return isHomePath(path) ? 'home' : null
