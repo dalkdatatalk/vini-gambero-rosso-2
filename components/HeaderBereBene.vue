@@ -183,7 +183,10 @@ function isHomePath(path: string) {
 }
 
 function isAwardPath(path: string) {
-  return path === '/classifica-vini-2026/premi' || path === '/classifica-vini-2026/premi/'
+  return (
+    path === '/classifica-vini-2026/premi' ||
+    path.startsWith('/classifica-vini-2026/premi/')
+  )
 }
 
 const activeId = computed(() => {
