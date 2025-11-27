@@ -3,7 +3,6 @@
     <NuxtLink :to="detailLink" class="wine-card__link">
       <div class="wine-card__content">
         <div class="wine-card__info">
-
           <div v-if="premioLabel" class="wine-card__award">
             {{ premioLabel }}
           </div>
@@ -11,6 +10,7 @@
           <p class="wine-card__region">{{ regionLabel }}</p>
           <p v-if="wine.type" class="wine-card__type">{{ wine.type }}</p>
           <p v-if="wine.denominazione" class="wine-card__denominazione">{{ wine.denominazione }}</p>
+          <p v-if="wine.wineryName" class="wine-card__winery">{{ wine.wineryName }}</p>
           <p v-if="wine.price" class="wine-card__price">€{{ wine.price }}</p>
         </div>
 
@@ -97,6 +97,7 @@ const premioLabel = computed(() => {
 .wine-card:hover .wine-card__region,
 .wine-card:hover .wine-card__type,
 .wine-card:hover .wine-card__denominazione,
+.wine-card:hover .wine-card__winery,
 .wine-card:hover .wine-card__score-label,
 .wine-card:hover .wine-card__score-value,
 .wine-card:hover .wine-card__arrow,
@@ -179,6 +180,15 @@ const premioLabel = computed(() => {
   letter-spacing: -0.02em;
   margin: 0;
   text-transform: capitalize;
+}
+
+.wine-card__winery {
+  font-family: 'Funnel Sans', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: #290005;
+  letter-spacing: -0.02em;
+  margin: 0;
 }
 
 .wine-card__score {
