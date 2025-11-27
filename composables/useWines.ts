@@ -115,11 +115,29 @@ function toNumber(value: string | number | null | undefined): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+function decodeHtmlEntities(text: string): string {
+  const entities: Record<string, string> = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+    '&#8211;': '\u2013',
+    '&#8212;': '\u2014',
+    '&#8216;': '\u2018',
+    '&#8217;': '\u2019',
+    '&#8220;': '\u201C',
+    '&#8221;': '\u201D',
+    '&nbsp;': ' ',
+  };
+  return text.replace(/&#?\w+;/g, (match) => entities[match] ?? match);
+}
+
 function safeText(value: string | undefined | null): string | null {
   if (!value) {
     return null;
   }
-  const trimmed = value.trim();
+  const trimmed = decodeHtmlEntities(value).trim();
   return trimmed.length > 0 ? trimmed : null;
 }
 
