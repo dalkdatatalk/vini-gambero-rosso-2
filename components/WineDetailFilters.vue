@@ -305,6 +305,32 @@ const internalState = reactive({
   price: 0,
 });
 
+function matchesRegion(wine: any, region: string | null): boolean {
+  if (!region) return true;
+  const names = extractRegions(wine);
+  return names.includes(region);
+}
+
+function matchesGrape(wine: any, grape: string | null): boolean {
+  if (!grape) return true;
+  const names = extractGrapes(wine);
+  return names.includes(grape);
+}
+
+function matchesPairing(wine: any, pairing: string | null): boolean {
+  if (!pairing) return true;
+  const names = extractPairingTags(wine);
+  return names.includes(pairing);
+}
+
+function matchesWinery(wine: any, winery: string | null): boolean {
+  if (!winery) return true;
+  const name = extractWineryName(wine);
+  return name === winery;
+}
+
+const selectedWineryLocal = ref('');
+
 const componentId = Math.random().toString(36).slice(2, 9);
 const scoreInputId = `wine-score-${componentId}`;
 const queryInputId = `wine-query-${componentId}`;
@@ -357,6 +383,10 @@ const computedMaxPrice = computed(() => {
 const regions = computed(() => {
   const values = new Set<string>();
   for (const wine of props.wines ?? []) {
+    if (!matchesGrape(wine, internalState.grape)) continue;
+    if (!matchesPairing(wine, internalState.abbinamento)) continue;
+    if (!matchesWinery(wine, selectedWineryLocal.value || null)) continue;
+
     for (const name of extractRegions(wine)) {
       if (name) {
         values.add(name);
@@ -369,6 +399,10 @@ const regions = computed(() => {
 const grapes = computed(() => {
   const values = new Set<string>();
   for (const wine of props.wines ?? []) {
+    if (!matchesRegion(wine, internalState.region)) continue;
+    if (!matchesPairing(wine, internalState.abbinamento)) continue;
+    if (!matchesWinery(wine, selectedWineryLocal.value || null)) continue;
+
     for (const name of extractGrapes(wine)) {
       if (name) {
         values.add(name);
@@ -381,6 +415,10 @@ const grapes = computed(() => {
 const pairings = computed(() => {
   const values = new Set<string>();
   for (const wine of props.wines ?? []) {
+    if (!matchesRegion(wine, internalState.region)) continue;
+    if (!matchesGrape(wine, internalState.grape)) continue;
+    if (!matchesWinery(wine, selectedWineryLocal.value || null)) continue;
+
     for (const name of extractPairingTags(wine)) {
       if (name) {
         values.add(name);
@@ -393,6 +431,10 @@ const pairings = computed(() => {
 const wineries = computed(() => {
   const values = new Set<string>();
   for (const wine of props.wines ?? []) {
+    if (!matchesRegion(wine, internalState.region)) continue;
+    if (!matchesGrape(wine, internalState.grape)) continue;
+    if (!matchesPairing(wine, internalState.abbinamento)) continue;
+
     const name = extractWineryName(wine);
     if (name) {
       values.add(name);
@@ -400,8 +442,6 @@ const wineries = computed(() => {
   }
   return Array.from(values).sort((a, b) => a.localeCompare(b));
 });
-
-const selectedWineryLocal = ref('');
 
 const regionModel = computed({
   get: () => internalState.region ?? '',
