@@ -279,6 +279,7 @@ const props = defineProps<{
     score: number;
     price: number;
   };
+  selectedWinery?: string | null;
 }>();
 
 const emit = defineEmits<{
@@ -293,6 +294,7 @@ const emit = defineEmits<{
       price: number;
     }
   ): void;
+  (e: 'update:selectedWinery', value: string | null): void;
   (e: 'update:results', value: any[]): void;
 }>();
 
@@ -447,7 +449,7 @@ const regionModel = computed({
   get: () => internalState.region ?? '',
   set: (value: string) => {
     internalState.region = value ? value : null;
-    triggerUpdate(true);
+    triggerUpdate(true, true);
   },
 });
 
@@ -455,7 +457,7 @@ const grapeModel = computed({
   get: () => internalState.grape ?? '',
   set: (value: string) => {
     internalState.grape = value ? value : null;
-    triggerUpdate(true);
+    triggerUpdate(true, true);
   },
 });
 
@@ -463,7 +465,7 @@ const pairingModel = computed({
   get: () => internalState.abbinamento ?? '',
   set: (value: string) => {
     internalState.abbinamento = value ? value : null;
-    triggerUpdate(true);
+    triggerUpdate(true, true);
   },
 });
 
@@ -474,7 +476,7 @@ const scoreModel = computed({
     if (internalState.score !== normalized) {
       internalState.score = normalized;
     }
-    triggerUpdate(true);
+    triggerUpdate(true, true);
   },
 });
 
@@ -509,7 +511,7 @@ const priceModel = computed({
     if (internalState.price !== normalized) {
       internalState.price = normalized;
     }
-    triggerUpdate(true);
+    triggerUpdate(true, true);
   },
 });
 
@@ -517,7 +519,7 @@ const queryModel = computed({
   get: () => internalState.query,
   set: (value: string) => {
     internalState.query = value ?? '';
-    triggerUpdate(false);
+    triggerUpdate(false, true);
   },
 });
 
@@ -648,8 +650,17 @@ watch(
 );
 
 watch(
+  () => props.selectedWinery,
+  (value) => {
+    selectedWineryLocal.value = value ?? '';
+  },
+  { immediate: true }
+);
+
+watch(
   () => selectedWineryLocal.value,
-  () => {
+  (value) => {
+    emit('update:selectedWinery', value || null);
     triggerUpdate(true);
   }
 );

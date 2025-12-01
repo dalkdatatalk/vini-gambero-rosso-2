@@ -11,6 +11,7 @@
     <WineDetailFilters
       :wines="winesBySelection"
       v-model="filterStateBinding"
+      v-model:selected-winery="selectedWineryModel"
       :min-score="0"
       :max-score="100"
       @update:results="onFilterResults"
@@ -31,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { navigateTo, useHead, useRoute, useRouter, useSeoMeta } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
@@ -39,6 +40,7 @@ import Footer from '~/components/Footer.vue';
 import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
+import { useWineFiltersState } from '~/composables/useWineFiltersState';
 import {
   getWineMenuItemById,
   isWineMacroCategoryId,
@@ -161,24 +163,21 @@ const baseSortedWines = computed(() => {
   });
 });
 
-const filterState = reactive({
-  query: '',
-  region: null as string | null,
-  grape: null as string | null,
-  abbinamento: null as string | null,
-  score: 0,
-  price: 0,
-});
+const listId = computed(() => currentType.value || 'default');
+const filtersState = useWineFiltersState(`type-${listId.value}`);
 
 const filterStateBinding = computed({
-  get: () => filterState,
+  get: () => filtersState.value,
   set: (value) => {
-    filterState.query = value?.query ?? '';
-    filterState.region = value?.region ?? null;
-    filterState.grape = value?.grape ?? null;
-    filterState.abbinamento = value?.abbinamento ?? null;
-    filterState.score = Number.isFinite(value?.score) ? Number(value?.score) : 0;
-    filterState.price = Number.isFinite(value?.price) ? Number(value?.price) : 0;
+    if (!value) return;
+    Object.assign(filtersState.value, value);
+  },
+});
+
+const selectedWineryModel = computed({
+  get: () => filtersState.value.selectedWinery,
+  set: (value: string | null) => {
+    filtersState.value.selectedWinery = value;
   },
 });
 
