@@ -16,13 +16,26 @@
         <ComboboxRoot
           v-model="regionModel"
           :aria-labelledby="`region-combobox-label-${componentId}`"
+          class="combobox-root"
         >
-          <ComboboxAnchor>
-            <ComboboxInput :placeholder="regionLabel" />
-            <ComboboxTrigger aria-label="Apri elenco regioni" />
+          <ComboboxAnchor class="combobox-anchor">
+            <ComboboxInput
+              class="combobox-input"
+              :placeholder="regionLabel"
+            />
+            <ComboboxTrigger
+              class="combobox-trigger"
+              aria-label="Apri elenco regioni"
+            >
+              <span class="dropdown-icon" aria-hidden="true">
+                <svg viewBox="0 0 15 13" fill="none">
+                  <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+                </svg>
+              </span>
+            </ComboboxTrigger>
           </ComboboxAnchor>
 
-          <ComboboxContent>
+          <ComboboxContent class="combobox-content">
             <ComboboxViewport>
               <ComboboxItem
                 v-for="option in regionOptions"
@@ -102,13 +115,26 @@
         <ComboboxRoot
           v-model="grapeModel"
           :aria-labelledby="`grape-combobox-label-${componentId}`"
+          class="combobox-root"
         >
-          <ComboboxAnchor>
-            <ComboboxInput :placeholder="grapeLabel" />
-            <ComboboxTrigger aria-label="Apri elenco vitigni" />
+          <ComboboxAnchor class="combobox-anchor">
+            <ComboboxInput
+              class="combobox-input"
+              :placeholder="grapeLabel"
+            />
+            <ComboboxTrigger
+              class="combobox-trigger"
+              aria-label="Apri elenco vitigni"
+            >
+              <span class="dropdown-icon" aria-hidden="true">
+                <svg viewBox="0 0 15 13" fill="none">
+                  <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+                </svg>
+              </span>
+            </ComboboxTrigger>
           </ComboboxAnchor>
 
-          <ComboboxContent>
+          <ComboboxContent class="combobox-content">
             <ComboboxViewport>
               <ComboboxItem
                 v-for="option in grapeOptions"
@@ -134,13 +160,26 @@
         <ComboboxRoot
           v-model="pairingModel"
           :aria-labelledby="`pairing-combobox-label-${componentId}`"
+          class="combobox-root"
         >
-          <ComboboxAnchor>
-            <ComboboxInput :placeholder="pairingLabel" />
-            <ComboboxTrigger aria-label="Apri elenco abbinamenti" />
+          <ComboboxAnchor class="combobox-anchor">
+            <ComboboxInput
+              class="combobox-input"
+              :placeholder="pairingLabel"
+            />
+            <ComboboxTrigger
+              class="combobox-trigger"
+              aria-label="Apri elenco abbinamenti"
+            >
+              <span class="dropdown-icon" aria-hidden="true">
+                <svg viewBox="0 0 15 13" fill="none">
+                  <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+                </svg>
+              </span>
+            </ComboboxTrigger>
           </ComboboxAnchor>
 
-          <ComboboxContent>
+          <ComboboxContent class="combobox-content">
             <ComboboxViewport>
               <ComboboxItem
                 v-for="option in pairingOptions"
@@ -165,13 +204,26 @@
         <ComboboxRoot
           v-model="selectedWineryLocal"
           :aria-labelledby="`winery-combobox-label-${componentId}`"
+          class="combobox-root"
         >
-          <ComboboxAnchor>
-            <ComboboxInput placeholder="Tutte le cantine" />
-            <ComboboxTrigger aria-label="Apri elenco cantine" />
+          <ComboboxAnchor class="combobox-anchor">
+            <ComboboxInput
+              class="combobox-input"
+              placeholder="Tutte le cantine"
+            />
+            <ComboboxTrigger
+              class="combobox-trigger"
+              aria-label="Apri elenco cantine"
+            >
+              <span class="dropdown-icon" aria-hidden="true">
+                <svg viewBox="0 0 15 13" fill="none">
+                  <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+                </svg>
+              </span>
+            </ComboboxTrigger>
           </ComboboxAnchor>
 
-          <ComboboxContent>
+          <ComboboxContent class="combobox-content">
             <ComboboxViewport>
               <ComboboxItem :value="''">
                 Tutte le cantine
@@ -1110,6 +1162,54 @@ function parsePriceRangeText(text: string): number[] {
   background: #ca1f1e;
   cursor: pointer;
   border: 2px solid #290005;
+}
+
+.combobox-root {
+  position: relative;
+  width: 100%;
+}
+
+.combobox-anchor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--rosso-scuro);
+  border-radius: 20px;
+  padding: 8px 12px;
+}
+
+.combobox-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font: inherit;
+  color: inherit;
+}
+
+.combobox-trigger {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dropdown-icon {
+  display: inline-flex;
+  width: 14px;
+  height: 12px;
+}
+
+.combobox-content {
+  position: absolute;
+  width: 100%;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 10;
+  background: #fff;
+  border: 1px solid var(--rosso-scuro);
+  border-radius: 12px;
 }
 
 .filter-input {
