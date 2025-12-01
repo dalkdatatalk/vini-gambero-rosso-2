@@ -35,12 +35,7 @@ const ctaHref = computed(() => {
 const router = useRouter();
 
 const onGoBack = () => {
-  if (process.client && window.history.state && window.history.state.position > 0) {
-    router.back();
-    return;
-  }
-
-  router.push(ctaHref.value);
+  router.back();
 };
 
 const hasAward = computed(() => Boolean(props.premioName?.trim().length));
