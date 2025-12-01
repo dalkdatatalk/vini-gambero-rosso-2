@@ -168,23 +168,57 @@
       </div>
 
       <div class="filter-item filter-item--winery">
-        <label for="winery-filter" class="filter-label">Cantina</label>
-        <select
-          id="winery-filter"
-          class="filter-dropdown"
-          v-model="selectedWineryLocal"
+        <label
+          :id="`winery-combobox-label-${componentId}`"
+          class="filter-label"
         >
-          <option value="">
-            Tutte le cantine
-          </option>
-          <option
-            v-for="winery in wineryOptions"
-            :key="winery"
-            :value="winery"
-          >
-            {{ winery }}
-          </option>
-        </select>
+          Cantina
+        </label>
+
+        <ComboboxRoot
+          v-model="selectedWineryLocal"
+          class="filter-dropdown combobox-root"
+          :aria-labelledby="`winery-combobox-label-${componentId}`"
+        >
+          <ComboboxAnchor class="combobox-anchor">
+            <ComboboxInput
+              class="combobox-input"
+              placeholder="Tutte le cantine"
+            />
+            <ComboboxTrigger
+              class="combobox-trigger"
+              aria-label="Apri elenco cantine"
+            >
+              <svg viewBox="0 0 15 13" fill="none" aria-hidden="true">
+                <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+              </svg>
+            </ComboboxTrigger>
+          </ComboboxAnchor>
+
+          <ComboboxContent class="dropdown-menu">
+            <ComboboxViewport class="dropdown-menu__viewport">
+              <ComboboxItem
+                :value="''"
+                class="dropdown-item"
+              >
+                <span class="dropdown-item-button">
+                  Tutte le cantine
+                </span>
+              </ComboboxItem>
+
+              <ComboboxItem
+                v-for="winery in wineryOptions"
+                :key="winery"
+                :value="winery"
+                class="dropdown-item"
+              >
+                <span class="dropdown-item-button">
+                  {{ winery }}
+                </span>
+              </ComboboxItem>
+            </ComboboxViewport>
+          </ComboboxContent>
+        </ComboboxRoot>
       </div>
 
       <div class="filter-item filter-item--search">
@@ -205,6 +239,15 @@
 <script setup lang="ts">
 import { useWines } from '~/composables/useWines';
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
+import {
+  ComboboxAnchor,
+  ComboboxContent,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxRoot,
+  ComboboxTrigger,
+  ComboboxViewport,
+} from 'radix-vue';
 
 const props = defineProps<{
   wines: any[];
