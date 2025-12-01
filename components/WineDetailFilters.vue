@@ -361,7 +361,7 @@ const computedMaxPrice = computed(() => {
 
 const regions = computed(() => {
   const values = new Set<string>();
-  for (const wine of props.wines ?? []) {
+  for (const wine of filteredWinesForFacet('region')) {
     for (const name of extractRegions(wine)) {
       if (name) {
         values.add(name);
@@ -373,7 +373,7 @@ const regions = computed(() => {
 
 const grapes = computed(() => {
   const values = new Set<string>();
-  for (const wine of props.wines ?? []) {
+  for (const wine of filteredWinesForFacet('grape')) {
     for (const name of extractGrapes(wine)) {
       if (name) {
         values.add(name);
@@ -385,7 +385,7 @@ const grapes = computed(() => {
 
 const pairings = computed(() => {
   const values = new Set<string>();
-  for (const wine of props.wines ?? []) {
+  for (const wine of filteredWinesForFacet('pairing')) {
     for (const name of extractPairingTags(wine)) {
       if (name) {
         values.add(name);
@@ -397,7 +397,7 @@ const pairings = computed(() => {
 
 const wineries = computed(() => {
   const values = new Set<string>();
-  for (const wine of props.wines ?? []) {
+  for (const wine of filteredWinesForFacet('winery')) {
     const name = extractWineryName(wine);
     if (name) {
       values.add(name);
@@ -630,6 +630,36 @@ watch(
   }
 );
 
+watch(
+  regions,
+  (options) => {
+    if (internalState.region && !options.includes(internalState.region)) {
+      internalState.region = null;
+      triggerUpdate(true);
+    }
+  }
+);
+
+watch(
+  grapes,
+  (options) => {
+    if (internalState.grape && !options.includes(internalState.grape)) {
+      internalState.grape = null;
+      triggerUpdate(true);
+    }
+  }
+);
+
+watch(
+  pairings,
+  (options) => {
+    if (internalState.abbinamento && !options.includes(internalState.abbinamento)) {
+      internalState.abbinamento = null;
+      triggerUpdate(true);
+    }
+  }
+);
+
 function clampScore(value: number) {
   const min = computedMinScore.value;
   const max = computedMaxScore.value;
@@ -642,6 +672,86 @@ function clampPrice(value: number) {
   const max = computedMaxPrice.value;
   const normalized = Number.isFinite(value) ? value : min;
   return Math.min(Math.max(normalized, min), max);
+}
+
+function matchesRegion(wine: any, region: string | null): boolean {
+  if (!region) {
+    return true;
+  }
+  const regionNeedle = norm(region);
+  return extractRegions(wine).some((value) => norm(value) === regionNeedle);
+}
+
+function matchesGrape(wine: any, grape: string | null): boolean {
+  if (!grape) {
+    return true;
+  }
+  const grapeNeedle = norm(grape);
+  return extractGrapes(wine).some((value) => norm(value) === grapeNeedle);
+}
+
+function matchesPairing(wine: any, pairing: string | null): boolean {
+  if (!pairing) {
+    return true;
+  }
+  const pairingNeedle = norm(pairing);
+  return extractPairingTags(wine).some((value) => norm(value) === pairingNeedle);
+}
+
+function matchesWinery(wine: any, winery: string | null): boolean {
+  if (!winery) {
+    return true;
+  }
+  const wineryNeedle = norm(winery);
+  const wineryName = extractWineryName(wine);
+  return Boolean(wineryName && norm(wineryName) === wineryNeedle);
+}
+
+function matchesScore(wine: any, score: number): boolean {
+  const minimumScore = Number.isFinite(score) ? score : computedMinScore.value;
+  const scoreValue = toNumber(wine?.vino_centesimi ?? wine?.score);
+  return scoreValue >= minimumScore;
+}
+
+function matchesPrice(wine: any, price: number): boolean {
+  if (price <= computedMinPrice.value) {
+    return true;
+  }
+  const minimumPrice = Number.isFinite(price) ? price : computedMinPrice.value;
+  const priceValue = getWinePrice(wine);
+  return priceValue != null && priceValue >= minimumPrice;
+}
+
+function matchesQuery(wine: any, query: string): boolean {
+  const queryNeedle = norm(query);
+  if (!queryNeedle) {
+    return true;
+  }
+  const tokens = collectSearchTokens(wine).map((token) => norm(token));
+  return tokens.some((token) => token.includes(queryNeedle));
+}
+
+function filteredWinesForFacet(exclude: 'region' | 'grape' | 'pairing' | 'winery') {
+  const regionFilter = exclude === 'region' ? null : internalState.region;
+  const grapeFilter = exclude === 'grape' ? null : internalState.grape;
+  const pairingFilter = exclude === 'pairing' ? null : internalState.abbinamento;
+  const wineryFilter =
+    exclude === 'winery'
+      ? null
+      : selectedWineryLocal.value === ALL_WINERY_VALUE
+        ? null
+        : selectedWineryLocal.value;
+
+  return (props.wines ?? []).filter(
+    (wine) =>
+      matchesRegion(wine, regionFilter) &&
+      matchesGrape(wine, grapeFilter) &&
+      matchesPairing(wine, pairingFilter) &&
+      matchesWinery(wine, wineryFilter) &&
+      matchesScore(wine, internalState.score) &&
+      matchesPrice(wine, internalState.price) &&
+      matchesQuery(wine, internalState.query)
+  );
 }
 
 function toNumber(value: unknown): number {
@@ -849,70 +959,18 @@ function applyFilters(
     price: number;
   }
 ) {
-  const minimumScore = Number.isFinite(state.score) ? state.score : 0;
-  const minimumPrice = Number.isFinite(state.price) ? state.price : computedMinPrice.value;
-  const regionNeedle = norm(state.region);
-  const grapeNeedle = norm(state.grape);
-  const pairingNeedle = norm(state.abbinamento);
   const wineryValue =
     selectedWineryLocal.value === ALL_WINERY_VALUE ? null : selectedWineryLocal.value;
-  const wineryNeedle = norm(wineryValue);
-  const queryNeedle = norm(state.query);
 
-  return wines.filter((wine) => {
-    const scoreValue = toNumber(wine?.vino_centesimi ?? wine?.score);
-    if (scoreValue < minimumScore) {
-      return false;
-    }
-
-    if (minimumPrice > computedMinPrice.value) {
-      const priceValue = getWinePrice(wine);
-      if (priceValue == null || priceValue < minimumPrice) {
-        return false;
-      }
-    }
-
-    if (regionNeedle) {
-      const regionsList = extractRegions(wine);
-      const match = regionsList.some((item) => norm(item) === regionNeedle);
-      if (!match) {
-        return false;
-      }
-    }
-
-    if (grapeNeedle) {
-      const grapesList = extractGrapes(wine);
-      const match = grapesList.some((item) => norm(item) === grapeNeedle);
-      if (!match) {
-        return false;
-      }
-    }
-
-    if (pairingNeedle) {
-      const pairingsList = extractPairingTags(wine);
-      const match = pairingsList.some((item) => norm(item) === pairingNeedle);
-      if (!match) {
-        return false;
-      }
-    }
-
-    if (wineryNeedle) {
-      const wineryName = extractWineryName(wine);
-      if (!wineryName || norm(wineryName) !== wineryNeedle) {
-        return false;
-      }
-    }
-
-    if (queryNeedle) {
-      const tokens = collectSearchTokens(wine).map((token) => norm(token));
-      const match = tokens.some((token) => token.includes(queryNeedle));
-      if (!match) {
-        return false;
-      }
-    }
-
-    return true;
-  });
+  return wines.filter((wine) =>
+    matchesRegion(wine, state.region) &&
+    matchesGrape(wine, state.grape) &&
+    matchesPairing(wine, state.abbinamento) &&
+    matchesWinery(wine, wineryValue) &&
+    matchesScore(wine, state.score) &&
+    matchesPrice(wine, state.price) &&
+    matchesQuery(wine, state.query)
+  );
 }
 
 function getWinePrice(wine: any): number | null {
