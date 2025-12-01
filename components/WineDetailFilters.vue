@@ -21,7 +21,7 @@
           <ComboboxAnchor class="combobox-anchor">
             <ComboboxInput
               class="combobox-input"
-              :placeholder="regionLabel"
+              placeholder="Regione"
             />
             <ComboboxTrigger
               class="combobox-trigger"
@@ -121,7 +121,7 @@
           <ComboboxAnchor class="combobox-anchor">
             <ComboboxInput
               class="combobox-input"
-              :placeholder="grapeLabel"
+              placeholder="Vitigno"
             />
             <ComboboxTrigger
               class="combobox-trigger"
@@ -167,7 +167,7 @@
           <ComboboxAnchor class="combobox-anchor">
             <ComboboxInput
               class="combobox-input"
-              :placeholder="pairingLabel"
+              placeholder="Abbinamenti"
             />
             <ComboboxTrigger
               class="combobox-trigger"
@@ -197,22 +197,15 @@
       </div>
 
       <div class="filter-item filter-item--winery">
-        <label
-          :id="`winery-combobox-label-${componentId}`"
-          class="filter-label"
-        >
-          Cantina
-        </label>
-
         <ComboboxRoot
           v-model="selectedWineryLocal"
-          :aria-labelledby="`winery-combobox-label-${componentId}`"
+          aria-label="Cantina"
           class="combobox-root"
         >
           <ComboboxAnchor class="combobox-anchor">
             <ComboboxInput
               class="combobox-input"
-              placeholder="Tutte le cantine"
+              placeholder="Cantina"
             />
             <ComboboxTrigger
               class="combobox-trigger"
@@ -499,10 +492,6 @@ const regionOptions = computed(() => ['Tutte', ...regions.value]);
 const grapeOptions = computed(() => ['Tutti', ...grapes.value]);
 const pairingOptions = computed(() => ['Tutti gli abbinamenti', ...pairings.value]);
 const wineryOptions = computed(() => wineries.value);
-const regionLabel = computed(() => regionModel.value || 'Tutte');
-const grapeLabel = computed(() => grapeModel.value || 'Tutti');
-const pairingLabel = computed(() => pairingModel.value || 'Tutti gli abbinamenti');
-
 const priceStep = computed(() => {
   const span = computedMaxPrice.value - computedMinPrice.value;
   if (span <= 20) {
