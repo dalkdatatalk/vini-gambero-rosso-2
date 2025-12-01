@@ -1209,6 +1209,8 @@ function parsePriceRangeText(text: string): number[] {
   border: 1px solid var(--rosso-scuro);
   border-radius: 12px;
   padding: 2rem 1rem;
+  max-height: 320px;
+  overflow-y: auto;
 }
 
 .combobox-viewport {
