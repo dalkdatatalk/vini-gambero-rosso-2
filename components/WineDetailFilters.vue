@@ -40,7 +40,7 @@
               <ComboboxItem
                 v-for="option in regionOptions"
                 :key="option"
-                :value="option === 'Tutte' ? '' : option"
+                :value="option === 'Tutte' ? ALL_REGION_VALUE : option"
                 class="combobox-item"
               >
                 {{ option }}
@@ -140,7 +140,7 @@
               <ComboboxItem
                 v-for="option in grapeOptions"
                 :key="option"
-                :value="option === 'Tutti' ? '' : option"
+                :value="option === 'Tutti' ? ALL_GRAPE_VALUE : option"
                 class="combobox-item"
               >
                 {{ option }}
@@ -186,7 +186,7 @@
               <ComboboxItem
                 v-for="option in pairingOptions"
                 :key="option"
-                :value="option === 'Tutti gli abbinamenti' ? '' : option"
+                :value="option === 'Tutti gli abbinamenti' ? ALL_PAIRING_VALUE : option"
                 class="combobox-item"
               >
                 {{ option }}
@@ -221,7 +221,7 @@
 
           <ComboboxContent class="combobox-content">
             <ComboboxViewport class="combobox-viewport">
-              <ComboboxItem :value="''" class="combobox-item">
+              <ComboboxItem :value="ALL_WINERY_VALUE" class="combobox-item">
                 Tutte le cantine
               </ComboboxItem>
 
@@ -264,6 +264,11 @@ import {
   ComboboxTrigger,
   ComboboxViewport,
 } from 'radix-vue';
+
+const ALL_REGION_VALUE = 'Regioni';
+const ALL_GRAPE_VALUE = 'Vitigni';
+const ALL_PAIRING_VALUE = 'Abbinamenti';
+const ALL_WINERY_VALUE = 'Cantine';
 
 const props = defineProps<{
   wines: any[];
@@ -401,28 +406,29 @@ const wineries = computed(() => {
   return Array.from(values).sort((a, b) => a.localeCompare(b));
 });
 
-const selectedWineryLocal = ref('');
+const selectedWineryLocal = ref(ALL_WINERY_VALUE);
 
 const regionModel = computed({
-  get: () => internalState.region ?? '',
+  get: () => internalState.region ?? ALL_REGION_VALUE,
   set: (value: string) => {
-    internalState.region = value ? value : null;
+    internalState.region = !value || value === ALL_REGION_VALUE ? null : value;
     triggerUpdate(true);
   },
 });
 
 const grapeModel = computed({
-  get: () => internalState.grape ?? '',
+  get: () => internalState.grape ?? ALL_GRAPE_VALUE,
   set: (value: string) => {
-    internalState.grape = value ? value : null;
+    internalState.grape = !value || value === ALL_GRAPE_VALUE ? null : value;
     triggerUpdate(true);
   },
 });
 
 const pairingModel = computed({
-  get: () => internalState.abbinamento ?? '',
+  get: () => internalState.abbinamento ?? ALL_PAIRING_VALUE,
   set: (value: string) => {
-    internalState.abbinamento = value ? value : null;
+    internalState.abbinamento =
+      !value || value === ALL_PAIRING_VALUE ? null : value;
     triggerUpdate(true);
   },
 });
@@ -614,8 +620,12 @@ watch(
 watch(
   () => wineryOptions.value,
   (options) => {
-    if (selectedWineryLocal.value && !options.includes(selectedWineryLocal.value)) {
-      selectedWineryLocal.value = '';
+    if (
+      selectedWineryLocal.value !== ALL_WINERY_VALUE &&
+      selectedWineryLocal.value &&
+      !options.includes(selectedWineryLocal.value)
+    ) {
+      selectedWineryLocal.value = ALL_WINERY_VALUE;
     }
   }
 );
@@ -844,7 +854,9 @@ function applyFilters(
   const regionNeedle = norm(state.region);
   const grapeNeedle = norm(state.grape);
   const pairingNeedle = norm(state.abbinamento);
-  const wineryNeedle = norm(selectedWineryLocal.value);
+  const wineryValue =
+    selectedWineryLocal.value === ALL_WINERY_VALUE ? null : selectedWineryLocal.value;
+  const wineryNeedle = norm(wineryValue);
   const queryNeedle = norm(state.query);
 
   return wines.filter((wine) => {
