@@ -279,6 +279,7 @@ const props = defineProps<{
     score: number;
     price: number;
   };
+  selectedWinery?: string | null;
 }>();
 
 const emit = defineEmits<{
@@ -294,6 +295,7 @@ const emit = defineEmits<{
     }
   ): void;
   (e: 'update:results', value: any[]): void;
+  (e: 'update:selectedWinery', value: string | null): void;
 }>();
 
 const internalState = reactive({
@@ -401,7 +403,7 @@ const wineries = computed(() => {
   return Array.from(values).sort((a, b) => a.localeCompare(b));
 });
 
-const selectedWineryLocal = ref('');
+const selectedWineryLocal = ref(props.selectedWinery ?? '');
 
 const regionModel = computed({
   get: () => internalState.region ?? '',
@@ -606,9 +608,21 @@ watch(
 
 watch(
   () => selectedWineryLocal.value,
-  () => {
+  (value) => {
+    emit('update:selectedWinery', value ? value : null);
     triggerUpdate(true);
   }
+);
+
+watch(
+  () => props.selectedWinery,
+  (value) => {
+    const normalized = value ?? '';
+    if (normalized !== selectedWineryLocal.value) {
+      selectedWineryLocal.value = normalized;
+    }
+  },
+  { immediate: true }
 );
 
 watch(

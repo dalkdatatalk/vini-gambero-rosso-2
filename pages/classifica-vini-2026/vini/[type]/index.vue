@@ -11,6 +11,7 @@
     <WineDetailFilters
       :wines="winesBySelection"
       v-model="filterStateBinding"
+      v-model:selectedWinery="selectedWineryModel"
       :min-score="0"
       :max-score="100"
       @update:results="onFilterResults"
@@ -31,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { navigateTo, useHead, useRoute, useRouter, useSeoMeta } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
@@ -47,6 +48,7 @@ import {
 } from '~/lib/wineMenuItems';
 import rawWines from '~/data/wines.json';
 import { buildWineProductJsonLdNode } from '~/utils/structuredData';
+import { useWineFiltersState } from '~/composables/useWineFiltersState';
 
 const BEREBENE_YEAR = 2026 as const;
 
@@ -161,24 +163,30 @@ const baseSortedWines = computed(() => {
   });
 });
 
-const filterState = reactive({
-  query: '',
-  region: null as string | null,
-  grape: null as string | null,
-  abbinamento: null as string | null,
-  score: 0,
-  price: 0,
-});
+const listId = (route.params.type as string) || 'default';
+const { state: filtersState } = useWineFiltersState(listId);
 
 const filterStateBinding = computed({
-  get: () => filterState,
+  get: () => ({
+    query: filtersState.value.query,
+    region: filtersState.value.region,
+    grape: filtersState.value.grape,
+    abbinamento: filtersState.value.abbinamento,
+    score: filtersState.value.score,
+    price: filtersState.value.price,
+  }),
   set: (value) => {
-    filterState.query = value?.query ?? '';
-    filterState.region = value?.region ?? null;
-    filterState.grape = value?.grape ?? null;
-    filterState.abbinamento = value?.abbinamento ?? null;
-    filterState.score = Number.isFinite(value?.score) ? Number(value?.score) : 0;
-    filterState.price = Number.isFinite(value?.price) ? Number(value?.price) : 0;
+    filtersState.value = {
+      ...filtersState.value,
+      ...value,
+    };
+  },
+});
+
+const selectedWineryModel = computed({
+  get: () => filtersState.value.selectedWinery,
+  set: (value: string | null) => {
+    filtersState.value.selectedWinery = value;
   },
 });
 
