@@ -559,7 +559,10 @@ watch(
     internalState.score = clampScore(incomingScore);
     const incomingPrice = Number.isFinite(value?.price) ? Number(value?.price) : computedMinPrice.value;
     internalState.price = clampPrice(incomingPrice);
-    triggerUpdate(true, true);
+    // sincronizziamo lo stato interno e i risultati,
+    // ma NON vogliamo ri-emettere update:modelValue verso il parent
+    // per evitare loop reattivi
+    triggerUpdate(true);
     syncing = false;
   },
   { immediate: true, deep: true }
