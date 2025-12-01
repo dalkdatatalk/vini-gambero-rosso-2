@@ -1182,6 +1182,10 @@ function parsePriceRangeText(text: string): number[] {
   padding: 8px 12px;
 }
 
+.combobox-anchor:hover {
+  cursor: pointer;
+}
+
 .combobox-input {
   flex: 1;
   border: none;
@@ -1225,6 +1229,11 @@ function parsePriceRangeText(text: string): number[] {
 
 .combobox-item {
   padding: 0;
+}
+
+.combobox-item:hover {
+  cursor: pointer;
+  background-color: color-mix(in srgb, var(--rosso) 20%, transparent);
 }
 
 .filter-input {
