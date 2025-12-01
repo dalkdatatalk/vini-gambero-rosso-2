@@ -610,7 +610,6 @@ watch(
   () => selectedWineryLocal.value,
   (value) => {
     emit('update:selectedWinery', value ? value : null);
-    triggerUpdate(true);
   }
 );
 
