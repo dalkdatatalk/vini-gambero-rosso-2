@@ -167,15 +167,10 @@ const listId = (route.params.type as string) || 'default';
 const { state: filtersState } = useWineFiltersState(listId);
 
 const filterStateBinding = computed({
-  get: () => ({
-    query: filtersState.value.query,
-    region: filtersState.value.region,
-    grape: filtersState.value.grape,
-    abbinamento: filtersState.value.abbinamento,
-    score: filtersState.value.score,
-    price: filtersState.value.price,
-  }),
+  get: () => filtersState.value,
   set: (value) => {
+    if (!value) return;
+
     filtersState.value = {
       ...filtersState.value,
       ...value,
