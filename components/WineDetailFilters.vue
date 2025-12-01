@@ -1209,6 +1209,17 @@ function parsePriceRangeText(text: string): number[] {
   border: 1px solid var(--rosso-scuro);
   border-radius: 12px;
   padding: 2rem 1rem;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  .combobox-content {
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+  }
 }
 
 .combobox-viewport {
