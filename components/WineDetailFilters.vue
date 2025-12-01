@@ -36,11 +36,12 @@
           </ComboboxAnchor>
 
           <ComboboxContent class="combobox-content">
-            <ComboboxViewport>
+            <ComboboxViewport class="combobox-viewport">
               <ComboboxItem
                 v-for="option in regionOptions"
                 :key="option"
                 :value="option === 'Tutte' ? '' : option"
+                class="combobox-item"
               >
                 {{ option }}
               </ComboboxItem>
@@ -135,11 +136,12 @@
           </ComboboxAnchor>
 
           <ComboboxContent class="combobox-content">
-            <ComboboxViewport>
+            <ComboboxViewport class="combobox-viewport">
               <ComboboxItem
                 v-for="option in grapeOptions"
                 :key="option"
                 :value="option === 'Tutti' ? '' : option"
+                class="combobox-item"
               >
                 {{ option }}
               </ComboboxItem>
@@ -180,11 +182,12 @@
           </ComboboxAnchor>
 
           <ComboboxContent class="combobox-content">
-            <ComboboxViewport>
+            <ComboboxViewport class="combobox-viewport">
               <ComboboxItem
                 v-for="option in pairingOptions"
                 :key="option"
                 :value="option === 'Tutti gli abbinamenti' ? '' : option"
+                class="combobox-item"
               >
                 {{ option }}
               </ComboboxItem>
@@ -224,8 +227,8 @@
           </ComboboxAnchor>
 
           <ComboboxContent class="combobox-content">
-            <ComboboxViewport>
-              <ComboboxItem :value="''">
+            <ComboboxViewport class="combobox-viewport">
+              <ComboboxItem :value="''" class="combobox-item">
                 Tutte le cantine
               </ComboboxItem>
 
@@ -233,6 +236,7 @@
                 v-for="winery in wineryOptions"
                 :key="winery"
                 :value="winery"
+                class="combobox-item"
               >
                 {{ winery }}
               </ComboboxItem>
@@ -1210,6 +1214,17 @@ function parsePriceRangeText(text: string): number[] {
   background: #fff;
   border: 1px solid var(--rosso-scuro);
   border-radius: 12px;
+  padding: 2rem 1rem;
+}
+
+.combobox-viewport {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.combobox-item {
+  padding: 0;
 }
 
 .filter-input {
