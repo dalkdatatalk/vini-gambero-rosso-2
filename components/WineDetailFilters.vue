@@ -1,44 +1,53 @@
 <template>
   <section
-    ref="rootRef"
     class="filters filters--details"
     aria-label="Filtri di dettaglio vini"
   >
     <div class="filter-controls">
       <!-- 1 Regione -->
-      <div class="filter-item">
-        <p class="filter-label">Regione</p>
-        <button
-          type="button"
-          class="filter-dropdown"
-          :aria-expanded="dropdownState.region ? 'true' : 'false'"
-          :aria-controls="regionDropdownId"
-          @click.stop="toggleDropdown('region')"
+      <div class="filter-item filter-item--region">
+        <label
+          :id="`region-combobox-label-${componentId}`"
+          class="filter-label visually-hidden"
         >
-          <span>{{ regionLabel }}</span>
-          <span
-            class="dropdown-icon"
-            :class="{ 'dropdown-icon--open': dropdownState.region }"
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 15 13" fill="none">
-              <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
-            </svg>
-          </span>
-        </button>
-        <ul
-          v-if="dropdownState.region"
-          :id="regionDropdownId"
-          class="dropdown-menu"
-          role="listbox"
-          @click.stop
+          Regione
+        </label>
+
+        <ComboboxRoot
+          v-model="regionModel"
+          :aria-labelledby="`region-combobox-label-${componentId}`"
+          class="combobox-root"
         >
-          <li v-for="option in regionOptions" :key="option" class="dropdown-item">
-            <button type="button" class="dropdown-item-button" @click="selectRegion(option)">
-              {{ option }}
-            </button>
-          </li>
-        </ul>
+          <ComboboxAnchor class="combobox-anchor">
+            <ComboboxInput
+              class="combobox-input"
+              placeholder="Regione"
+            />
+            <ComboboxTrigger
+              class="combobox-trigger"
+              aria-label="Apri elenco regioni"
+            >
+              <span class="dropdown-icon" aria-hidden="true">
+                <svg viewBox="0 0 15 13" fill="none">
+                  <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+                </svg>
+              </span>
+            </ComboboxTrigger>
+          </ComboboxAnchor>
+
+          <ComboboxContent class="combobox-content">
+            <ComboboxViewport class="combobox-viewport">
+              <ComboboxItem
+                v-for="option in regionOptions"
+                :key="option"
+                :value="option === 'Tutte' ? '' : option"
+                class="combobox-item"
+              >
+                {{ option }}
+              </ComboboxItem>
+            </ComboboxViewport>
+          </ComboboxContent>
+        </ComboboxRoot>
       </div>
 
       <!-- Fascia di Prezzo -->
@@ -96,75 +105,137 @@
       </div>
 
       <!-- 3 Vitigno -->
-      <div class="filter-item">
-        <p class="filter-label">Vitigno</p>
-        <button
-          type="button"
-          class="filter-dropdown"
-          :aria-expanded="dropdownState.grape ? 'true' : 'false'"
-          :aria-controls="grapeDropdownId"
-          @click.stop="toggleDropdown('grape')"
+      <div class="filter-item filter-item--grape">
+        <label
+          :id="`grape-combobox-label-${componentId}`"
+          class="filter-label visually-hidden"
         >
-          <span>{{ grapeLabel }}</span>
-          <span
-            class="dropdown-icon"
-            :class="{ 'dropdown-icon--open': dropdownState.grape }"
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 15 13" fill="none">
-              <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
-            </svg>
-          </span>
-        </button>
-        <ul
-          v-if="dropdownState.grape"
-          :id="grapeDropdownId"
-          class="dropdown-menu"
-          role="listbox"
-          @click.stop
+          Vitigno
+        </label>
+
+        <ComboboxRoot
+          v-model="grapeModel"
+          :aria-labelledby="`grape-combobox-label-${componentId}`"
+          class="combobox-root"
         >
-          <li v-for="option in grapeOptions" :key="option" class="dropdown-item">
-            <button type="button" class="dropdown-item-button" @click="selectGrape(option)">
-              {{ option }}
-            </button>
-          </li>
-        </ul>
+          <ComboboxAnchor class="combobox-anchor">
+            <ComboboxInput
+              class="combobox-input"
+              placeholder="Vitigno"
+            />
+            <ComboboxTrigger
+              class="combobox-trigger"
+              aria-label="Apri elenco vitigni"
+            >
+              <span class="dropdown-icon" aria-hidden="true">
+                <svg viewBox="0 0 15 13" fill="none">
+                  <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+                </svg>
+              </span>
+            </ComboboxTrigger>
+          </ComboboxAnchor>
+
+          <ComboboxContent class="combobox-content">
+            <ComboboxViewport class="combobox-viewport">
+              <ComboboxItem
+                v-for="option in grapeOptions"
+                :key="option"
+                :value="option === 'Tutti' ? '' : option"
+                class="combobox-item"
+              >
+                {{ option }}
+              </ComboboxItem>
+            </ComboboxViewport>
+          </ComboboxContent>
+        </ComboboxRoot>
       </div>
 
       <!-- 4 Abbinamento -->
-      <div class="filter-item">
-        <p class="filter-label">Abbinamento</p>
-        <button
-          type="button"
-          class="filter-dropdown"
-          :aria-expanded="dropdownState.pairing ? 'true' : 'false'"
-          :aria-controls="pairingDropdownId"
-          @click.stop="toggleDropdown('pairing')"
+      <div class="filter-item filter-item--pairing">
+        <label
+          :id="`pairing-combobox-label-${componentId}`"
+          class="filter-label visually-hidden"
         >
-          <span>{{ pairingLabel }}</span>
-          <span
-            class="dropdown-icon"
-            :class="{ 'dropdown-icon--open': dropdownState.pairing }"
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 15 13" fill="none">
-              <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
-            </svg>
-          </span>
-        </button>
-        <ul
-          v-if="dropdownState.pairing"
-          :id="pairingDropdownId"
-          class="dropdown-menu"
-          role="listbox"
-          @click.stop
+          Abbinamento
+        </label>
+
+        <ComboboxRoot
+          v-model="pairingModel"
+          :aria-labelledby="`pairing-combobox-label-${componentId}`"
+          class="combobox-root"
         >
-          <li v-for="option in pairingOptions" :key="option" class="dropdown-item">
-            <button type="button" class="dropdown-item-button" @click="selectPairing(option)">
-              {{ option }}
-            </button>
-          </li>
-        </ul>
+          <ComboboxAnchor class="combobox-anchor">
+            <ComboboxInput
+              class="combobox-input"
+              placeholder="Abbinamenti"
+            />
+            <ComboboxTrigger
+              class="combobox-trigger"
+              aria-label="Apri elenco abbinamenti"
+            >
+              <span class="dropdown-icon" aria-hidden="true">
+                <svg viewBox="0 0 15 13" fill="none">
+                  <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+                </svg>
+              </span>
+            </ComboboxTrigger>
+          </ComboboxAnchor>
+
+          <ComboboxContent class="combobox-content">
+            <ComboboxViewport class="combobox-viewport">
+              <ComboboxItem
+                v-for="option in pairingOptions"
+                :key="option"
+                :value="option === 'Tutti gli abbinamenti' ? '' : option"
+                class="combobox-item"
+              >
+                {{ option }}
+              </ComboboxItem>
+            </ComboboxViewport>
+          </ComboboxContent>
+        </ComboboxRoot>
+      </div>
+
+      <div class="filter-item filter-item--winery">
+        <ComboboxRoot
+          v-model="selectedWineryLocal"
+          aria-label="Cantina"
+          class="combobox-root"
+        >
+          <ComboboxAnchor class="combobox-anchor">
+            <ComboboxInput
+              class="combobox-input"
+              placeholder="Cantina"
+            />
+            <ComboboxTrigger
+              class="combobox-trigger"
+              aria-label="Apri elenco cantine"
+            >
+              <span class="dropdown-icon" aria-hidden="true">
+                <svg viewBox="0 0 15 13" fill="none">
+                  <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+                </svg>
+              </span>
+            </ComboboxTrigger>
+          </ComboboxAnchor>
+
+          <ComboboxContent class="combobox-content">
+            <ComboboxViewport class="combobox-viewport">
+              <ComboboxItem :value="''" class="combobox-item">
+                Tutte le cantine
+              </ComboboxItem>
+
+              <ComboboxItem
+                v-for="winery in wineryOptions"
+                :key="winery"
+                :value="winery"
+                class="combobox-item"
+              >
+                {{ winery }}
+              </ComboboxItem>
+            </ComboboxViewport>
+          </ComboboxContent>
+        </ComboboxRoot>
       </div>
 
       <div class="filter-item filter-item--search">
@@ -183,7 +254,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue';
+import {
+  ComboboxAnchor,
+  ComboboxContent,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxRoot,
+  ComboboxTrigger,
+  ComboboxViewport,
+} from 'radix-vue';
 
 const props = defineProps<{
   wines: any[];
@@ -229,9 +309,6 @@ const componentId = Math.random().toString(36).slice(2, 9);
 const scoreInputId = `wine-score-${componentId}`;
 const queryInputId = `wine-query-${componentId}`;
 const priceInputId = `wine-price-${componentId}`;
-const regionDropdownId = `wine-region-menu-${componentId}`;
-const grapeDropdownId = `wine-grape-menu-${componentId}`;
-const pairingDropdownId = `wine-pairing-menu-${componentId}`;
 const computedMinScore = computed(() => Number.isFinite(props.minScore) ? Number(props.minScore) : 0);
 const computedMaxScore = computed(() => Number.isFinite(props.maxScore) ? Number(props.maxScore) : 100);
 
@@ -312,6 +389,19 @@ const pairings = computed(() => {
   }
   return Array.from(values).sort((a, b) => a.localeCompare(b));
 });
+
+const wineries = computed(() => {
+  const values = new Set<string>();
+  for (const wine of props.wines ?? []) {
+    const name = extractWineryName(wine);
+    if (name) {
+      values.add(name);
+    }
+  }
+  return Array.from(values).sort((a, b) => a.localeCompare(b));
+});
+
+const selectedWineryLocal = ref('');
 
 const regionModel = computed({
   get: () => internalState.region ?? '',
@@ -401,10 +491,7 @@ onBeforeUnmount(() => {
 const regionOptions = computed(() => ['Tutte', ...regions.value]);
 const grapeOptions = computed(() => ['Tutti', ...grapes.value]);
 const pairingOptions = computed(() => ['Tutti gli abbinamenti', ...pairings.value]);
-const regionLabel = computed(() => regionModel.value || 'Tutte');
-const grapeLabel = computed(() => grapeModel.value || 'Tutti');
-const pairingLabel = computed(() => pairingModel.value || 'Tutti gli abbinamenti');
-
+const wineryOptions = computed(() => wineries.value);
 const priceStep = computed(() => {
   const span = computedMaxPrice.value - computedMinPrice.value;
   if (span <= 20) {
@@ -424,59 +511,6 @@ const priceFormatter = new Intl.NumberFormat('it-IT', {
 
 const priceMinLabel = computed(() => priceFormatter.format(computedMinPrice.value));
 const priceValueLabel = computed(() => priceFormatter.format(priceModel.value));
-
-type DropdownKey = 'region' | 'grape' | 'pairing';
-const dropdownKeys: DropdownKey[] = ['region', 'grape', 'pairing'];
-
-const dropdownState = reactive({
-  region: false,
-  grape: false,
-  pairing: false,
-});
-
-const rootRef = ref<HTMLElement | null>(null);
-
-function toggleDropdown(type: DropdownKey) {
-  for (const key of dropdownKeys) {
-    if (key === type) {
-      dropdownState[key] = !dropdownState[key];
-    } else {
-      dropdownState[key] = false;
-    }
-  }
-}
-
-function closeDropdowns() {
-  for (const key of dropdownKeys) {
-    dropdownState[key] = false;
-  }
-}
-
-function selectRegion(option: string) {
-  regionModel.value = option === 'Tutte' ? '' : option;
-  closeDropdowns();
-}
-
-function selectGrape(option: string) {
-  grapeModel.value = option === 'Tutti' ? '' : option;
-  closeDropdowns();
-}
-
-function selectPairing(option: string) {
-  pairingModel.value = option === 'Tutti gli abbinamenti' ? '' : option;
-  closeDropdowns();
-}
-
-function handleDocumentClick(event: MouseEvent) {
-  if (!rootRef.value) {
-    return;
-  }
-  const target = event.target as Node | null;
-  if (target && rootRef.value.contains(target)) {
-    return;
-  }
-  closeDropdowns();
-}
 
 let syncing = false;
 let debounceHandle: ReturnType<typeof setTimeout> | null = null;
@@ -567,6 +601,22 @@ watch(
   () => {
     internalState.price = clampPrice(internalState.price);
     triggerUpdate(true, true);
+  }
+);
+
+watch(
+  () => selectedWineryLocal.value,
+  () => {
+    triggerUpdate(true);
+  }
+);
+
+watch(
+  () => wineryOptions.value,
+  (options) => {
+    if (selectedWineryLocal.value && !options.includes(selectedWineryLocal.value)) {
+      selectedWineryLocal.value = '';
+    }
   }
 );
 
@@ -716,6 +766,16 @@ function extractPairingTags(wine: any): string[] {
   return Array.from(values);
 }
 
+function extractWineryName(wine: any): string | null {
+  const candidates = [wine?.wineryName, wine?.relatedLocale?.title];
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' && candidate.trim()) {
+      return candidate.trim();
+    }
+  }
+  return null;
+}
+
 function collectSearchTokens(wine: any): string[] {
   const values = new Set<string>();
   const push = (input: unknown) => {
@@ -730,6 +790,7 @@ function collectSearchTokens(wine: any): string[] {
   push(wine?.denominazione);
   push(wine?.content);
   push(wine?.prezzo);
+  push(extractWineryName(wine));
 
   const arrays = [
     wine?.prodotti_denominazione_vino,
@@ -783,6 +844,7 @@ function applyFilters(
   const regionNeedle = norm(state.region);
   const grapeNeedle = norm(state.grape);
   const pairingNeedle = norm(state.abbinamento);
+  const wineryNeedle = norm(selectedWineryLocal.value);
   const queryNeedle = norm(state.query);
 
   return wines.filter((wine) => {
@@ -818,6 +880,13 @@ function applyFilters(
       const pairingsList = extractPairingTags(wine);
       const match = pairingsList.some((item) => norm(item) === pairingNeedle);
       if (!match) {
+        return false;
+      }
+    }
+
+    if (wineryNeedle) {
+      const wineryName = extractWineryName(wine);
+      if (!wineryName || norm(wineryName) !== wineryNeedle) {
         return false;
       }
     }
@@ -938,13 +1007,6 @@ function parsePriceRangeText(text: string): number[] {
   return values;
 }
 
-onMounted(() => {
-  document.addEventListener('click', handleDocumentClick);
-});
-
-onBeforeUnmount(() => {
-  document.removeEventListener('click', handleDocumentClick);
-});
 </script>
 
 <style scoped>
@@ -982,93 +1044,6 @@ onBeforeUnmount(() => {
   color: #290005;
   letter-spacing: -0.72px;
   margin-bottom: 10px;
-}
-
-.filter-dropdown {
-  position: relative;
-  height: 42px;
-  border: 1px solid #290005;
-  border-radius: 10px;
-  opacity: 0.4;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 17px;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-  width: 100%;
-  background: transparent;
-}
-
-.filter-dropdown:hover,
-.filter-dropdown:focus-visible {
-  opacity: 0.6;
-  outline: none;
-}
-
-.filter-dropdown span:first-child {
-  font-family: 'Funnel Sans', sans-serif;
-  font-weight: 400;
-  font-size: 20px;
-  color: #290005;
-  letter-spacing: -0.6px;
-}
-
-.dropdown-icon {
-  width: 17px;
-  height: 17px;
-  transform: rotate(180deg);
-  transition: transform 0.3s ease;
-}
-
-.dropdown-icon--open {
-  transform: rotate(0deg);
-}
-
-.dropdown-icon svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: calc(100% + 5px);
-  left: 0;
-  right: 0;
-  background-color: #f6f6f6;
-  border: 1px solid #290005;
-  border-radius: 10px;
-  z-index: 10;
-  max-height: 220px;
-  overflow-y: auto;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 6px 0;
-}
-
-.dropdown-item {
-  padding: 0 4px;
-}
-
-.dropdown-item-button {
-  width: 100%;
-  background: transparent;
-  border: none;
-  padding: 10px 13px;
-  font-family: 'Funnel Sans', sans-serif;
-  font-weight: 400;
-  font-size: 18px;
-  color: #290005;
-  text-align: left;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
-}
-
-.dropdown-item-button:hover,
-.dropdown-item-button:focus-visible {
-  background-color: rgba(202, 31, 30, 0.1);
-  outline: none;
 }
 
 
@@ -1180,6 +1155,79 @@ onBeforeUnmount(() => {
   background: #ca1f1e;
   cursor: pointer;
   border: 2px solid #290005;
+}
+
+.combobox-root {
+  position: relative;
+  width: 100%;
+}
+
+.combobox-anchor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--rosso-scuro);
+  border-radius: 20px;
+  padding: 8px 12px;
+}
+
+.combobox-anchor:hover {
+  cursor: pointer;
+}
+
+.combobox-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font: inherit;
+  color: inherit;
+}
+
+.combobox-trigger {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dropdown-icon {
+  display: inline-flex;
+  width: 14px;
+  height: 12px;
+  transition: transform 0.2s ease;
+}
+
+.combobox-content {
+  position: absolute;
+  width: 100%;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 10;
+  background: #fff;
+  border: 1px solid var(--rosso-scuro);
+  border-radius: 12px;
+  padding: 2rem 1rem;
+}
+
+.combobox-viewport {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.combobox-item {
+  padding: 0;
+}
+
+.combobox-item:hover {
+  cursor: pointer;
+  background-color: color-mix(in srgb, var(--rosso) 20%, transparent);
+}
+
+.combobox-trigger[data-state='open'] .dropdown-icon {
+  transform: rotate(180deg);
 }
 
 .filter-input {
