@@ -1,13 +1,19 @@
 <template>
   <div class="wine-go-back-cta">
-    <NuxtLink :to="ctaHref" class="wine-go-back-cta__link" :aria-label="ctaLabel">
+    <button
+      type="button"
+      class="wine-go-back-cta__link"
+      :aria-label="ctaLabel"
+      @click="onGoBack"
+    >
       {{ ctaLabel }}
-    </NuxtLink>
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRouter } from '#imports';
 import type { Wine } from '~/composables/useWines';
 import { findWineMenuItemByType } from '~/lib/wineMenuItems';
 
@@ -25,6 +31,17 @@ const ctaHref = computed(() => {
 
   return macroCategoria.value.routePath;
 });
+
+const router = useRouter();
+
+const onGoBack = () => {
+  if (process.client && window.history.state && window.history.state.position > 0) {
+    router.back();
+    return;
+  }
+
+  router.push(ctaHref.value);
+};
 
 const hasAward = computed(() => Boolean(props.premioName?.trim().length));
 
@@ -65,8 +82,10 @@ const ctaLabel = computed(() => {
   color: var(--rosso);
   text-align: left;
   text-decoration: underline;
+  background: none;
   border: none;
   border-radius: 0;
+  cursor: pointer;
   transition: color 0.2s ease;
 }
 
