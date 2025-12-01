@@ -41,6 +41,7 @@ import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
 import { useWineFiltersState } from '~/composables/useWineFiltersState';
+import { useLastWineListRoute } from '~/composables/useLastWineListRoute';
 import {
   getWineMenuItemById,
   isWineMacroCategoryId,
@@ -58,6 +59,7 @@ type RawWineGuideInfo = { guide?: (RawGuideEntry | null | undefined)[] | null | 
 const route = useRoute();
 const router = useRouter();
 const { byType, bySlug, filterByMacroType, getMacroWineTypes } = useWines();
+const lastWineListRoute = useLastWineListRoute();
 
 const { isMobile, isTablet } = useBreakpoints();
 
@@ -65,6 +67,14 @@ const macroTypes = getMacroWineTypes();
 
 const typeParamRaw = computed(() => String(route.params.type ?? ''));
 const currentType = computed(() => typeParamRaw.value.trim().toLowerCase());
+
+watch(
+  () => route.fullPath,
+  (path) => {
+    lastWineListRoute.value = path;
+  },
+  { immediate: true }
+);
 
 const currentMacro = computed(() => {
   const id = currentType.value;

@@ -15,6 +15,7 @@
 import { computed } from 'vue';
 import { useRouter } from '#imports';
 import type { Wine } from '~/composables/useWines';
+import { useLastWineListRoute } from '~/composables/useLastWineListRoute';
 import { findWineMenuItemByType } from '~/lib/wineMenuItems';
 
 const props = defineProps<{
@@ -33,8 +34,14 @@ const ctaHref = computed(() => {
 });
 
 const router = useRouter();
+const lastWineListRoute = useLastWineListRoute();
 
 const onGoBack = () => {
+  if (lastWineListRoute.value) {
+    router.push(lastWineListRoute.value);
+    return;
+  }
+
   router.back();
 };
 

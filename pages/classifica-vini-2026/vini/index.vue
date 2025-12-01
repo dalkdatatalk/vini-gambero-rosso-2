@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useHead } from '#imports';
+import { useHead, useRoute } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
 import Footer from '~/components/Footer.vue';
@@ -31,11 +31,23 @@ import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
 import { useWineFiltersState } from '~/composables/useWineFiltersState';
+import { useLastWineListRoute } from '~/composables/useLastWineListRoute';
 import { findWineMenuItemByType } from '~/lib/wineMenuItems';
 import { slugify } from '~/utils/slugify';
 import { buildWineProductJsonLdNode } from '~/utils/structuredData';
 
 const { isMobile, isTablet } = useBreakpoints();
+
+const route = useRoute();
+const lastWineListRoute = useLastWineListRoute();
+
+watch(
+  () => route.fullPath,
+  (path) => {
+    lastWineListRoute.value = path;
+  },
+  { immediate: true }
+);
 
 const wineTools = useWines();
 const { wines } = wineTools;
