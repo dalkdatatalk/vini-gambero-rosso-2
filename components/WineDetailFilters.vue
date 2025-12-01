@@ -167,6 +167,26 @@
         </ul>
       </div>
 
+      <div class="filter-item filter-item--winery">
+        <label for="winery-filter" class="filter-label">Cantina</label>
+        <select
+          id="winery-filter"
+          class="filter-dropdown"
+          v-model="selectedWineryLocal"
+        >
+          <option value="">
+            Tutte le cantine
+          </option>
+          <option
+            v-for="winery in wineryOptions"
+            :key="winery"
+            :value="winery"
+          >
+            {{ winery }}
+          </option>
+        </select>
+      </div>
+
       <div class="filter-item filter-item--search">
         <label class="visually-hidden" :for="queryInputId">Cerca vini per nome</label>
         <input
@@ -183,6 +203,7 @@
 </template>
 
 <script setup lang="ts">
+import { useWines } from '~/composables/useWines';
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 
 const props = defineProps<{
@@ -199,6 +220,7 @@ const props = defineProps<{
     score: number;
     price: number;
   };
+  selectedWinery?: string | null;
 }>();
 
 const emit = defineEmits<{
@@ -214,7 +236,20 @@ const emit = defineEmits<{
     }
   ): void;
   (e: 'update:results', value: any[]): void;
+  (e: 'update:selectedWinery', value: string | null): void;
 }>();
+
+const { wines } = useWines();
+
+const wineryOptions = computed(() =>
+  Array.from(
+    new Set(
+      wines.value
+        .map((wine) => wine.wineryName?.trim())
+        .filter((name): name is string => Boolean(name))
+    )
+  ).sort((a, b) => a.localeCompare(b))
+);
 
 const internalState = reactive({
   query: '',
@@ -388,6 +423,13 @@ const queryModel = computed({
   set: (value: string) => {
     internalState.query = value ?? '';
     triggerUpdate(false);
+  },
+});
+
+const selectedWineryLocal = computed({
+  get: () => props.selectedWinery ?? '',
+  set: (value: string) => {
+    emit('update:selectedWinery', value || null);
   },
 });
 
