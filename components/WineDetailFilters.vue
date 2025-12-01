@@ -265,10 +265,10 @@ import {
   ComboboxViewport,
 } from 'radix-vue';
 
-const ALL_REGION_VALUE = '__ALL_REGION__';
-const ALL_GRAPE_VALUE = '__ALL_GRAPE__';
-const ALL_PAIRING_VALUE = '__ALL_PAIRING__';
-const ALL_WINERY_VALUE = '__ALL_WINERY__';
+const ALL_REGION_VALUE = 'Regioni';
+const ALL_GRAPE_VALUE = 'Vitigni';
+const ALL_PAIRING_VALUE = 'Abbinamenti';
+const ALL_WINERY_VALUE = 'Cantine';
 
 const props = defineProps<{
   wines: any[];
