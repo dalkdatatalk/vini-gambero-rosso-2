@@ -9,6 +9,7 @@
       v-model="filterStateBinding"
       :min-score="0"
       :max-score="100"
+      persist-key="vini-index"
       @update:results="onFilterResults"
       class="page__filters"
     />

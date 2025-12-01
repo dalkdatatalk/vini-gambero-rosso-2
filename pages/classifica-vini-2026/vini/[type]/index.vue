@@ -13,6 +13,7 @@
       v-model="filterStateBinding"
       :min-score="0"
       :max-score="100"
+      :persist-key="persistKey"
       @update:results="onFilterResults"
       class="page__filters"
     />
@@ -63,6 +64,10 @@ const macroTypes = getMacroWineTypes();
 
 const typeParamRaw = computed(() => String(route.params.type ?? ''));
 const currentType = computed(() => typeParamRaw.value.trim().toLowerCase());
+
+const persistKey = computed(() =>
+  currentType.value ? `vini-type-${currentType.value}` : 'vini-type-default'
+);
 
 const currentMacro = computed(() => {
   const id = currentType.value;

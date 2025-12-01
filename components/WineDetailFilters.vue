@@ -254,7 +254,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import {
   ComboboxAnchor,
   ComboboxContent,
@@ -279,6 +279,13 @@ const props = defineProps<{
     score: number;
     price: number;
   };
+  selectedWinery?: string | null;
+  /**
+   * Chiave usata per memorizzare lo stato dei filtri
+   * (es. 'vini-index' oppure 'vini-type-rossi').
+   * Se non fornita, la persistenza è disabilitata.
+   */
+  persistKey?: string;
 }>();
 
 const emit = defineEmits<{
@@ -571,6 +578,13 @@ function triggerUpdate(immediate: boolean, forceModel = false) {
       debounceHandle = null;
     }
 
+    // Salva lo stato corrente nei persisted filters (se persistKey è definita)
+    const persisted: PersistedFiltersPayload = {
+      ...payload,
+      selectedWinery: selectedWineryLocal.value || null,
+    };
+    savePersistedFilters(props.persistKey, persisted);
+
     if (!syncing || forceModel) {
       emit('update:modelValue', payload);
     }
@@ -663,6 +677,34 @@ watch(
   }
 );
 
+onMounted(() => {
+  const persisted = loadPersistedFilters(props.persistKey);
+  if (!persisted) {
+    return;
+  }
+
+  syncing = true;
+
+  internalState.query = persisted.query ?? '';
+  internalState.region = persisted.region ?? null;
+  internalState.grape = persisted.grape ?? null;
+  internalState.abbinamento = persisted.abbinamento ?? null;
+  internalState.score = clampScore(
+    Number.isFinite(persisted.score) ? persisted.score : computedMinScore.value
+  );
+  internalState.price = clampPrice(
+    Number.isFinite(persisted.price) ? persisted.price : computedMinPrice.value
+  );
+
+  selectedWineryLocal.value = persisted.selectedWinery ?? '';
+
+  // Ricalcola risultati e (se consentito dalla logica esistente) aggiorna modelValue esterno
+  // Usa forceModel = true solo se NON innesca loop con il watcher su props.modelValue.
+  triggerUpdate(true, true);
+
+  syncing = false;
+});
+
 function clampScore(value: number) {
   const min = computedMinScore.value;
   const max = computedMaxScore.value;
@@ -675,6 +717,63 @@ function clampPrice(value: number) {
   const max = computedMaxPrice.value;
   const normalized = Number.isFinite(value) ? value : min;
   return Math.min(Math.max(normalized, min), max);
+}
+
+function getStorage(): Storage | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    return window.sessionStorage; // oppure localStorage se preferisci
+  } catch {
+    return null;
+  }
+}
+
+type PersistedFiltersPayload = {
+  query: string;
+  region: string | null;
+  grape: string | null;
+  abbinamento: string | null;
+  score: number;
+  price: number;
+  selectedWinery: string | null;
+};
+
+function loadPersistedFilters(key?: string): PersistedFiltersPayload | null {
+  if (!key) return null;
+  const storage = getStorage();
+  if (!storage) return null;
+
+  const raw = storage.getItem(key);
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw) as Partial<PersistedFiltersPayload>;
+    if (!parsed || typeof parsed !== 'object') return null;
+
+    return {
+      query: typeof parsed.query === 'string' ? parsed.query : '',
+      region: typeof parsed.region === 'string' ? parsed.region : null,
+      grape: typeof parsed.grape === 'string' ? parsed.grape : null,
+      abbinamento: typeof parsed.abbinamento === 'string' ? parsed.abbinamento : null,
+      score: Number.isFinite(parsed.score as number) ? Number(parsed.score) : computedMinScore.value,
+      price: Number.isFinite(parsed.price as number) ? Number(parsed.price) : computedMinPrice.value,
+      selectedWinery: typeof parsed.selectedWinery === 'string' ? parsed.selectedWinery : null,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function savePersistedFilters(key: string | undefined, payload: PersistedFiltersPayload): void {
+  if (!key) return;
+  const storage = getStorage();
+  if (!storage) return;
+
+  try {
+    storage.setItem(key, JSON.stringify(payload));
+  } catch {
+    // ignora errori (es. quota piena, modalità private, ecc.)
+  }
 }
 
 function toNumber(value: unknown): number {
