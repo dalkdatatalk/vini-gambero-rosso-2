@@ -101,36 +101,50 @@
         </div>
       </div> -->
 
-      <!-- 2 Punteggio -->
-      <!-- su desktop occupa più spazio con una colonna più larga -->
-      <div class="filter-item filter-item--score">
-        <p class="filter-label">Punteggio</p>
-        <div class="filter-range" role="group" aria-label="Filtra per punteggio minimo">
-          <span class="range-min">{{ computedMinScore }}</span>
-          <div class="range-slider" :style="{ '--range-progress': scoreProgress + '%' }">
-            <div
-              class="range-bubble"
-              :class="{ 'range-bubble--visible': scoreBubbleVisible }"
-              aria-hidden="true"
-            >
-              {{ scoreModel }}
-            </div>
-            <input
-              :id="scoreInputId"
-              v-model.number="scoreModel"
-              type="range"
-              :min="computedMinScore"
-              :max="computedMaxScore"
-              step="1"
-              :aria-valuemin="computedMinScore"
-              :aria-valuemax="computedMaxScore"
-              :aria-valuenow="scoreModel"
-              aria-label="Punteggio minimo"
-              @input="handleScoreInput"
+      <!-- 2 Abbinamento -->
+      <div class="filter-item filter-item--pairing">
+        <label
+          :id="`pairing-combobox-label-${componentId}`"
+          class="filter-label visually-hidden"
+        >
+          Abbinamento
+        </label>
+
+        <ComboboxRoot
+          v-model="pairingModel"
+          :aria-labelledby="`pairing-combobox-label-${componentId}`"
+          class="combobox-root"
+        >
+          <ComboboxAnchor class="combobox-anchor">
+            <ComboboxInput
+              class="combobox-input"
+              placeholder="Abbinamenti"
             />
-          </div>
-          <span class="range-max">{{ computedMaxScore }}</span>
-        </div>
+            <ComboboxTrigger
+              class="combobox-trigger"
+              aria-label="Apri elenco abbinamenti"
+            >
+              <span class="dropdown-icon" aria-hidden="true">
+                <svg viewBox="0 0 15 13" fill="none">
+                  <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
+                </svg>
+              </span>
+            </ComboboxTrigger>
+          </ComboboxAnchor>
+
+          <ComboboxContent class="combobox-content">
+            <ComboboxViewport class="combobox-viewport">
+              <ComboboxItem
+                v-for="option in pairingOptions"
+                :key="option"
+                :value="option === 'Tutti gli abbinamenti' ? ALL_PAIRING_VALUE : option"
+                class="combobox-item"
+              >
+                {{ option }}
+              </ComboboxItem>
+            </ComboboxViewport>
+          </ComboboxContent>
+        </ComboboxRoot>
       </div>
 
       <!-- 3 Vitigno -->
@@ -179,52 +193,7 @@
         </ComboboxRoot>
       </div>
 
-      <!-- 4 Abbinamento -->
-      <div class="filter-item filter-item--pairing">
-        <label
-          :id="`pairing-combobox-label-${componentId}`"
-          class="filter-label visually-hidden"
-        >
-          Abbinamento
-        </label>
-
-        <ComboboxRoot
-          v-model="pairingModel"
-          :aria-labelledby="`pairing-combobox-label-${componentId}`"
-          class="combobox-root"
-        >
-          <ComboboxAnchor class="combobox-anchor">
-            <ComboboxInput
-              class="combobox-input"
-              placeholder="Abbinamenti"
-            />
-            <ComboboxTrigger
-              class="combobox-trigger"
-              aria-label="Apri elenco abbinamenti"
-            >
-              <span class="dropdown-icon" aria-hidden="true">
-                <svg viewBox="0 0 15 13" fill="none">
-                  <path d="M0 0L7.5 13L15 0H0Z" fill="#290005" />
-                </svg>
-              </span>
-            </ComboboxTrigger>
-          </ComboboxAnchor>
-
-          <ComboboxContent class="combobox-content">
-            <ComboboxViewport class="combobox-viewport">
-              <ComboboxItem
-                v-for="option in pairingOptions"
-                :key="option"
-                :value="option === 'Tutti gli abbinamenti' ? ALL_PAIRING_VALUE : option"
-                class="combobox-item"
-              >
-                {{ option }}
-              </ComboboxItem>
-            </ComboboxViewport>
-          </ComboboxContent>
-        </ComboboxRoot>
-      </div>
-
+      <!-- 4 Cantine -->
       <div class="filter-item filter-item--winery">
         <ComboboxRoot
           v-model="selectedWineryLocal"
@@ -265,6 +234,37 @@
             </ComboboxViewport>
           </ComboboxContent>
         </ComboboxRoot>
+      </div>
+
+      <!-- 5 Punteggio -->
+      <div class="filter-item filter-item--score">
+        <p class="filter-label">Punteggio</p>
+        <div class="filter-range" role="group" aria-label="Filtra per punteggio minimo">
+          <span class="range-min">{{ computedMinScore }}</span>
+          <div class="range-slider" :style="{ '--range-progress': scoreProgress + '%' }">
+            <div
+              class="range-bubble"
+              :class="{ 'range-bubble--visible': scoreBubbleVisible }"
+              aria-hidden="true"
+            >
+              {{ scoreModel }}
+            </div>
+            <input
+              :id="scoreInputId"
+              v-model.number="scoreModel"
+              type="range"
+              :min="computedMinScore"
+              :max="computedMaxScore"
+              step="1"
+              :aria-valuemin="computedMinScore"
+              :aria-valuemax="computedMaxScore"
+              :aria-valuenow="scoreModel"
+              aria-label="Punteggio minimo"
+              @input="handleScoreInput"
+            />
+          </div>
+          <span class="range-max">{{ computedMaxScore }}</span>
+        </div>
       </div>
 
     </div>
@@ -1439,9 +1439,11 @@ function parsePriceRangeText(text: string): number[] {
     align-items: end;
   }
 
-  /* punteggio occupa 3 colonne, gli altri una */
+  /* filtri principali su una riga, punteggio sotto con larghezza moderata */
   .filter-item--score {
-    grid-column: span 3;
+    grid-column: 1 / span 2;
+    width: clamp(260px, 30vw, 420px);
+    justify-self: start;
   }
 
   .filter-item--region,
