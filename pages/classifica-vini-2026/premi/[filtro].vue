@@ -3,7 +3,11 @@
   <HeaderGeneral v-else />
 
   <main class="page">
-    <WineAwardsFilters :activeFilter="activeFilter" :onFilter="onFilterClick" />
+    <WineAwardsFilters
+      :activeFilter="activeFilter"
+      :onFilter="onFilterClick"
+      :title="awardsPageTitle"
+    />
 
     <WineList :wines="filteredWines" empty-message="Non sono presenti vini premiati." />
   </main>
@@ -14,7 +18,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useHead, useRoute, useRouter } from '#imports';
+import { useRoute } from 'vue-router';
+import { useHead, useRouter } from '#imports';
 import Footer from '~/components/Footer.vue';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
@@ -40,6 +45,18 @@ const normalizeFilter = (value: string | string[] | undefined): FilterValue => {
 };
 
 const activeFilter = ref<FilterValue>(normalizeFilter(route.params.filtro));
+
+const awardsPageTitle = computed(() => {
+  if (activeFilter.value === 'nazionali') {
+    return 'I vini premiati selezionati da Berebene 2026 a livello nazionale';
+  }
+
+  if (activeFilter.value === 'regionali') {
+    return 'I vini premiati selezionati da Berebene 2026 a livello regionale';
+  }
+
+  return 'I vini premiati selezionati da Berebene 2026';
+});
 
 watch(
   () => route.params.filtro,
