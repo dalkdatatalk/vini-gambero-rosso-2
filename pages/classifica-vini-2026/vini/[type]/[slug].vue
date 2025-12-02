@@ -7,9 +7,14 @@
         <div class="wine-details-container">
           <div class="wine-column technical">
             <header class="detail-page__header">
-              <NuxtLink :to="backToCategoryHref" class="wine-back-button" aria-label="Torna alla lista dei vini">
+              <button
+                type="button"
+                class="wine-back-button"
+                aria-label="Torna alla lista dei vini"
+                @click="onBackClick"
+              >
                 <Icon name="ph:arrow-left" class="wine-back-button__icon" />
-              </NuxtLink>
+              </button>
               <WineSingleSponsor v-if="premioName" :premio-name="premioName" />
               <h1 class="name-wine">{{ wine.name }}</h1>
             </header>
@@ -37,7 +42,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { createError, useHead, useRoute, useSeoMeta } from '#imports';
+import { createError, useHead, useRoute, useRouter, useSeoMeta } from '#imports';
 import { useWines } from '~/composables/useWines';
 import { useBreakpoints } from '~/composables/useBreakpoints';
 import { findWineMenuItemByType } from '~/lib/wineMenuItems';
@@ -52,6 +57,7 @@ type RawPremio = { name?: string | null };
 type RawWineWithPremi = { slug?: string | null; premi?: RawPremio[] };
 
 const route = useRoute();
+const router = useRouter();
 
 const { isMobile, isTablet } = useBreakpoints();
 
@@ -112,6 +118,10 @@ const premioName = computed(() => {
 
   return firstValid?.name ?? undefined;
 });
+
+const onBackClick = () => {
+  router.back();
+};
 
 const wineryName = computed(() => wine.value.wineryName ?? wine.value.relatedLocale?.title ?? null);
 const wineryLink = computed(() => wine.value.wineryLink ?? wine.value.relatedLocale?.website ?? null);
