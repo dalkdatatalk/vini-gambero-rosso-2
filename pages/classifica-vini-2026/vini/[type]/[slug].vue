@@ -261,11 +261,13 @@ useHead(() => ({
   padding: 0.35rem;
   color: var(--rosso-scuro);
   text-decoration: none;
-  border-radius: 999px;
   transition: color 0.2s ease;
   flex-shrink: 0;
   align-self: flex-start;
   margin-bottom: 0.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
 
 .wine-back-button:focus-visible,
