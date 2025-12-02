@@ -167,14 +167,15 @@ const { filterState } = useWineFiltersPerType();
 const filterStateBinding = computed({
   get: () => filterState.value,
   set: (value) => {
-    filterState.value = {
-      query: value?.query ?? '',
-      region: value?.region ?? null,
-      grape: value?.grape ?? null,
-      abbinamento: value?.abbinamento ?? null,
-      score: Number.isFinite(value?.score) ? Number(value?.score) : 0,
-      price: Number.isFinite(value?.price) ? Number(value?.price) : 0,
-    };
+    const state = filterState.value;
+
+    // mutiamo il singolo oggetto invece di sostituirlo
+    state.query = value?.query ?? '';
+    state.region = value?.region ?? null;
+    state.grape = value?.grape ?? null;
+    state.abbinamento = value?.abbinamento ?? null;
+    state.score = Number.isFinite(value?.score) ? Number(value?.score) : 0;
+    state.price = Number.isFinite(value?.price) ? Number(value?.price) : 0;
   },
 });
 

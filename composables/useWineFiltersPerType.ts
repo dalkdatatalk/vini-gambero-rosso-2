@@ -44,7 +44,18 @@ export function useWineFiltersPerType() {
 
   const filterState = computed<WineFilterState>({
     get() {
-      return filtersByType.value[currentTypeKey.value] ?? { ...DEFAULT_STATE }
+      const key = currentTypeKey.value
+      let existing = filtersByType.value[key]
+
+      // se non esiste ancora uno stato per questa tipologia, crealo e salvalo
+      if (!existing) {
+        existing = { ...DEFAULT_STATE }
+        filtersByType.value[key] = existing
+      }
+
+      // importante: restituiamo SEMPRE lo stesso oggetto,
+      // non una copia nuova ogni volta
+      return existing
     },
     set(value) {
       filtersByType.value[currentTypeKey.value] = {
