@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { navigateTo, useHead, useRoute, useRouter, useSeoMeta } from '#imports';
 import HeaderGeneral from '~/components/HeaderGeneral.vue';
 import HeaderMobile from '~/components/HeaderMobile.vue';
@@ -39,6 +39,7 @@ import Footer from '~/components/Footer.vue';
 import { useBreakpoints } from '~/composables/useBreakpoints';
 import { useWines } from '~/composables/useWines';
 import type { Wine } from '~/composables/useWines';
+import { useWineFiltersPerType } from '~/composables/useWineFiltersPerType';
 import {
   getWineMenuItemById,
   isWineMacroCategoryId,
@@ -161,24 +162,20 @@ const baseSortedWines = computed(() => {
   });
 });
 
-const filterState = reactive({
-  query: '',
-  region: null as string | null,
-  grape: null as string | null,
-  abbinamento: null as string | null,
-  score: 0,
-  price: 0,
-});
+const { filterState } = useWineFiltersPerType();
 
 const filterStateBinding = computed({
-  get: () => filterState,
+  get: () => filterState.value,
   set: (value) => {
-    filterState.query = value?.query ?? '';
-    filterState.region = value?.region ?? null;
-    filterState.grape = value?.grape ?? null;
-    filterState.abbinamento = value?.abbinamento ?? null;
-    filterState.score = Number.isFinite(value?.score) ? Number(value?.score) : 0;
-    filterState.price = Number.isFinite(value?.price) ? Number(value?.price) : 0;
+    const state = filterState.value;
+
+    // mutiamo il singolo oggetto invece di sostituirlo
+    state.query = value?.query ?? '';
+    state.region = value?.region ?? null;
+    state.grape = value?.grape ?? null;
+    state.abbinamento = value?.abbinamento ?? null;
+    state.score = Number.isFinite(value?.score) ? Number(value?.score) : 0;
+    state.price = Number.isFinite(value?.price) ? Number(value?.price) : 0;
   },
 });
 
