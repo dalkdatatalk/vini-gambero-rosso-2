@@ -10,7 +10,7 @@
           <p class="wine-card__region">{{ regionLabel }}</p>
           <p v-if="wine.type" class="wine-card__type">{{ wine.type }}</p>
           <p v-if="wine.denominazione" class="wine-card__denominazione">{{ wine.denominazione }}</p>
-          <p v-if="wine.wineryName" class="wine-card__winery">{{ wine.wineryName }}</p>
+          <p v-if="cleanWineryName" class="wine-card__winery">{{ cleanWineryName }}</p>
           <p v-if="wine.price" class="wine-card__price">€{{ wine.price }}</p>
         </div>
 
@@ -35,6 +35,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useHtmlEntities } from '#imports';
 import { usePremioCleaner } from '~/composables/usePremioCleaner';
 import rawWines from '~/data/wines.json';
 import type { Wine } from '~/composables/useWines';
@@ -47,6 +48,8 @@ const props = defineProps<{
   wine: Wine;
 }>();
 
+const { normalizeEntityString } = useHtmlEntities();
+
 const detailTypeSegment = computed(
   () => findWineMenuItemByType(props.wine.type ?? null)?.id ?? 'tutti'
 );
@@ -54,6 +57,18 @@ const detailTypeSegment = computed(
 const detailLink = computed(
   () => `/classifica-vini-2026/vini/${detailTypeSegment.value}/${props.wine.slug}`
 );
+
+const cleanWineryName = computed<string | null>(() => {
+  const raw =
+    props.wine.wineryName ??
+    props.wine.relatedLocale?.title ??
+    '';
+
+  if (!raw) return null;
+
+  const decoded = normalizeEntityString(raw);
+  return decoded.length > 0 ? decoded : raw;
+});
 
 const regionLabel = computed(() => props.wine.region ?? 'Regione non disponibile');
 
