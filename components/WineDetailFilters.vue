@@ -3,7 +3,28 @@
     class="filters filters--details"
     aria-label="Filtri di dettaglio vini"
   >
+    <!-- intestazione leggera per dare gerarchia ai filtri -->
+    <div class="filters-header">
+      <p class="filters-title">
+        Filtra i risultati
+      </p>
+    </div>
+
+    <!-- griglia dei filtri -->
     <div class="filter-controls">
+      <!-- Search (più protagonista, in alto a tutta larghezza) -->
+      <div class="filter-item filter-item--search">
+        <label class="visually-hidden" :for="queryInputId">Cerca vini per nome</label>
+        <input
+          :id="queryInputId"
+          v-model="queryModel"
+          class="filter-input"
+          type="search"
+          placeholder="Cerca per nome"
+        />
+        <div class="filter-underline" aria-hidden="true"></div>
+      </div>
+
       <!-- 1 Regione -->
       <div class="filter-item filter-item--region">
         <label
@@ -74,7 +95,8 @@
       </div> -->
 
       <!-- 2 Punteggio -->
-      <div class="filter-item">
+      <!-- su desktop occupa più spazio con una colonna più larga -->
+      <div class="filter-item filter-item--score">
         <p class="filter-label">Punteggio</p>
         <div class="filter-range" role="group" aria-label="Filtra per punteggio minimo">
           <span class="range-min">{{ computedMinScore }}</span>
@@ -238,17 +260,6 @@
         </ComboboxRoot>
       </div>
 
-      <div class="filter-item filter-item--search">
-        <label class="visually-hidden" :for="queryInputId">Cerca vini per nome</label>
-        <input
-          :id="queryInputId"
-          v-model="queryModel"
-          class="filter-input"
-          type="search"
-          placeholder="Cerca per nome"
-        />
-        <div class="filter-underline" aria-hidden="true"></div>
-      </div>
     </div>
   </section>
 </template>
@@ -1086,25 +1097,41 @@ function parsePriceRangeText(text: string): number[] {
   width: 100%;
 }
 
-.filter-controls {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+/* intestazione sopra i filtri */
+.filters-header {
   width: 100%;
-  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.filters-title {
+  font-family: 'Funnel Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #6b7280;
+  margin: 0 0 4px;
+}
+
+/* griglia dei filtri */
+.filter-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px 16px;
+  align-items: flex-end;
+  width: 100%;
 }
 
 .filter-item {
   position: relative;
-  flex: 0 0 auto;
   min-width: 0;
   width: 100%;
 }
 
 .filter-item--search {
-  flex: 0 0 auto;
-  min-width: 0;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  grid-column: 1 / -1; /* sempre a tutta larghezza */
 }
 
 .filter-label {
@@ -1351,38 +1378,45 @@ function parsePriceRangeText(text: string): number[] {
 }
 
 @media (min-width: 768px) {
-  .filter-controls {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .filter-item,
-  .filter-item--search {
-    flex: 0 0 100%;
-  }
-
   .filter-input {
     font-size: 28px;
+  }
+
+  .filter-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 24px;
+  }
+
+  /* punteggio e search occupano tutta la riga a questa larghezza */
+  .filter-item--score,
+  .filter-item--search {
+    grid-column: 1 / -1;
   }
 }
 
 @media (min-width: 1280px) {
   .filter-controls {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px 32px;
     padding: 16px 0 24px;
-    align-items: stretch;
-    flex-direction: row;
-    flex-wrap: wrap;
+    align-items: end;
   }
 
-  .filter-item {
-    flex: 1 1 220px;
-    min-width: 220px;
+  /* punteggio occupa 3 colonne, gli altri una */
+  .filter-item--score {
+    grid-column: span 3;
   }
 
+  .filter-item--region,
+  .filter-item--grape,
+  .filter-item--pairing,
+  .filter-item--winery {
+    grid-column: span 1;
+  }
+
+  /* search resta sempre in alto a tutta larghezza (perché è il primo nel DOM) */
   .filter-item--search {
-    flex: 1 1 280px;
-    min-width: 280px;
+    grid-column: 1 / -1;
   }
 
   .filter-input {
