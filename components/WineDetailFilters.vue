@@ -3,11 +3,18 @@
     class="filters filters--details"
     aria-label="Filtri di dettaglio vini"
   >
-    <!-- intestazione leggera per dare gerarchia ai filtri -->
+    <!-- intestazione filtri con azione di reset -->
     <div class="filters-header">
       <p class="filters-title">
         Filtra i risultati
       </p>
+      <button
+        type="button"
+        class="filters-reset"
+        @click="handleResetFilters"
+      >
+        Reimposta filtri
+      </button>
     </div>
 
     <!-- griglia dei filtri -->
@@ -497,6 +504,19 @@ const queryModel = computed({
     triggerUpdate(false);
   },
 });
+
+function handleResetFilters() {
+  internalState.query = '';
+  internalState.region = null;
+  internalState.grape = null;
+  internalState.abbinamento = null;
+  internalState.score = computedMinScore.value;
+  internalState.price = computedMinPrice.value;
+
+  selectedWineryLocal.value = ALL_WINERY_VALUE;
+
+  triggerUpdate(true, true);
+}
 
 onBeforeUnmount(() => {
   if (scoreBubbleTimeout) {
@@ -1099,6 +1119,9 @@ function parsePriceRangeText(text: string): number[] {
 
 /* intestazione sopra i filtri */
 .filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
   width: 100%;
   margin-bottom: 8px;
 }
@@ -1110,7 +1133,21 @@ function parsePriceRangeText(text: string): number[] {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: #6b7280;
-  margin: 0 0 4px;
+  margin: 0;
+}
+
+.filters-reset {
+  border: none;
+  background: transparent;
+  font-family: 'Funnel Sans', sans-serif;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.filters-reset:hover {
+  color: #290005;
 }
 
 /* griglia dei filtri */
