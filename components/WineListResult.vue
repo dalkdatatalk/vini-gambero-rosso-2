@@ -7,10 +7,10 @@
             {{ premioLabel }}
           </div>
           <h3 class="wine-card__name">{{ wine.name }}</h3>
+          <p v-if="cleanWineryName" class="wine-card__winery">{{ cleanWineryName }}</p>
           <p class="wine-card__region">{{ regionLabel }}</p>
           <p v-if="wine.type" class="wine-card__type">{{ wine.type }}</p>
           <p v-if="wine.denominazione" class="wine-card__denominazione">{{ wine.denominazione }}</p>
-          <p v-if="cleanWineryName" class="wine-card__winery">{{ cleanWineryName }}</p>
           <p v-if="wine.price" class="wine-card__price">€{{ wine.price }}</p>
         </div>
 
@@ -198,9 +198,9 @@ const premioLabel = computed(() => {
 }
 
 .wine-card__winery {
-  font-family: 'Funnel Sans', sans-serif;
+  font-family: var(--cormorant-garamond), serif;
   font-weight: 400;
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: #290005;
   letter-spacing: -0.02em;
   margin: 0;
