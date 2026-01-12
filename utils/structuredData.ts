@@ -23,6 +23,7 @@ interface JsonLdRating {
   '@type': 'AggregateRating';
   ratingValue: number;
   bestRating: 100;
+  ratingCount: string;
 }
 
 interface JsonLdOrganization {
@@ -165,6 +166,7 @@ export function buildWineProductJsonLd(
           '@type': 'AggregateRating',
           ratingValue: wine.score,
           bestRating: 100,
+          ratingCount: '1',
         }
       : undefined;
 
@@ -263,4 +265,3 @@ export function buildWineListJsonLd(
     })),
   };
 }
-
