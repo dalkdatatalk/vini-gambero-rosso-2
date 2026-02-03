@@ -22,6 +22,12 @@
           >
             Cookie Policy
           </a>
+          <a
+            class="site-footer__link evolution-show-consent-ui"
+            href="#"
+          >
+            Preferenze Privacy
+          </a>
         </div>
       </div>
     </div>
